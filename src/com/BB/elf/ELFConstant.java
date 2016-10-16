@@ -3,7 +3,7 @@ package com.BB.elf;
 public class ELFConstant {
 
 	public static class ELFUnit {
-		
+
 		private static final int uint16_t = 0x2;
 		private static final int uint32_t = 0x4;
 		private static final int uint64_t = 0x8;
@@ -13,7 +13,7 @@ public class ELFConstant {
 		public static final int ELF32_Off = uint32_t;
 		public static final int ELF32_Addr = uint32_t;
 		public static final int ELF32_Sword = uint32_t;
-		
+
 		public static final int ELF64_Half = uint16_t;
 		public static final int ELF64_Word = uint32_t;
 		public static final int ELF64_Off = uint64_t;
@@ -21,10 +21,9 @@ public class ELFConstant {
 		public static final int ELF64_Sword = uint32_t;
 		public static final int ELF64_Xword = uint64_t;
 		public static final int ELF64_Sxword = uint64_t;
-		
 
 	}
-	
+
 	public static class HeaderContent {
 
 		public static final int EI_NIDENT = 0x10;
@@ -306,13 +305,13 @@ public class ELFConstant {
 		public static final int EM_78KOR = 199; // Renesas 78KOR family
 		public static final int EM_56800EX = 200; // Freescale 56800EX Digital
 													// Signal Controller (DSC)
-		
+
 		/*-----------------------------------------------*/
 
 	}
-	
-	public static class ProgramHeaderContent{
-		
+
+	public static class ProgramHeaderContent {
+
 		public static final int PT_NULL = 0;
 		public static final int PT_LOAD = 1;
 		public static final int PT_DYNAMIC = 2;
@@ -322,7 +321,29 @@ public class ELFConstant {
 		public static final int PT_PHDR = 6;
 		public static final int PT_LOPROC = 0x70000000;
 		public static final int PT_HIPROC = 0x7fffffff;
-		
+
+	}
+
+	public static class SectionHeaderContent {
+
+		public static final int SHT_NULL = 0;
+		public static final int SHT_PROGBITS = 1;
+		public static final int SHT_SYMTAB = 2;
+		public static final int SHT_STRTAB = 3;
+		public static final int SHT_RELA = 4;
+		public static final int SHT_HASH = 5;
+		public static final int SHT_DYNAMIC = 6;
+		public static final int SHT_NOTE = 7;
+		public static final int SHT_NOBITS = 8;
+		public static final int SHT_REL = 9;
+		public static final int SHT_SHLIB = 10;
+		public static final int SHT_DYMSYM = 11;
+		public static final int SHT_NUM = 12;
+		public static final int SHT_LOPROC = 0x70000000;
+		public static final int SHT_HIPROC = 0x7fffffff;
+		public static final int SHT_LOUSER = 0x80000000;
+		public static final int SHT_HIUSER = 0x8fffffff;
+
 	}
 
 }

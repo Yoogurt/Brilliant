@@ -16,6 +16,7 @@ import static com.BB.elf.ELFConstant.ProgramHeaderContent.PT_PHDR;
 import static com.BB.elf.ELFConstant.ProgramHeaderContent.PT_SHLIB;
 
 import java.io.IOException;
+import java.io.RandomAccessFile;
 
 import com.BB.util.LocatableInPutStream;
 import com.BB.util.Log;
@@ -65,18 +66,18 @@ public class ELF_ProgramHeader {
 		 */
 		byte[] p_align;
 
-		private ELF_Segment associatedSegment;
+		private ELF_SegmentHeader associatedSegment;
 
-		public ELF_Segment getAssociatedSegment() {
+		public ELF_SegmentHeader getAssociatedSegment() {
 			return associatedSegment;
 		}
 
-		protected void setAssociatedSegment(ELF_Segment assocition) {
+		protected void setAssociatedSegment(ELF_SegmentHeader assocition) {
 			this.associatedSegment = assocition;
 		}
 
-		public boolean isLoadableSegment() {
-			return Util.bytes2Int32(p_type) == PT_LOAD;
+		public boolean isLoadableSegment(ELF_Header header) {
+			return Util.bytes2Int32(p_type, header.isLittleEndian()) == PT_LOAD;
 		}
 
 		@Override
@@ -98,7 +99,7 @@ public class ELF_ProgramHeader {
 	private boolean isPT_PHDRExist;
 	private boolean isPT_INTERPExist;
 
-	public ELF_ProgramHeader(LocatableInPutStream is, ELF_Header header)
+	public ELF_ProgramHeader(RandomAccessFile is, ELF_Header header)
 			throws Exception {
 
 		Log.e(Constant.DIVISION_LINE);
@@ -115,7 +116,7 @@ public class ELF_ProgramHeader {
 
 	}
 
-	private void read32ProgramHeader(LocatableInPutStream is, ELF_Header header)
+	private void read32ProgramHeader(RandomAccessFile is, ELF_Header header)
 			throws Exception {
 
 		int mProgramHeaderCount = header.getProgramHeaderTableNum();
@@ -125,9 +126,11 @@ public class ELF_ProgramHeader {
 		for (int m = 0; m < mProgramHeaderCount; m++) {
 
 			ELF_Phdr ph = generate32ProgramHeaderStruture();
-			read32ProgramHeaderInternal(ph, is, m);
+			read32ProgramHeaderInternal(ph, is);
 
-			switch (Util.bytes2Int32(ph.p_type)) {
+			mInternalProgramHeader[m] = ph;
+
+			switch (Util.bytes2Int32(ph.p_type, header.isLittleEndian())) {
 			case PT_NULL:
 				Log.e("Program Header " + (m + 1) + " is Undefine :");
 				break;
@@ -142,7 +145,7 @@ public class ELF_ProgramHeader {
 			case PT_DYNAMIC:
 				Log.e("Program Header " + (m + 1)
 						+ " Gives a dynamic link infomation :");
-				verifyDynamicSegmentBeforAllLoadableSegment32(ph);
+				// verifyDynamicSegmentBeforAllLoadableSegment32(ph);
 				break;
 
 			case PT_INTERP:
@@ -176,7 +179,7 @@ public class ELF_ProgramHeader {
 
 	}
 
-	private void read64ProgramHeader(LocatableInPutStream is, ELF_Header header)
+	private void read64ProgramHeader(RandomAccessFile is, ELF_Header header)
 			throws Exception {
 
 		int mProgramHeaderCount = header.getProgramHeaderTableNum();
@@ -186,9 +189,11 @@ public class ELF_ProgramHeader {
 		for (int m = 0; m < mProgramHeaderCount; m++) {
 
 			ELF_Phdr ph = generate64ProgramHeaderStruture();
-			read64ProgramHeaderInternal(ph, is, m);
+			read64ProgramHeaderInternal(ph, is);
 
-			switch (Util.bytes2Int32(ph.p_type)) {
+			mInternalProgramHeader[m] = ph;
+
+			switch (Util.bytes2Int32(ph.p_type, header.isLittleEndian())) {
 			case PT_NULL:
 				Log.e("Program Header " + (m + 1) + " is Undefine :");
 				break;
@@ -244,14 +249,16 @@ public class ELF_ProgramHeader {
 			throw new RuntimeException("Interpret Segment appear over once!");
 	}
 
+	@Deprecated
 	private void verifyDynamicSegmentBeforAllLoadableSegment32(
-			ELF_Phdr dynamicSegment) {
+			ELF_Phdr dynamicSegment, ELF_Header header) {
 
 		for (int m = 0; m < mLoadablePtr; m++) {
 			ELF_Phdr mT = mInternalProgramHeader[mLoadableSegment[m]];
 
-			if (Util.bytes2Int32(mT.p_offset) < Util
-					.bytes2Int32(dynamicSegment.p_offset))
+			if (Util.bytes2Int32(mT.p_offset, header.isLittleEndian()) < Util
+					.bytes2Int32(dynamicSegment.p_offset,
+							header.isLittleEndian()))
 				throw new RuntimeException(
 						"Loadable Segment before Dynamic Segment , dynamic Segment : "
 								+ Util.bytes2Hex(dynamicSegment.p_offset)
@@ -266,7 +273,6 @@ public class ELF_ProgramHeader {
 
 		for (int m = 0; m < mLoadablePtr; m++) {
 			ELF_Phdr mT = mInternalProgramHeader[mLoadableSegment[m]];
-			
 
 			if (Util.bytes2Int64(mT.p_offset) < Util
 					.bytes2Int64(dynamicSegment.p_offset))
@@ -295,8 +301,8 @@ public class ELF_ProgramHeader {
 
 	}
 
-	private void read32ProgramHeaderInternal(ELF_Phdr ph,
-			LocatableInPutStream is, int index) throws IOException {
+	private void read32ProgramHeaderInternal(ELF_Phdr ph, RandomAccessFile is)
+			throws IOException {
 
 		is.read(ph.p_type);
 		is.read(ph.p_offset);
@@ -307,11 +313,10 @@ public class ELF_ProgramHeader {
 		is.read(ph.p_flags);
 		is.read(ph.p_align);
 
-		mInternalProgramHeader[index] = ph;
 	}
 
-	private void read64ProgramHeaderInternal(ELF_Phdr ph,
-			LocatableInPutStream is, int index) throws IOException {
+	private void read64ProgramHeaderInternal(ELF_Phdr ph, RandomAccessFile is)
+			throws IOException {
 
 		is.read(ph.p_type);
 		is.read(ph.p_flags);
@@ -322,7 +327,6 @@ public class ELF_ProgramHeader {
 		is.read(ph.p_memsz);
 		is.read(ph.p_align);
 
-		mInternalProgramHeader[index] = ph;
 	}
 
 	private void verifyProgramHeader32(ELF_Phdr ph, ELF_Header header) {
@@ -331,13 +335,13 @@ public class ELF_ProgramHeader {
 			throw new RuntimeException("Multi-PT_PHDR defined !");
 		isPT_PHDRExist = true;
 
-		if (header.getProgramHeaderTableOffset() != Util
-				.bytes2Int32(ph.p_offset))
+		if (header.getProgramHeaderTableOffset() != Util.bytes2Int32(
+				ph.p_offset, header.isLittleEndian()))
 			throw new RuntimeException("Program Header Offset Verify Fail");
 
 		if (header.getProgramHeaderTableEntrySize()
-				* header.getProgramHeaderTableNum() != Util
-					.bytes2Int32(ph.p_filesz))
+				* header.getProgramHeaderTableNum() != Util.bytes2Int32(
+				ph.p_filesz, header.isLittleEndian()))
 			throw new RuntimeException("Program Header Size Verify Fail");
 
 		Log.e("Program Header Verify Success\n");
@@ -370,15 +374,14 @@ public class ELF_ProgramHeader {
 				+ Util.bytes2Hex(ph.p_vaddr));
 
 		if (header.isSharedObject() || header.isExeutable())
-			Log.e("Segment will mmap direct at memory : "
+			Log.e("Segment will mmap directly at memory : "
 					+ Util.bytes2Hex(ph.p_paddr));
 
-		Log.e("Segment takes " + Util.decHexSizeFormat32(ph.p_filesz)
-				+ " in elf");
-		Log.e("Segment takes " + Util.decHexSizeFormat32(ph.p_memsz)
+		Log.e("Segment takes "
+				+ Util.decHexSizeFormat32(ph.p_filesz, header.isLittleEndian())
 				+ " in elf");
 
-		Util.assertAlign(Util.bytes2Int64(ph.p_align));
+	//	Util.assertAlign(Util.bytes2Int64(ph.p_align));
 
 	}
 
@@ -414,10 +417,11 @@ public class ELF_ProgramHeader {
 
 	}
 
-	public ELF_Phdr getProgramHeaderBySegmentPosition(int position) {
+	public ELF_Phdr getProgramHeaderBySegmentPosition(int position,
+			ELF_Header header) {
 
 		for (ELF_Phdr mT : mInternalProgramHeader) {
-			if (Util.bytes2Int32(mT.p_offset) == position) {
+			if (Util.bytes2Int32(mT.p_offset, header.isLittleEndian()) == position) {
 				return mT;
 			}
 		}

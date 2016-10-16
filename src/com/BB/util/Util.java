@@ -123,12 +123,6 @@ public class Util {
 		return bytes2Int32(data, 0, length, isLittleEndian);
 	}
 
-	public static int bytes2Int32(byte[] data) {
-
-		return bytes2Int32(data, true);
-
-	}
-
 	public static boolean equals(byte[] data, int startIndex, int length,
 			long obj, boolean isLittleEndian) {
 
@@ -240,14 +234,14 @@ public class Util {
 		return bytes2Int64(data, true);
 	}
 
-	public static String decHexSizeFormat32(byte[] size) {
-		return Util.bytes2Int32(size) + "(0x" + Util.bytes2Hex(size) + ")"
-				+ "B";
+	public static String decHexSizeFormat32(byte[] size, boolean isLittleEndian) {
+		return Util.bytes2Int32(size, isLittleEndian) + "(0x"
+				+ Util.bytes2Hex(size) + ")" + "B";
 	}
 
-	public static String hexDecSizeFormat32(byte[] size) {
-		return "0x" + Util.bytes2Hex(size) + "(" + Util.bytes2Int32(size) + ")"
-				+ "B";
+	public static String hexDecSizeFormat32(byte[] size, boolean isLittleEndian) {
+		return "0x" + Util.bytes2Hex(size) + "("
+				+ Util.bytes2Int32(size, isLittleEndian) + ")" + "B";
 	}
 
 	public static void assertAlign(long align) {

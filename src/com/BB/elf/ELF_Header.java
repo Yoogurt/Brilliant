@@ -31,10 +31,9 @@ import static com.BB.elf.ELFConstant.HeaderContent.ET_REL;
 import static com.BB.elf.ELFConstant.HeaderContent.EV_CURRENT;
 import static com.BB.elf.ELFConstant.HeaderContent.StandardELFMagicCode;
 
-import java.io.InputStream;
+import java.io.RandomAccessFile;
 
 import com.BB.util.BytesBuilder;
-import com.BB.util.LocatableInPutStream;
 import com.BB.util.Log;
 import com.BB.util.Util;
 
@@ -108,8 +107,8 @@ public class ELF_Header {
 
 	private byte[] mInternalMMap;
 
-	public ELF_Header(LocatableInPutStream is) throws Exception {
-		
+	public ELF_Header(RandomAccessFile is) throws Exception {
+
 		Log.e(Constant.DIVISION_LINE);
 		Log.e(Constant.ELF_HEADER);
 		Log.e(Constant.DIVISION_LINE);
@@ -120,14 +119,14 @@ public class ELF_Header {
 			read32BitHeader(is);
 		else
 			read64BitHeader(is);
-		
+
 		readELFHeader();
 
 		mInternalMMap = toCompletelyHeader();
 
 	}
 
-	private void read32BitHeader(InputStream is) throws Exception {
+	private void read32BitHeader(RandomAccessFile is) throws Exception {
 
 		e_type = new byte[ELF32_Half];
 		is.read(e_type);
@@ -169,7 +168,7 @@ public class ELF_Header {
 		is.read(e_shstrndex);
 	}
 
-	private void read64BitHeader(InputStream is) throws Exception {
+	private void read64BitHeader(RandomAccessFile is) throws Exception {
 
 		e_type = new byte[ELF64_Half];
 		is.read(e_type);
@@ -212,7 +211,7 @@ public class ELF_Header {
 
 	}
 
-	private void verifyElfMagicCode(InputStream is) throws Exception {
+	private void verifyElfMagicCode(RandomAccessFile is) throws Exception {
 
 		e_ident = new byte[EI_NIDENT];
 		is.read(e_ident);
@@ -253,9 +252,9 @@ public class ELF_Header {
 	}
 
 	public void readELFHeader() throws Exception {
-		
+
 		Log.e();
-		
+
 		switch (Util.bytes2Int32(e_type, isLittleEndian())) {
 		case ET_NONE:
 			Log.i("Unknown ELF Type");
@@ -301,9 +300,9 @@ public class ELF_Header {
 					"Unsupport processor Architecture for this ELF !");
 		}
 
-		if (Util.bytes2Int32(e_version) != EV_CURRENT)
+		if (Util.bytes2Int32(e_version, isLittleEndian()) != EV_CURRENT)
 			throw new Exception("Unknown ELF Version");
-		
+
 		Log.e();
 
 		Log.e("ELF Enter Entry : " + Util.bytes2Hex(e_entry));
@@ -311,34 +310,35 @@ public class ELF_Header {
 		Log.e("Program Header Table Offset : " + Util.bytes2Hex(e_phoff)
 				+ (isLittleEndian() ? " Little Endian" : " Big Endian"));
 		Log.e("Program Header Table per enitity's size : "
-				+ Util.bytes2Int32(e_phentsize) + " B");
+				+ Util.bytes2Int32(e_phentsize, isLittleEndian()) + " B");
 		Log.e("Program Header Table total enitities : "
-				+ Util.bytes2Int32(e_phnum));
-		
+				+ Util.bytes2Int32(e_phnum, isLittleEndian()));
+
 		Log.e();
 
 		Log.e("Section Header Table Offset : " + Util.bytes2Hex(e_shoff)
 				+ (isLittleEndian() ? " Little Endian" : " Big Endian"));
 		Log.e("Section Header Table per enitity's size : "
-				+ Util.bytes2Int32(e_shentsize) + " B");
+				+ Util.bytes2Int32(e_shentsize, isLittleEndian()) + " B");
 		Log.e("Section Header Table total enitities : "
-				+ Util.bytes2Int32(e_shnum));
+				+ Util.bytes2Int32(e_shnum, isLittleEndian()));
 		Log.e("Section Header Table's \"String Table\" Offset : "
 				+ Util.bytes2Hex(e_shstrndex));
-		
+
 		Log.e();
 
 		Log.e("ELF Header Flags : " + Util.bytes2Hex(e_flags));
-		Log.e("ELF Header totally size : " + Util.bytes2Int32(e_ehsize) + " B");
+		Log.e("ELF Header totally size : "
+				+ Util.bytes2Int32(e_ehsize, isLittleEndian()) + " B");
 
 	}
-	
-	public boolean isSharedObject(){
+
+	public boolean isSharedObject() {
 		return Util.bytes2Int32(e_type, isLittleEndian()) == ET_DYN;
 	}
-	
-	public boolean isExeutable(){
-		return  Util.bytes2Int32(e_type, isLittleEndian()) == ET_EXEC;
+
+	public boolean isExeutable() {
+		return Util.bytes2Int32(e_type, isLittleEndian()) == ET_EXEC;
 	}
 
 	public boolean is32Bit() {
@@ -386,17 +386,18 @@ public class ELF_Header {
 	public int getSectionHeaderStringIndex() {
 		return Util.bytes2Int32(e_shstrndex, isLittleEndian());
 	}
-	
+
 	/**
-	 *  we would like to assume that an elf wouldn't larger than 4GB
+	 * we would like to assume that an elf wouldn't larger than 4GB
 	 */
-	public int getHeaderSize(){
-		return Util.bytes2Int32(e_ehsize);
+	public int getHeaderSize() {
+		return Util.bytes2Int32(e_ehsize, isLittleEndian());
 	}
-	
+
 	public byte[] toCompletelyHeader() {
 
-		BytesBuilder bb = new BytesBuilder(Util.bytes2Int32(e_ehsize));
+		BytesBuilder bb = new BytesBuilder(Util.bytes2Int32(e_ehsize,
+				isLittleEndian()));
 		bb.append(e_ident).append(e_type).append(e_machine).append(e_version)
 				.append(e_entry).append(e_phoff).append(e_shoff)
 				.append(e_flags).append(e_ehsize).append(e_phentsize)
