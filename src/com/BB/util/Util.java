@@ -41,17 +41,12 @@ public class Util {
 
 	}
 
-	public static boolean equals(byte[] data1, int srcStartIndex, byte[] data2,
-			int objStartIndex, int length) {
-		if (data1.length - srcStartIndex < length
-				|| data2.length - objStartIndex < length)
-			throw new RuntimeException(
-					"compare fail while comparing data1 and data2 , from data1 position "
-							+ srcStartIndex + " to " + length + srcStartIndex
-							+ " , data1 total length +" + data1.length + "\n"
-							+ "from data2 position " + objStartIndex + " to "
-							+ length + srcStartIndex
-							+ " , data2 total length +" + data2.length);
+	public static boolean equals(byte[] data1, int srcStartIndex, byte[] data2, int objStartIndex, int length) {
+		if (data1.length - srcStartIndex < length || data2.length - objStartIndex < length)
+			throw new RuntimeException("compare fail while comparing data1 and data2 , from data1 position "
+					+ srcStartIndex + " to " + length + srcStartIndex + " , data1 total length +" + data1.length + "\n"
+					+ "from data2 position " + objStartIndex + " to " + length + srcStartIndex
+					+ " , data2 total length +" + data2.length);
 
 		for (int ptr = 0; ptr < length; ptr++)
 			if (data1[ptr + srcStartIndex] != data2[ptr + objStartIndex])
@@ -60,8 +55,7 @@ public class Util {
 		return true;
 	}
 
-	public static boolean equals(byte[] data, int startIndex, int length,
-			int obj, boolean isLittleEndian) {
+	public static boolean equals(byte[] data, int startIndex, int length, int obj, boolean isLittleEndian) {
 
 		int actullyValue = bytes2Int32(data, startIndex, length, isLittleEndian);
 
@@ -72,8 +66,7 @@ public class Util {
 		return data < 0 ? data + 256 : data;
 	}
 
-	public static int bytes2Int32(byte[] data, int startIndex, int length,
-			boolean isLittleEndian) {
+	public static int bytes2Int32(byte[] data, int startIndex, int length, boolean isLittleEndian) {
 
 		if (isLittleEndian) {
 
@@ -108,6 +101,10 @@ public class Util {
 
 	}
 
+	public static int bytes2Int32(byte[] data) {
+		return bytes2Int32(data, 0, data.length, true);
+	}
+
 	public static int bytes2Int32(byte[] data, boolean isLittleEndian) {
 
 		return bytes2Int32(data, 0, data.length, isLittleEndian);
@@ -118,16 +115,13 @@ public class Util {
 		return bytes2Int32(data, 0, length, true);
 	}
 
-	public static int bytes2Int32(byte[] data, int length,
-			boolean isLittleEndian) {
+	public static int bytes2Int32(byte[] data, int length, boolean isLittleEndian) {
 		return bytes2Int32(data, 0, length, isLittleEndian);
 	}
 
-	public static boolean equals(byte[] data, int startIndex, int length,
-			long obj, boolean isLittleEndian) {
+	public static boolean equals(byte[] data, int startIndex, int length, long obj, boolean isLittleEndian) {
 
-		long actullyValue = bytes2Int64(data, startIndex, length,
-				isLittleEndian);
+		long actullyValue = bytes2Int64(data, startIndex, length, isLittleEndian);
 
 		return actullyValue == obj;
 	}
@@ -156,8 +150,7 @@ public class Util {
 
 			for (; srcIndex > -1; srcIndex--)
 				if (src[srcIndex] != obj[srcIndex])
-					return byte2Int32(src[srcIndex]) > byte2Int32(obj[srcIndex]) ? (isExchange ? -1
-							: 1)
+					return byte2Int32(src[srcIndex]) > byte2Int32(obj[srcIndex]) ? (isExchange ? -1 : 1)
 							: (isExchange ? 1 : -1);
 
 		} else {
@@ -169,8 +162,7 @@ public class Util {
 
 			for (int objIndex = 0; objIndex < obj.length; objIndex++, srcIndex++)
 				if (src[srcIndex] != obj[srcIndex])
-					return byte2Int32(src[srcIndex]) > byte2Int32(obj[srcIndex]) ? (isExchange ? -1
-							: 1)
+					return byte2Int32(src[srcIndex]) > byte2Int32(obj[srcIndex]) ? (isExchange ? -1 : 1)
 							: (isExchange ? 1 : -1);
 
 		}
@@ -179,8 +171,7 @@ public class Util {
 
 	}
 
-	public static long bytes2Int64(byte[] data, int startIndex, int length,
-			boolean isLittleEndian) {
+	public static long bytes2Int64(byte[] data, int startIndex, int length, boolean isLittleEndian) {
 
 		if (isLittleEndian) {
 
@@ -225,8 +216,7 @@ public class Util {
 		return bytes2Int64(data, 0, length, true);
 	}
 
-	public static long bytes2Int64(byte[] data, int length,
-			boolean isLittleEndian) {
+	public static long bytes2Int64(byte[] data, int length, boolean isLittleEndian) {
 		return bytes2Int32(data, 0, length, isLittleEndian);
 	}
 
@@ -235,13 +225,11 @@ public class Util {
 	}
 
 	public static String decHexSizeFormat32(byte[] size, boolean isLittleEndian) {
-		return Util.bytes2Int32(size, isLittleEndian) + "(0x"
-				+ Util.bytes2Hex(size) + ")" + "B";
+		return Util.bytes2Int32(size, isLittleEndian) + "(0x" + Util.bytes2Hex(size) + ")" + "B";
 	}
 
 	public static String hexDecSizeFormat32(byte[] size, boolean isLittleEndian) {
-		return "0x" + Util.bytes2Hex(size) + "("
-				+ Util.bytes2Int32(size, isLittleEndian) + ")" + "B";
+		return "0x" + Util.bytes2Hex(size) + "(" + Util.bytes2Int32(size, isLittleEndian) + ")" + "B";
 	}
 
 	public static void assertAlign(long align) {

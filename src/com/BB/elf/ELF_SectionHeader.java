@@ -10,7 +10,7 @@ import static com.BB.elf.ELFConstant.ELFUnit.*;
 import static com.BB.elf.Constant.*;
 import static com.BB.elf.ELFConstant.SectionHeaderContent.*;
 
-public class ELF_SegmentHeader {
+public class ELF_SectionHeader {
 
 	public class ELF_Shdr {
 
@@ -60,20 +60,33 @@ public class ELF_SegmentHeader {
 		byte[] sh_addralign;
 
 		/**
-		 * section entry soze
+		 * section entry size
 		 */
 		byte[] sh_entsize;
 
 		/**
 		 * name of this section
 		 */
-		String sh_sectionName;
+		ELF_Section section;
+
+		/**
+		 * 
+		 */
+		private String name;
+
+		private void setName(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
 	}
 
 	private ELF_Shdr[] mInternalSectionHeaders;
+	private int mStringSectionHeaderIndex;
 
-	public ELF_SegmentHeader(RandomAccessFile raf, ELF_Header header)
-			throws IOException {
+	public ELF_SectionHeader(RandomAccessFile raf, ELF_Header header) throws IOException {
 
 		Log.e(ELF_SECTION_TABLE);
 
@@ -84,27 +97,28 @@ public class ELF_SegmentHeader {
 		else
 			readSectionHeader64(raf, header);
 
+		namedSection();
 	}
 
-	private void readSectionHeader32(RandomAccessFile raf, ELF_Header header)
-			throws IOException {
+	private void readSectionHeader32(RandomAccessFile raf, ELF_Header header) throws IOException {
 
 		int mSectionHeaderCount = header.getSectionHeaderNum();
 		mInternalSectionHeaders = new ELF_Shdr[mSectionHeaderCount];
+
+		mStringSectionHeaderIndex = header.getSectionStringIndex();
 
 		for (int m = 0; m < mSectionHeaderCount; m++) {
 
 			ELF_Shdr mS = genrateSectionHeaderStructure32();
 			readSectionHeaderStructure(raf, mS);
-
-			decodeSectionHeader32(mS, header);
-
+			
 			mInternalSectionHeaders[m] = mS;
+			
+			decodeSectionHeader32(raf, mS, header);
 		}
 	}
 
-	private void readSectionHeader64(RandomAccessFile raf, ELF_Header header)
-			throws IOException {
+	private void readSectionHeader64(RandomAccessFile raf, ELF_Header header) throws IOException {
 
 		int mSectionHeaderCount = header.getSectionHeaderNum();
 		mInternalSectionHeaders = new ELF_Shdr[mSectionHeaderCount];
@@ -113,10 +127,11 @@ public class ELF_SegmentHeader {
 
 			ELF_Shdr mS = genrateSectionHeaderStructure64();
 			readSectionHeaderStructure(raf, mS);
-
+			
 			mInternalSectionHeaders[m] = mS;
+			
+			decodeSectionHeader32(raf, mS, header);
 		}
-
 	}
 
 	private ELF_Shdr genrateSectionHeaderStructure32() {
@@ -147,70 +162,87 @@ public class ELF_SegmentHeader {
 
 	}
 
-	private void decodeSectionHeader32(ELF_Shdr mS, ELF_Header header) {
+	private void decodeSectionHeader32(RandomAccessFile raf, ELF_Shdr mS, ELF_Header header) {
 
 		Log.e(DIVISION_LINE);
+
 		switch (Util.bytes2Int32(mS.sh_type, header.isLittleEndian())) {
+
 		case SHT_NULL:/* 0 */
 			Log.e("This Section is Unvalueable");
+			loadSectionFromSectionHeader(raf, header, mS);
 			break;
 
 		case SHT_PROGBITS:/* 1 */
-			Log.e("This Section Header is about program defined information");
+			Log.e("This Section Header is about program defined information , at " + Util.bytes2Hex(mS.sh_offset));
+			loadSectionFromSectionHeader(raf, header, mS);
 			break;
 
 		case SHT_SYMTAB:/* 2 */
-			Log.e("This Section Header is a symbol table section");
+			Log.e("This Section Header is a symbol table section, at " + Util.bytes2Hex(mS.sh_offset));
+			loadSectionFromSectionHeader(raf, header, mS);
 			break;
 
 		case SHT_STRTAB:/* 3 */
-			Log.e("This Section Header is a string table section");
+			Log.e("This Section Header is a string table section , at " + Util.bytes2Hex(mS.sh_offset));
+
+			if (mInternalSectionHeaders[mStringSectionHeaderIndex] == mS)
+				Log.e("This is a Section contains other Section's Name");
+
+			loadSectionFromSectionHeader(raf, header, mS);
 			break;
 
 		case SHT_RELA:/* 4 */
-			Log.e("This Section Header is a relocation section with addrnds");
+			Log.e("This Section Header is a relocation section with addrnds , at " + Util.bytes2Hex(mS.sh_offset));
+			loadSectionFromSectionHeader(raf, header, mS);
 			break;
 
 		case SHT_HASH:/* 5 */
-			Log.e("This Section Header is about symbol hash table");
+			Log.e("This Section Header is about symbol hash table , at " + Util.bytes2Hex(mS.sh_offset));
+			loadSectionFromSectionHeader(raf, header, mS);
 			break;
 
 		case SHT_DYNAMIC:/* 6 */
-			Log.e("This is a dynamic Section Header");
+			Log.e("This is a dynamic Section Header , at " + Util.bytes2Hex(mS.sh_offset));
+			loadSectionFromSectionHeader(raf, header, mS);
 			break;
 
 		case SHT_NOTE:/* 7 */
-			Log.e("This is a note Section Header");
+			Log.e("This is a note Section Header , at " + Util.bytes2Hex(mS.sh_offset));
+			loadSectionFromSectionHeader(raf, header, mS);
+			break;
+
+		case SHT_REL:/* 9 */
+			Log.e("This is a relation section without addends , at " + Util.bytes2Hex(mS.sh_offset));
+			loadSectionFromSectionHeader(raf, header, mS);
+			break;
+
+		case SHT_SHLIB:/* 10 */
+			Log.e("This is a reserved section for unknown purpose , at " + Util.bytes2Hex(mS.sh_offset));
+			loadSectionFromSectionHeader(raf, header, mS);
+			break;
+
+		case SHT_DYMSYM:/* 11 */
+			Log.e("This is a dynamic symbol table section , at " + Util.bytes2Hex(mS.sh_offset));
+			loadSectionFromSectionHeader(raf, header, mS);
+			break;
+
+		case SHT_NUM:/* 12 */
+			Log.e("This is the number of types Section Header , at " + Util.bytes2Hex(mS.sh_offset));
+			loadSectionFromSectionHeader(raf, header, mS);
 			break;
 
 		case SHT_NOBITS:/* 8 */
 			Log.e("This is a not space Section Header");
 			break;
-
-		case SHT_REL:/* 9 */
-			Log.e("This is a relation section without addends");
-			break;
-
-		case SHT_SHLIB:/* 10 */
-			Log.e("This is a reserved section for unknown purpose");
-			break;
-
-		case SHT_DYMSYM:/* 11 */
-			Log.e("This is a dynamic symbol table section");
-			break;
-
-		case SHT_NUM:/* 12 */
-			Log.e("This is the number of types Section Header");
-			break;
 		default:
-			Log.e("Unknown Section Header Type !");
+			Log.e("Unknown Section Header Type ! at " + Util.bytes2Hex(mS.sh_offset));
 			break;
 		}
 
 	}
 
-	private void readSectionHeaderStructure(RandomAccessFile raf, ELF_Shdr mS)
-			throws IOException {
+	private void readSectionHeaderStructure(RandomAccessFile raf, ELF_Shdr mS) throws IOException {
 
 		raf.read(mS.sh_name);
 		raf.read(mS.sh_type);
@@ -253,10 +285,28 @@ public class ELF_SegmentHeader {
 
 	}
 
-	private void locateSectionHeaderOffset(RandomAccessFile raf,
-			ELF_Header header) throws IOException {
+	private void namedSection() {
+
+		ELF_Shdr mStringSection = mInternalSectionHeaders[mStringSectionHeaderIndex];
+
+		for (ELF_Shdr mS : mInternalSectionHeaders)
+			mS.setName(mStringSection.section.getStringAtIndex(mS.sh_name));
+	}
+
+	private void locateSectionHeaderOffset(RandomAccessFile raf, ELF_Header header) throws IOException {
 		long mSectionOffset = header.getSectionHeaderTableOffset();
 		raf.seek(mSectionOffset);
+	}
+
+	private void loadSectionFromSectionHeader(RandomAccessFile raf, ELF_Header header, ELF_Shdr mS) {
+		try {
+			long index = raf.getFilePointer();
+			mS.section = new ELF_Section(raf, header, mS);
+			raf.seek(index);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Unable to decode Section");
+		}
 	}
 
 }

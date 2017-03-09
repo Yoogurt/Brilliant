@@ -123,7 +123,6 @@ public class ELF_Header {
 		readELFHeader();
 
 		mInternalMMap = toCompletelyHeader();
-
 	}
 
 	private void read32BitHeader(RandomAccessFile is) throws Exception {
@@ -322,7 +321,7 @@ public class ELF_Header {
 				+ Util.bytes2Int32(e_shentsize, isLittleEndian()) + " B");
 		Log.e("Section Header Table total enitities : "
 				+ Util.bytes2Int32(e_shnum, isLittleEndian()));
-		Log.e("Section Header Table's \"String Table\" Offset : "
+		Log.e("Section Header Table's \"String Table\" Index : "
 				+ Util.bytes2Hex(e_shstrndex));
 
 		Log.e();
@@ -383,7 +382,7 @@ public class ELF_Header {
 		return Util.bytes2Int32(e_shnum, isLittleEndian());
 	}
 
-	public int getSectionHeaderStringIndex() {
+	public int getSectionStringIndex() {
 		return Util.bytes2Int32(e_shstrndex, isLittleEndian());
 	}
 

@@ -27,8 +27,7 @@ public class ELFConstant {
 	public static class HeaderContent {
 
 		public static final int EI_NIDENT = 0x10;
-		public static final byte[] StandardELFMagicCode = { 0x7f, 0x45, 0x4c,
-				0x46 };
+		public static final byte[] StandardELFMagicCode = { 0x7f, 0x45, 0x4c, 0x46 };
 
 		public static final int EI_CALSS = 4;
 		public static final int ELFCLASS32 = 1;
@@ -343,6 +342,43 @@ public class ELFConstant {
 		public static final int SHT_HIPROC = 0x7fffffff;
 		public static final int SHT_LOUSER = 0x80000000;
 		public static final int SHT_HIUSER = 0x8fffffff;
+
+		/**
+		 * writable section
+		 */
+		public static final int SHF_WRITE = 0x1;
+		public static final int SHF_ALLOC = 0x2;
+		/**
+		 * executable section
+		 */
+		public static final int SHF_EXECINSTR = 0x4;
+		public static final int SHF_MASKPROC = 0xf0000000;
+	}
+
+	public static class SectionName {
+		public static final String BSS = ".bss";
+		public static final String COMMENT = ".comment";
+		public static final String DATA = ".data";
+		public static final String DATAL = ".datal";
+		public static final String DEBUG = ".debug";
+		public static final String DYNAMIC = ".dynamic";
+		public static final String DYNSTR = ".dynstr";
+		public static final String FINI = ".fini";
+		public static final String GOT = ".got";
+		public static final String HASH = ".hash";
+		public static final String INIT = ".init";
+		public static final String INTERP = ".interp";
+		public static final String LINE = ".line";
+		public static final String NOTE = ".note";
+		public static final String PLT = ".plt";
+		public static final String RELNAME = ".relname";
+		public static final String RELANAME = ".relaname";
+		public static final String RODATA = ".rodata";
+		public static final String RODATA1 = ".rodata1";
+		public static final String SHSTRTAB = ".shstrtab";
+		public static final String STRTAB = ".strtab";
+		public static final String SYMTAB = ".symtab";
+		public static final String TEXT = ".text";
 
 	}
 
