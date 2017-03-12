@@ -45,6 +45,10 @@ import com.BB.util.Util;
  * @author 国斌
  *
  */
+/**
+ * @author Administrator
+ *
+ */
 public class ELF_Header {
 
 	/**
