@@ -1,0 +1,470 @@
+package com.marik.elf;
+
+import static com.marik.elf.ELFConstant.ELFUnit.ELF32_Addr;
+import static com.marik.elf.ELFConstant.ELFUnit.ELF32_Word;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_DEBUG;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_FINI;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_FINI_ARRAY;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_FINI_ARRAYSZ;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_FLAGS;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_FLAGS_1;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_HASH;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_HIPROC;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_INIT;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_INIT_ARRAY;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_INIT_ARRAYSZ;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_JMPREL;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_LOPROC;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_NEEDED;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_NULL;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_PLTGOT;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_PLTREL;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_PLTRELSZ;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_REL;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_RELA;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_RELAENT;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_RELASZ;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_RELCOUNT;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_RELENT;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_RELSZ;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_RPATH;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_SONAME;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_STRSZ;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_STRTAB;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_SYMBOLIC;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_SYMENT;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_SYMTAB;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_TEXTREL;
+import static com.marik.elf.ELFConstant.ProgramHeaderContent.PT_DYNAMIC;
+
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.marik.elf.ELF_ProgramHeader.ELF_Phdr;
+import com.marik.util.Log;
+import com.marik.util.Util;
+
+public class ELF_Dynamic {
+
+	class Elf_Dyn {
+		byte[] d_val;
+		byte[] d_un;
+	}
+
+	class Elf_Sym {
+		byte[] st_name; /* 名称 - index into string table 4B */
+		byte[] st_value; /* 偏移地址 4B */
+		byte[] st_size; /* 符号长度（ e.g. 函数的长度） 4B */
+		byte st_info; /* 类型和绑定类型 1B */
+		byte st_other; /* 未定义 1B */
+		byte[] st_shndx; /* section header的索引号，表示位于哪个 section 中 2B */
+	}
+
+	private List<Elf_Dyn> mInternalDynamics = new ArrayList<>();
+
+	private int mStrTabIndex = 0;
+	private int mSymTabIndex = 0;
+
+	private int mInitFunc = 0;
+	private int mInitArray = 0;
+	private int mInitArraySz = 0;
+
+	private int mFiniFunc = 0;
+	private int mFiniArray = 0;
+	private int mFiniArraySz = 0;
+
+	private int mHash = 0;
+
+	private List<String> mNeededDynamicLibrary = new ArrayList<>();
+	private ELF_ProgramHeader.ELF_Phdr mSelf;
+
+	private String mDynamicLibraryName;
+
+	private int[] mRelocateOffset = new int[2]; // DT_REL and DT_JMPREL
+	private int[] mRelocateSize = new int[2];
+	private ELF_Relocate[] mRelocateSection = new ELF_Relocate[2];
+
+	/**
+	 * we decode this in file nor memory
+	 */
+	ELF_Dynamic(RandomAccessFile raf, ELF_Phdr mSelf) throws IOException {
+
+		this.mSelf = mSelf;
+
+		if (mSelf.getProgramHeader().getELFHeader().is32Bit())
+			loadDynamicSegment32(raf);
+		else
+			loadDynamicSegment64();
+
+		loadRelocateSection(raf);
+	}
+
+	private void loadDynamicSegment32(RandomAccessFile raf) throws IOException {
+
+		if (Util.bytes2Int32(mSelf.p_type) != PT_DYNAMIC)
+			throw new IllegalArgumentException("Attempt to decode Dynamic Segment with a not PT_DYNAMIC ProgramHeader");
+
+		int dynamicCount = Util.bytes2Int32(mSelf.p_filesz) / 8;
+
+		long prePosition = raf.getFilePointer();
+
+		raf.seek(Util.bytes2Int64(mSelf.p_offset));
+
+		for (int i = 0; i < dynamicCount; i++) {
+
+			Elf_Dyn dynamic = generateElfDynamicEntry32();
+
+			raf.read(dynamic.d_un);
+			raf.read(dynamic.d_val);
+
+			if (!parseDynamicEntry(dynamic, raf)) {
+				mInternalDynamics.add(dynamic);
+				break;
+			}
+
+			mInternalDynamics.add(dynamic);
+		}
+
+		Log.e("   " + Constant.DIVISION_LINE);
+		Log.e("   " + mInternalDynamics.size() + " DT_DYNAMIC Found");
+		raf.seek(prePosition);
+	}
+
+	private void loadDynamicSegment64() {
+		throw new UnsupportedOperationException("not implements");
+	}
+
+	private Elf_Dyn generateElfDynamicEntry32() {
+		Elf_Dyn newDynamic = new Elf_Dyn();
+
+		newDynamic.d_un = new byte[ELF32_Word];
+		newDynamic.d_val = new byte[ELF32_Addr];
+
+		return newDynamic;
+	}
+
+	private boolean parseDynamicEntry(Elf_Dyn dynamic, RandomAccessFile raf) throws IOException {
+
+		switch (Util.bytes2Int32(dynamic.d_un)) {
+		case DT_NULL:
+			return false;
+		case DT_NEEDED: // elf necessary library
+			String name = getStrTabIndexString(Util.bytes2Int32(dynamic.d_val), raf);
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "Need Dynamic Library : " + name);
+			storeNeededDynamicLibraryName(name);
+			break;
+		case DT_PLTRELSZ:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_PLTRELSZ " + +getVal(dynamic.d_val));
+			mRelocateSize[1] = (int) getVal(dynamic.d_val);
+			break;
+		case DT_PLTGOT:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_PLTGOT at " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_HASH:
+			readDT_HASH(dynamic);
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_HASH at " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_STRTAB:
+			readDT_STRTAB(dynamic);
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_STRTAB at " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_SYMTAB:
+			readDT_SYMTAB(dynamic);
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_SYMTAB at " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_RELA:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_RELA at " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_RELASZ:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_RELASZ : " + +getVal(dynamic.d_val));
+			break;
+		case DT_RELAENT:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_RELAENT at " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_STRSZ:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_STRSZ : " + +getVal(dynamic.d_val));
+			break;
+		case DT_SYMENT:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_SYMENT : " + +getVal(dynamic.d_val));
+			break;
+		case DT_INIT:
+			readDT_INIT(dynamic);
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_INIT at " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_FINI:
+			readDT_FINI(dynamic);
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_FINI at " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_SONAME:
+			mDynamicLibraryName = getStrTabIndexString(Util.bytes2Int32(dynamic.d_val), raf);
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "My Dynamic Library : " + mDynamicLibraryName);
+			break;
+		case DT_RPATH:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_RPATH at " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_SYMBOLIC:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_SYMBOLIC at " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_REL:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_REL at " + Util.bytes2Hex(dynamic.d_val));
+			mRelocateOffset[0] = (int) getVal(dynamic.d_val);
+			break;
+		case DT_RELSZ:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_RELSZ : " + getVal(dynamic.d_val));
+			mRelocateSize[0] = (int) getVal(dynamic.d_val);
+			break;
+		case DT_RELENT:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_RELENT : " + +getVal(dynamic.d_val));
+			break;
+		case DT_PLTREL:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_PLTREL at " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_DEBUG:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_DEBUG at " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_TEXTREL:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_TEXTREL at " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_JMPREL:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_JMPREL at " + Util.bytes2Hex(dynamic.d_val));
+			mRelocateOffset[1] = (int) getVal(dynamic.d_val);
+			break;
+		case DT_LOPROC:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_LOPROC at " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_HIPROC:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_HIPROC at " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_INIT_ARRAY:
+			readDT_INIT_ARRAY(dynamic);
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_INIT_ARRAY at " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_FINI_ARRAY:
+			readDT_FINI_ARRAY(dynamic);
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_FINI_ARRAY at " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_RELCOUNT:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_RELCOUNT : " + +getVal(dynamic.d_val));
+			break;
+		case DT_FINI_ARRAYSZ:
+			readDT_FINI_ARRAYSZ(dynamic);
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_FINI_ARRAYSZ : " + getVal(dynamic.d_val));
+			break;
+		case DT_INIT_ARRAYSZ:
+			readDT_INIT_ARRAYSZ(dynamic);
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_INIT_ARRAYSZ : " + getVal(dynamic.d_val));
+			break;
+		case DT_FLAGS_1:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_FLAGS_1 : " + getVal(dynamic.d_val));
+			break;
+		case DT_FLAGS:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_FLAGS : " + getVal(dynamic.d_val));
+			break;
+		default:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "Unknown DT type " + Util.bytes2Hex(dynamic.d_un));
+			break;
+		}
+		return true;
+	}
+
+	private void readDT_HASH(Elf_Dyn dynamic) {
+		if (mHash == 0)
+			mHash = Util.bytes2Int32(dynamic.d_val);
+		else
+			throw new IllegalStateException("DT_HASH appear over once");
+	}
+
+	private void readDT_INIT_ARRAY(Elf_Dyn dynamic) {
+		if (mInitArray == 0)
+			mInitArray = Util.bytes2Int32(dynamic.d_val);
+		else
+			throw new IllegalStateException("mInitArray appear over once");
+	}
+
+	private void readDT_INIT(Elf_Dyn dynamic) {
+		if (mInitFunc == 0)
+			mInitFunc = Util.bytes2Int32(dynamic.d_val);
+		else
+			throw new IllegalStateException("DT_INIT appear over once");
+	}
+
+	private void readDT_SYMTAB(Elf_Dyn dynamic) {
+		if (mSymTabIndex == 0)
+			mSymTabIndex = Util.bytes2Int32(dynamic.d_val);
+		else
+			throw new IllegalStateException("DT_SYMTAB appear over once");
+	}
+
+	private void readDT_STRTAB(Elf_Dyn dynamic) {
+		if (mStrTabIndex == 0)
+			mStrTabIndex = Util.bytes2Int32(dynamic.d_val);
+		else
+			throw new IllegalStateException("DT_STRTAB appear over once");
+	}
+
+	private void readDT_FINI(Elf_Dyn dynamic) {
+		if (mFiniFunc == 0)
+			mFiniFunc = Util.bytes2Int32(dynamic.d_val);
+		else
+			throw new IllegalStateException("DT_FINI appear over once");
+	}
+
+	private void readDT_FINI_ARRAY(Elf_Dyn dynamic) {
+		if (mFiniArray == 0)
+			mFiniArray = Util.bytes2Int32(dynamic.d_val);
+		else
+			throw new IllegalStateException("DT_FINI_ARRAY appear over once");
+	}
+
+	private void readDT_FINI_ARRAYSZ(Elf_Dyn dynamic) {
+		if (mFiniArraySz == 0)
+			mFiniArraySz = Util.bytes2Int32(dynamic.d_val);
+		else
+			throw new IllegalStateException("DT_FINI_ARRAYSZ appear over once");
+	}
+
+	private void readDT_INIT_ARRAYSZ(Elf_Dyn dynamic) {
+		if (mInitArraySz == 0)
+			mInitArraySz = Util.bytes2Int32(dynamic.d_val);
+		else
+			throw new IllegalStateException("DT_INIT_ARRAYSZ appear over once");
+	}
+
+	private String getStrTabIndexString(int index, RandomAccessFile raf) throws IOException {
+		if (mStrTabIndex == 0)
+			throw new IllegalStateException("Unable to find Library Name");
+
+		long prePosition = raf.getFilePointer();
+
+		raf.seek(index + mStrTabIndex);
+
+		String name = Util.getStringFromBytes(raf);
+
+		raf.seek(prePosition);
+
+		return name;
+	}
+
+	String getSymInStrTab(int sym, RandomAccessFile raf) throws IOException {
+		if (mStrTabIndex == 0 || mSymTabIndex == 0 || sym <= 0)
+			return null;
+
+		long prePointer = raf.getFilePointer();
+
+		byte[] st_name = new byte[4];
+		raf.seek(mSymTabIndex + 0x10 * sym); // Elf_sym takes 0x10 B
+		raf.read(st_name);
+
+		try {
+			return getStrTabIndexString(Util.bytes2Int32(st_name), raf);
+		} catch (Exception e) {
+			throw new IllegalStateException();
+		} finally {
+			raf.seek(prePointer);
+		}
+	}
+
+	public int getDT_INIT() {
+		return mInitFunc;
+	}
+
+	public int getDT_INIT_ARRAY() {
+		return mInitArray;
+	}
+	
+	public int getDT_INIT_ARRAYSZ(){
+		return mInitArraySz;
+	}
+	
+	public int getDT_FINI() {
+		return mFiniFunc;
+	}
+
+	public int getDT_FINI_ARRAY() {
+		return mFiniArray;
+	}
+	
+	public int getDT_FINI_ARRAYSZ(){
+		return mFiniArraySz;
+	}
+
+	public int getDT_STRTAB() {
+		return mStrTabIndex;
+	}
+
+	public int getDT_SYMTAB() {
+		return mSymTabIndex;
+	}
+
+	public ELF_Relocate[] getDT_RELS() {
+		return mRelocateSection;
+	}
+
+	public int getDT_REL() {
+		return mRelocateOffset[0];
+	}
+
+	public int getDT_PLTREL() {
+		return mRelocateOffset[1];
+	}
+
+	public int getDT_RELSZ() {
+		return mRelocateSize[0];
+	}
+
+	public int getDT_PLTRELSZ() {
+		return mRelocateSize[1];
+	}
+
+	public int getDT_HASH() {
+		return mHash;
+	}
+
+	private void storeNeededDynamicLibraryName(String name) {
+		mNeededDynamicLibrary.add(name);
+	}
+
+	private long getVal(byte[] data) {
+		return Util.bytes2Int64(data);
+	}
+
+	private void loadRelocateSection(RandomAccessFile raf) throws IOException {
+		mRelocateSection[0] = new ELF_Relocate(raf, mRelocateOffset[0], mRelocateSize[0], this);
+		mRelocateSection[1] = new ELF_Relocate(raf, mRelocateOffset[1], mRelocateSize[1], this);
+	}
+}
