@@ -85,9 +85,13 @@ public class ELF_Dynamic {
 
 	private String mDynamicLibraryName;
 
-	private int[] mRelocateOffset = new int[2]; // DT_REL and DT_JMPREL
-	private int[] mRelocateSize = new int[2];
-	private ELF_Relocate[] mRelocateSection = new ELF_Relocate[2];
+	private int mRel;
+	private int mRelSz;
+
+	private int mJmpRel;
+	private int mJmpSz;
+
+	private List<ELF_Relocate> mRelocateSections = new ArrayList<>();
 
 	/**
 	 * we decode this in file nor memory
@@ -155,14 +159,14 @@ public class ELF_Dynamic {
 			return false;
 		case DT_NEEDED: // elf necessary library
 			String name = getStrTabIndexString(Util.bytes2Int32(dynamic.d_val), raf);
+			storeNeededDynamicLibraryName(name);
 			Log.e("   " + Constant.DIVISION_LINE);
 			Log.e("   " + "Need Dynamic Library : " + name);
-			storeNeededDynamicLibraryName(name);
 			break;
 		case DT_PLTRELSZ:
+			mJmpSz = (int) getVal(dynamic.d_val);
 			Log.e("   " + Constant.DIVISION_LINE);
 			Log.e("   " + "DT_PLTRELSZ " + +getVal(dynamic.d_val));
-			mRelocateSize[1] = (int) getVal(dynamic.d_val);
 			break;
 		case DT_PLTGOT:
 			Log.e("   " + Constant.DIVISION_LINE);
@@ -228,12 +232,12 @@ public class ELF_Dynamic {
 			Log.e("   " + "DT_SYMBOLIC at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_REL:
-			mRelocateOffset[0] = (int) getVal(dynamic.d_val);
+			readDT_REL(dynamic);
 			Log.e("   " + Constant.DIVISION_LINE);
 			Log.e("   " + "DT_REL at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_RELSZ:
-			mRelocateSize[0] = (int) getVal(dynamic.d_val);
+			mRelSz = (int) getVal(dynamic.d_val);
 			Log.e("   " + Constant.DIVISION_LINE);
 			Log.e("   " + "DT_RELSZ : " + getVal(dynamic.d_val));
 			break;
@@ -255,9 +259,9 @@ public class ELF_Dynamic {
 			Log.e("   " + "DT_TEXTREL at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_JMPREL:
+			readDT_JMPREL(dynamic);
 			Log.e("   " + Constant.DIVISION_LINE);
 			Log.e("   " + "DT_JMPREL at " + Util.bytes2Hex(dynamic.d_val));
-			mRelocateOffset[1] = (int) getVal(dynamic.d_val);
 			break;
 		case DT_LOPROC:
 			Log.e("   " + Constant.DIVISION_LINE);
@@ -319,6 +323,20 @@ public class ELF_Dynamic {
 			break;
 		}
 		return true;
+	}
+
+	private void readDT_JMPREL(Elf_Dyn dynamic) {
+		if (mJmpRel == 0)
+			mJmpRel = (int) getVal(dynamic.d_val);
+		else
+			throw new IllegalStateException("DT_JMPREL appear over once");
+	}
+
+	private void readDT_REL(Elf_Dyn dynamic) {
+		if (mRel == 0)
+			mRel = (int) getVal(dynamic.d_val);
+		else
+			throw new IllegalStateException("DT_REL appear over once");
 	}
 
 	private void readDT_ANDROID_REL(Elf_Dyn dynamic) {
@@ -468,24 +486,24 @@ public class ELF_Dynamic {
 		return mSymTabIndex;
 	}
 
-	public ELF_Relocate[] getDT_RELS() {
-		return mRelocateSection;
+	public List<ELF_Relocate> getRelocateSections() {
+		return mRelocateSections;
 	}
 
 	public int getDT_REL() {
-		return mRelocateOffset[0];
+		return mRel;
 	}
 
 	public int getDT_PLTREL() {
-		return mRelocateOffset[1];
+		return mJmpRel;
 	}
 
 	public int getDT_RELSZ() {
-		return mRelocateSize[0];
+		return mRelSz;
 	}
 
 	public int getDT_PLTRELSZ() {
-		return mRelocateSize[1];
+		return mJmpSz;
 	}
 
 	public int getDT_HASH() {
@@ -496,12 +514,12 @@ public class ELF_Dynamic {
 		mNeededDynamicLibrary.add(name);
 	}
 
-	private long getVal(byte[] data) {
-		return Util.bytes2Int64(data);
+	private int getVal(byte[] data) {
+		return Util.bytes2Int32(data);
 	}
 
 	private void loadRelocateSection(RandomAccessFile raf) throws IOException {
-		mRelocateSection[0] = new ELF_Relocate(raf, mRelocateOffset[0], mRelocateSize[0], this);
-		mRelocateSection[1] = new ELF_Relocate(raf, mRelocateOffset[1], mRelocateSize[1], this);
+		mRelocateSections.add(new ELF_Relocate(raf, mRel, mRelSz, this));
+		mRelocateSections.add(new ELF_Relocate(raf, mJmpRel, mJmpSz, this));
 	}
 }

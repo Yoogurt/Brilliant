@@ -13,9 +13,24 @@ import com.marik.util.Util;
 public class ELF_Relocate {
 
 	public class Elf_rel {
-		byte[] r_offset;
+		public byte[] r_offset;
 
-		byte[] r_info;
+		public byte[] r_info;
+
+		public byte getType() {
+			return (byte) Util.bytes2Int32(r_info);
+		}
+
+		public int getSym() {
+			return Util.bytes2Int32(r_info) >> 8;
+		}
+	}
+
+	@Deprecated
+	public class Elf_rela {
+		public byte[] r_offset;
+		public byte[] r_info;
+		public byte[] r_append;
 	}
 
 	private Elf_rel[] mInternalRelocates;
@@ -48,27 +63,27 @@ public class ELF_Relocate {
 
 			Log.e(Constant.DIVISION_LINE);
 
-			byte r_info = getType(rel);
+			byte r_info = rel.getType();
 
-			int sym = getSym(rel);
+			int sym = rel.getSym();
 
 			switch (r_info) {
-			case R_ARM_GLOB_DAT:
+			case R_GENERIC_GLOB_DAT:
 				Log.e("       relocation section r_offset : " + Util.bytes2Hex(rel.r_offset)
 						+ " r_info : R_ARM_GLOB_DAT " + " , sym : " + sym
-						+ (sym > 0 ? " , symbol name : " + mSelf.getSymInStrTab(getSym(rel), raf) : ""));
+						+ (sym > 0 ? " , symbol name : " + mSelf.getSymInStrTab(rel.getSym(), raf) : ""));
 				break;
 
-			case R_ARM_RELATIVE:
+			case R_GENERIC_RELATIVE:
 				Log.e("       relocation section r_offset : " + Util.bytes2Hex(rel.r_offset)
 						+ " r_info : R_ARM_RELATIVE" + " , sym : " + sym
-						+ (sym > 0 ? " , symbol name : " + mSelf.getSymInStrTab(getSym(rel), raf) : ""));
+						+ (sym > 0 ? " , symbol name : " + mSelf.getSymInStrTab(rel.getSym(), raf) : ""));
 				break;
 
-			case R_ARM_JUMP_SLOT:
+			case R_GENERIC_JUMP_SLOT:
 				Log.e("       relocation section r_offset : " + Util.bytes2Hex(rel.r_offset)
 						+ " r_info : R_ARM_JUMP_SLOT" + " , sym : " + sym
-						+ (sym > 0 ? " , symbol name : " + mSelf.getSymInStrTab(getSym(rel), raf) : ""));
+						+ (sym > 0 ? " , symbol name : " + mSelf.getSymInStrTab(rel.getSym(), raf) : ""));
 				break;
 
 			default:
@@ -80,14 +95,6 @@ public class ELF_Relocate {
 		Log.e(Constant.DIVISION_LINE);
 		Log.e("Found " + mInternalRelocates.length + " Relocate Info");
 
-	}
-
-	private byte getType(Elf_rel rel) {
-		return (byte) Util.bytes2Int32(rel.r_info);
-	}
-
-	private int getSym(Elf_rel rel) {
-		return Util.bytes2Int32(rel.r_info) >> 8;
 	}
 
 	public Elf_rel[] getRelocateEntry() {

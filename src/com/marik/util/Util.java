@@ -245,6 +245,16 @@ public class Util {
 			throw new AssertionError();
 	}
 
+	/**
+	 * @return little endian
+	 */
+	public static byte[] int2bytes(int val) {
+		byte[] ret = new byte[4];
+		for (int i = 0; i < 4; i++, val >>= 8)
+			ret[i] = (byte) val;
+		return ret;
+	}
+
 	public static String getStringFromBytes(RandomAccessFile raf) throws IOException {
 
 		StringBuilder sb = new StringBuilder();
@@ -261,7 +271,7 @@ public class Util {
 
 		while (true)
 			if (OS.mMemory[index] != 0)
-				sb.append(OS.mMemory[index++]);
+				sb.append((char) OS.mMemory[index++]);
 			else
 				break;
 
@@ -270,9 +280,7 @@ public class Util {
 
 	public static void main(String[] args) {
 
-		byte[] a = { (byte) 0x12, (byte) 0x34, (byte) 0xff };
-
-		System.out.println(equals(a, 0, 3, 0xff3412, true));
+		System.out.println(bytes2Int32(int2bytes(55555)));
 	}
 
 }

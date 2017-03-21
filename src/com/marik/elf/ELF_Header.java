@@ -41,10 +41,6 @@ import com.marik.util.Util;
  * @author 国斌
  *
  */
-/**
- * @author 国斌
- *
- */
 @SuppressWarnings("all")
 public class ELF_Header {
 

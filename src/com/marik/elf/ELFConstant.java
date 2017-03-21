@@ -425,10 +425,9 @@ public class ELFConstant {
 	}
 
 	public static class DT_RelType {
-		public static final byte R_ARM_RELATIVE = 0x17;
-		public static final byte R_ARM_GLOB_DAT = 0x15;
-
-		public static final byte R_ARM_JUMP_SLOT = 0x16;
+		public static final byte R_GENERIC_RELATIVE = 0x17;
+		public static final byte R_GENERIC_GLOB_DAT = 0x15;
+		public static final byte R_GENERIC_JUMP_SLOT = 0x16;
 	}
 
 }

@@ -1,9 +1,10 @@
 package com.marik.elf;
 
+import static com.marik.elf.ELFConstant.ELFUnit.uint32_t;
+import static com.marik.elf.ELFConstant.DT_RelType.*;
 import static com.marik.elf.ELFConstant.ELFUnit.*;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,9 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.activation.UnsupportedDataTypeException;
-import javax.management.RuntimeErrorException;
 
 import com.marik.elf.ELF_ProgramHeader.ELF_Phdr;
+import com.marik.elf.ELF_Relocate.Elf_rel;
 import com.marik.elf.ELF_SectionHeader.ELF_Shdr;
 import com.marik.util.Log;
 import com.marik.util.Util;
@@ -94,7 +95,9 @@ public class ELF {
 			loadSegments(raf);
 
 			link_image();
-			
+
+			OS.dumpMemory();
+
 			relocate();
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
@@ -111,7 +114,7 @@ public class ELF {
 		if (elf_start < 0)
 			throw new RuntimeException("mmap fail while reserse space");
 
-		elf_load_bias = (int) (r.min_address - elf_start);
+		elf_load_bias = (int) (elf_start - r.min_address);
 	}
 
 	private ReserseLoadableSegment phdr_table_get_load_size(List<ELF_Phdr> loadableSegment) {
@@ -216,10 +219,10 @@ public class ELF {
 		strtab = elf_dynamic.getDT_STRTAB() + elf_start; // index
 
 		plt_rel = elf_dynamic.getDT_PLTREL() + elf_start;
-		plt_rel_count = (elf_dynamic.getDT_PLTRELSZ() + elf_start) / 8;
+		plt_rel_count = (elf_dynamic.getDT_PLTRELSZ() + elf_start) >> 3;
 
 		rel = elf_dynamic.getDT_REL() + elf_start;
-		rel_count = (elf_dynamic.getDT_RELSZ() + elf_start) / 8;
+		rel_count = (elf_dynamic.getDT_RELSZ() + elf_start) >> 3;
 
 		init_func = elf_dynamic.getDT_INIT() + elf_start;
 		init_array = elf_dynamic.getDT_INIT_ARRAY() + elf_start;
@@ -228,12 +231,12 @@ public class ELF {
 		fini_func = elf_dynamic.getDT_FINI() + elf_start;
 		fini_array = elf_dynamic.getDT_FINI_ARRAY() + elf_start;
 		fini_array_sz = elf_dynamic.getDT_FINI_ARRAYSZ();
-		
-		if(nbucket == 0)
+
+		if (nbucket == 0)
 			throw new RuntimeException("empty/missing DT_HASH");
-		if(strtab == 0)
+		if (strtab == 0)
 			throw new RuntimeException("empty/missing DT_STRTAB");
-		if(symtab == 0)
+		if (symtab == 0)
 			throw new RuntimeException("empty/missing DT_SYMTAB");
 
 		System.out.println("nbucket : " + nbucket);
@@ -254,8 +257,74 @@ public class ELF {
 		System.out.println("fini_array_sz : " + fini_array_sz);
 	}
 
+	public int get_addend(Elf_rel rel, int reloc_addr) {
+
+		if (rel.getType() == R_GENERIC_RELATIVE)
+			return Util.bytes2Int32(OS.getMemory(), reloc_addr, ELF32_Addr, elf_header.isLittleEndian());
+
+		return 0; /*
+					 * if (ELFW(R_TYPE)(rel->r_info) == R_GENERIC_RELATIVE ||
+					 * ELFW(R_TYPE)(rel->r_info) == R_GENERIC_IRELATIVE) {
+					 * return *reinterpret_cast<ElfW(Addr)*>(reloc_addr); }
+					 * return 0;
+					 */
+	}
+
+	/**
+	 * what is relocation ? relocation fix a pointer which point at somewhere in
+	 * file , but we need to let it point to memory correct
+	 */
 	public void relocate() {
 
+		List<ELF_Relocate> rels = elf_dynamic.getRelocateSections();
+
+		for (ELF_Relocate r : rels) {
+			Elf_rel[] entries = r.getRelocateEntry();
+			for (Elf_rel rel : entries) {
+				// ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rel->r_offset +
+				// load_bias);
+				int reloc = Util.bytes2Int32(rel.r_offset) + elf_load_bias;
+				int sym = rel.getSym();
+				int type = rel.getType();
+				int addend = get_addend(rel, reloc);
+
+				if (sym > 0) { // sym > 0 means the symbol are global , not in
+								// this file
+					byte[] st_name = new byte[4];
+
+					System.arraycopy(OS.getMemory(), symtab + sym * 0x10, st_name, 0, 4); // we
+																							// get
+																							// st_name(index)
+																							// from
+																							// symtab
+
+					String sym_name = Util.getStringFromMemory(Util.bytes2Int32(st_name) + strtab);
+					Log.e("sym : " + sym + "  index : " + (Util.bytes2Int32(st_name) + strtab) + "  st_name : "
+							+ sym_name);
+				} else
+					Log.e("  sym : " + sym + "  addend : " + Integer.toHexString(addend));
+
+				switch (type) {
+				case R_GENERIC_GLOB_DAT:
+					break;
+				case R_GENERIC_JUMP_SLOT:
+					break;
+				case R_GENERIC_RELATIVE: { // *reinterpret_cast<ElfW(Addr)*>(reloc)
+											// = (load_bias + addend);
+					System.arraycopy(Util.int2bytes(elf_load_bias + addend), 0, OS.getMemory(), reloc, 4);  //yeah ! we need to pull the data out , fix it , then push it back
+
+					Log.e("reloc : " + Integer.toHexString(reloc) + "  become : "
+							+ Integer.toHexString(elf_load_bias + addend));
+
+				}
+					break;
+
+				default:
+					throw new RuntimeException("unknown weak reloc type" + type);
+				}
+
+			}
+		}
 	}
 
 	public Map<ELF_Phdr, List<ELF_Shdr>> getProgramSectionMapping(ELF_ProgramHeader programHeader,
