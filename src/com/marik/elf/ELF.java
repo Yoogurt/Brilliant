@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.activation.UnsupportedDataTypeException;
+import javax.management.RuntimeErrorException;
 
 import com.marik.elf.ELF_ProgramHeader.ELF_Phdr;
 import com.marik.elf.ELF_SectionHeader.ELF_Shdr;
@@ -93,7 +94,8 @@ public class ELF {
 			loadSegments(raf);
 
 			link_image();
-
+			
+			relocate();
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		}
@@ -106,10 +108,9 @@ public class ELF {
 		ReserseLoadableSegment r = phdr_table_get_load_size(allLoadableSegment);
 
 		elf_start = OS.mmap(0, (int) (r.max_address - r.min_address), (byte) 0, null, 0);
-		if (elf_start < 0) {
-			System.out.println("mmap fail while reserse space");
-			throw new RuntimeException();
-		}
+		if (elf_start < 0)
+			throw new RuntimeException("mmap fail while reserse space");
+
 		elf_load_bias = (int) (r.min_address - elf_start);
 	}
 
@@ -143,9 +144,6 @@ public class ELF {
 		ReserseLoadableSegment r = new ReserseLoadableSegment();
 		r.min_address = OS.PAGE_START(minAddress);
 		r.max_address = OS.PAGE_END(maxAddress);
-
-		System.out.println("minaddress " + minAddress);
-		System.out.println("maxaddress " + maxAddress);
 
 		return r;
 	}
@@ -197,10 +195,8 @@ public class ELF {
 			// System.out.println("Segment p_filesz : " +
 			// Util.bytes2Hex(ph.p_filesz));
 
-			if (0 <= OS.mmap((int) seg_page_start, (int) file_length, OS.MAP_FIXED, raf, file_page_start))
-				System.out.println("mmap Success");
-			else
-				System.out.println("mmap Fail");
+			if (0 > OS.mmap((int) seg_page_start, (int) file_length, OS.MAP_FIXED, raf, file_page_start))
+				throw new RuntimeException("Unable to mmap segment : " + ph.toString());
 		}
 
 	}
@@ -220,10 +216,10 @@ public class ELF {
 		strtab = elf_dynamic.getDT_STRTAB() + elf_start; // index
 
 		plt_rel = elf_dynamic.getDT_PLTREL() + elf_start;
-		plt_rel_count = elf_dynamic.getDT_PLTRELSZ() + elf_start;
+		plt_rel_count = (elf_dynamic.getDT_PLTRELSZ() + elf_start) / 8;
 
 		rel = elf_dynamic.getDT_REL() + elf_start;
-		rel_count = elf_dynamic.getDT_RELSZ() + elf_start;
+		rel_count = (elf_dynamic.getDT_RELSZ() + elf_start) / 8;
 
 		init_func = elf_dynamic.getDT_INIT() + elf_start;
 		init_array = elf_dynamic.getDT_INIT_ARRAY() + elf_start;
@@ -232,6 +228,13 @@ public class ELF {
 		fini_func = elf_dynamic.getDT_FINI() + elf_start;
 		fini_array = elf_dynamic.getDT_FINI_ARRAY() + elf_start;
 		fini_array_sz = elf_dynamic.getDT_FINI_ARRAYSZ();
+		
+		if(nbucket == 0)
+			throw new RuntimeException("empty/missing DT_HASH");
+		if(strtab == 0)
+			throw new RuntimeException("empty/missing DT_STRTAB");
+		if(symtab == 0)
+			throw new RuntimeException("empty/missing DT_SYMTAB");
 
 		System.out.println("nbucket : " + nbucket);
 		System.out.println("nchain : " + nchain);

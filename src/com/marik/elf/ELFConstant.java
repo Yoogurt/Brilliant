@@ -415,6 +415,11 @@ public class ELFConstant {
 		public static final int DT_RELCOUNT = 0x6ffffffa;
 		public static final int DT_FLAGS_1 = 0x6ffffffb;
 		public static final int DT_FLAGS = 0x1e;
+		public static final int DT_LOOS =  0x6000000d;
+		public static final int DT_ANDROID_REL = DT_LOOS + 2;
+		public static final int DT_ANDROID_RELSZ = DT_LOOS + 3;
+		
+		public static final int DT_GNU_HASH = 0x6ffffef5;
 		public static final int DT_LOPROC = 0x70000000;
 		public static final int DT_HIPROC = 0x7fffffff;
 	}
@@ -422,7 +427,7 @@ public class ELFConstant {
 	public static class DT_RelType {
 		public static final byte R_ARM_RELATIVE = 0x17;
 		public static final byte R_ARM_GLOB_DAT = 0x15;
-		
+
 		public static final byte R_ARM_JUMP_SLOT = 0x16;
 	}
 

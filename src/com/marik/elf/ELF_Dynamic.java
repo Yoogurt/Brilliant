@@ -8,6 +8,8 @@ import static com.marik.elf.ELFConstant.PT_Dynamic.DT_FINI_ARRAY;
 import static com.marik.elf.ELFConstant.PT_Dynamic.DT_FINI_ARRAYSZ;
 import static com.marik.elf.ELFConstant.PT_Dynamic.DT_FLAGS;
 import static com.marik.elf.ELFConstant.PT_Dynamic.DT_FLAGS_1;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_ANDROID_REL;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_ANDROID_RELSZ;
 import static com.marik.elf.ELFConstant.PT_Dynamic.DT_HASH;
 import static com.marik.elf.ELFConstant.PT_Dynamic.DT_HIPROC;
 import static com.marik.elf.ELFConstant.PT_Dynamic.DT_INIT;
@@ -18,6 +20,7 @@ import static com.marik.elf.ELFConstant.PT_Dynamic.DT_LOPROC;
 import static com.marik.elf.ELFConstant.PT_Dynamic.DT_NEEDED;
 import static com.marik.elf.ELFConstant.PT_Dynamic.DT_NULL;
 import static com.marik.elf.ELFConstant.PT_Dynamic.DT_PLTGOT;
+import static com.marik.elf.ELFConstant.PT_Dynamic.DT_GNU_HASH;
 import static com.marik.elf.ELFConstant.PT_Dynamic.DT_PLTREL;
 import static com.marik.elf.ELFConstant.PT_Dynamic.DT_PLTRELSZ;
 import static com.marik.elf.ELFConstant.PT_Dynamic.DT_REL;
@@ -197,6 +200,7 @@ public class ELF_Dynamic {
 			Log.e("   " + "DT_STRSZ : " + +getVal(dynamic.d_val));
 			break;
 		case DT_SYMENT:
+			assertSYMENT(dynamic);
 			Log.e("   " + Constant.DIVISION_LINE);
 			Log.e("   " + "DT_SYMENT : " + +getVal(dynamic.d_val));
 			break;
@@ -224,16 +228,17 @@ public class ELF_Dynamic {
 			Log.e("   " + "DT_SYMBOLIC at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_REL:
+			mRelocateOffset[0] = (int) getVal(dynamic.d_val);
 			Log.e("   " + Constant.DIVISION_LINE);
 			Log.e("   " + "DT_REL at " + Util.bytes2Hex(dynamic.d_val));
-			mRelocateOffset[0] = (int) getVal(dynamic.d_val);
 			break;
 		case DT_RELSZ:
+			mRelocateSize[0] = (int) getVal(dynamic.d_val);
 			Log.e("   " + Constant.DIVISION_LINE);
 			Log.e("   " + "DT_RELSZ : " + getVal(dynamic.d_val));
-			mRelocateSize[0] = (int) getVal(dynamic.d_val);
 			break;
 		case DT_RELENT:
+			assertRELENT(dynamic);
 			Log.e("   " + Constant.DIVISION_LINE);
 			Log.e("   " + "DT_RELENT : " + +getVal(dynamic.d_val));
 			break;
@@ -274,7 +279,7 @@ public class ELF_Dynamic {
 			break;
 		case DT_RELCOUNT:
 			Log.e("   " + Constant.DIVISION_LINE);
-			Log.e("   " + "DT_RELCOUNT : " + +getVal(dynamic.d_val));
+			Log.e("   " + "DT_RELCOUNT : " + +getVal(dynamic.d_val) + " (ignore)");
 			break;
 		case DT_FINI_ARRAYSZ:
 			readDT_FINI_ARRAYSZ(dynamic);
@@ -294,12 +299,44 @@ public class ELF_Dynamic {
 			Log.e("   " + Constant.DIVISION_LINE);
 			Log.e("   " + "DT_FLAGS : " + getVal(dynamic.d_val));
 			break;
+		case DT_GNU_HASH:
+			readDT_GNU_HASH(dynamic);
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_GNU_HASH : " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_ANDROID_REL:
+			readDT_ANDROID_REL(dynamic);
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_ANDROID_REL : " + Util.bytes2Hex(dynamic.d_val));
+			break;
+		case DT_ANDROID_RELSZ:
+			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + "DT_ANDROID_RELSZ : " + getVal(dynamic.d_val));
+			break;
 		default:
 			Log.e("   " + Constant.DIVISION_LINE);
 			Log.e("   " + "Unknown DT type " + Util.bytes2Hex(dynamic.d_un));
 			break;
 		}
 		return true;
+	}
+
+	private void readDT_ANDROID_REL(Elf_Dyn dynamic) {
+		throw new UnsupportedOperationException("DT_ANDROID_REL no implements");
+	}
+
+	private void readDT_GNU_HASH(Elf_Dyn dynamic) {
+		throw new UnsupportedOperationException("DT_GNU_HASH no implements");
+	}
+
+	private void assertSYMENT(Elf_Dyn dynamic) {
+		if (Util.bytes2Int32(dynamic.d_val) != 0x10) // Elf_Sym takes 0x10B
+			throw new AssertionError("assert fail , SYMENT != 0x10");
+	}
+
+	private void assertRELENT(Elf_Dyn dynamic) {
+		if (Util.bytes2Int32(dynamic.d_val) != 0x8) // Elf_Sym takes 0x10B
+			throw new AssertionError("assert fail , SYMENT != 0x10");
 	}
 
 	private void readDT_HASH(Elf_Dyn dynamic) {
@@ -406,11 +443,11 @@ public class ELF_Dynamic {
 	public int getDT_INIT_ARRAY() {
 		return mInitArray;
 	}
-	
-	public int getDT_INIT_ARRAYSZ(){
+
+	public int getDT_INIT_ARRAYSZ() {
 		return mInitArraySz;
 	}
-	
+
 	public int getDT_FINI() {
 		return mFiniFunc;
 	}
@@ -418,8 +455,8 @@ public class ELF_Dynamic {
 	public int getDT_FINI_ARRAY() {
 		return mFiniArray;
 	}
-	
-	public int getDT_FINI_ARRAYSZ(){
+
+	public int getDT_FINI_ARRAYSZ() {
 		return mFiniArraySz;
 	}
 
