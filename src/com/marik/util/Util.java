@@ -26,7 +26,7 @@ public class Util {
 
 	public static String bytes2Hex(byte[] data, int startIndex, int length) {
 
-		StringBuilder sb = new StringBuilder((length - startIndex) << 1 + 1);
+		StringBuilder sb = new StringBuilder();
 
 		for (int m = 0; m < length; m++)
 			sb.append(byte2Hex(data[m + startIndex])).append(" ");

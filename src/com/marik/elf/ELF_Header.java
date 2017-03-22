@@ -102,8 +102,6 @@ public class ELF_Header {
 	 */
 	private byte[] e_shstrndex;
 
-	private byte[] mInternalMMap;
-
 	ELF_Header(RandomAccessFile is) throws Exception {
 
 		Log.e(Constant.DIVISION_LINE);
@@ -117,7 +115,6 @@ public class ELF_Header {
 
 		readELFHeader();
 
-		mInternalMMap = toCompletelyHeader();
 	}
 
 	private void read32BitHeader(RandomAccessFile is) throws Exception {
@@ -337,17 +334,6 @@ public class ELF_Header {
 	 */
 	public int getHeaderSize() {
 		return Util.bytes2Int32(e_ehsize, isLittleEndian());
-	}
-
-	public byte[] toCompletelyHeader() {
-
-		BytesBuilder bb = new BytesBuilder(Util.bytes2Int32(e_ehsize, isLittleEndian()));
-		bb.append(e_ident).append(e_type).append(e_machine).append(e_version).append(e_entry).append(e_phoff)
-				.append(e_shoff).append(e_flags).append(e_ehsize).append(e_phentsize).append(e_phnum)
-				.append(e_shentsize).append(e_shnum).append(e_shentsize);
-
-		return bb.trim2Bytes();
-
 	}
 
 	@Override

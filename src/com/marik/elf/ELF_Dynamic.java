@@ -52,8 +52,8 @@ import com.marik.util.Util;
 public class ELF_Dynamic {
 
 	class Elf_Dyn {
-		byte[] d_val;
-		byte[] d_un;
+		public byte[] d_val;
+		public byte[] d_un;
 	}
 
 	class Elf_Sym {
@@ -87,6 +87,9 @@ public class ELF_Dynamic {
 
 	private int mRel;
 	private int mRelSz;
+
+	private int mRela;
+	private int mRelaSz;
 
 	private int mJmpRel;
 	private int mJmpSz;
@@ -188,10 +191,12 @@ public class ELF_Dynamic {
 			Log.e("   " + "DT_SYMTAB at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_RELA:
+			readDT_RELA(dynamic);
 			Log.e("   " + Constant.DIVISION_LINE);
 			Log.e("   " + "DT_RELA at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_RELASZ:
+			mRelaSz = getVal(dynamic.d_val);
 			Log.e("   " + Constant.DIVISION_LINE);
 			Log.e("   " + "DT_RELASZ : " + +getVal(dynamic.d_val));
 			break;
@@ -323,6 +328,13 @@ public class ELF_Dynamic {
 			break;
 		}
 		return true;
+	}
+
+	private void readDT_RELA(Elf_Dyn dynamic) {
+		if (mRela == 0)
+			mRela = (int) getVal(dynamic.d_val);
+		else
+			throw new IllegalStateException("DT_RELA appear over once");
 	}
 
 	private void readDT_JMPREL(Elf_Dyn dynamic) {
@@ -519,7 +531,10 @@ public class ELF_Dynamic {
 	}
 
 	private void loadRelocateSection(RandomAccessFile raf) throws IOException {
-		mRelocateSections.add(new ELF_Relocate(raf, mRel, mRelSz, this));
-		mRelocateSections.add(new ELF_Relocate(raf, mJmpRel, mJmpSz, this));
+		mRelocateSections.add(new ELF_Relocate(raf, mRel, mRelSz, this, false));
+		mRelocateSections.add(new ELF_Relocate(raf, mJmpRel, mJmpSz, this, false));
+
+		if (mRela != 0 && mRelaSz != 0)
+			mRelocateSections.add(new ELF_Relocate(raf, mRela, mRelaSz, this, true));
 	}
 }

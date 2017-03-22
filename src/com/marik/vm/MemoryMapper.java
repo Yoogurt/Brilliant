@@ -54,6 +54,7 @@ class MemoryMapper {
 	 */
 	public static int mmap(int start, int length, byte flag, RandomAccessFile raf, long offset) {
 
+		if(OS.debug)
 		System.out.println("mmap(0x" + Integer.toHexString(start) + ",0x" + Integer.toHexString(length) + "," + flag
 				+ ",...," + offset + ")");
 
@@ -76,9 +77,10 @@ class MemoryMapper {
 
 		int startIndex = (int) (start >> OS.PAGE_BIT);
 		int endIndex = (int) ((OS.PAGE_END(length) >> OS.PAGE_BIT) + startIndex);
+		if(OS.debug){
 		System.out.println("start " + start + " length " + length);
 		System.out.println("startIndex " + startIndex + " endIndex " + endIndex);
-
+	}
 		for (int i = startIndex; i < endIndex; i++)
 			if (i >= OS.mFlag.length) {
 				incMemory((int) OS.PAGE_END(length));
@@ -181,7 +183,7 @@ class MemoryMapper {
 	}
 
 	private static void incMemory(int size) {
-
+		if(OS.debug)
 		System.out.println("inc Space : " + size);
 
 		if (OS.PAGE_OFFSET(size) > 0)

@@ -11,7 +11,7 @@ import com.marik.vm.OS;
 public class MapOnMemory {
 
 	public static void main(String[] args) throws Exception {
-		ELF elf = new ELF("C:\\Users\\monitor\\Desktop\\test");
+	ELF elf =  ELF.decode("C:\\Users\\monitor\\Desktop\\test");
 		ELF_ProgramHeader ph = elf.getElf_phdr();
 		List<ELF_ProgramHeader.ELF_Phdr> m = ph.getAllLoadableSegment();
 		for (ELF_Phdr a : m) {

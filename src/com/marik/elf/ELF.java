@@ -1,8 +1,10 @@
 package com.marik.elf;
 
+import static com.marik.elf.ELFConstant.DT_RelType.R_GENERIC_GLOB_DAT;
+import static com.marik.elf.ELFConstant.DT_RelType.R_GENERIC_JUMP_SLOT;
+import static com.marik.elf.ELFConstant.DT_RelType.R_GENERIC_RELATIVE;
+import static com.marik.elf.ELFConstant.ELFUnit.ELF32_Addr;
 import static com.marik.elf.ELFConstant.ELFUnit.uint32_t;
-import static com.marik.elf.ELFConstant.DT_RelType.*;
-import static com.marik.elf.ELFConstant.ELFUnit.*;
 
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -28,14 +30,16 @@ import com.marik.vm.OS;
  */
 public class ELF {
 
+	private static final Map<String, ELF> sos = new HashMap<>();
+
 	private static class ReserseLoadableSegment {
 		long min_address;
 		long max_address;
 	}
 
-	private ELF_Header elf_header;
-	private ELF_ProgramHeader elf_phdr;
-	private ELF_Dynamic elf_dynamic;
+	public final ELF_Header elf_header;
+	public final ELF_ProgramHeader elf_phdr;
+	public final ELF_Dynamic elf_dynamic;
 
 	private int nbucket;
 	private int nchain;
@@ -71,11 +75,19 @@ public class ELF {
 		return elf_phdr;
 	}
 
-	public ELF(String file) throws Exception {
+	public static ELF decode(String file) throws Exception {
+
+		if (sos.containsKey(file))
+			return sos.get(file);
+
+		return new ELF(file);
+	}
+
+	private ELF(String file) throws Exception {
 		this(new File(file));
 	}
 
-	public ELF(File file) throws Exception {
+	private ELF(File file) throws Exception {
 
 		// Log.DEBUG = false;
 
@@ -96,12 +108,15 @@ public class ELF {
 
 			link_image();
 
-			OS.dumpMemory();
-
 			relocate();
+
+			callConstructors();
+			callArrays();
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		}
+
+		sos.put(file.getAbsolutePath(), this);
 	}
 
 	private void reserseAddressSpace() {
@@ -137,10 +152,8 @@ public class ELF {
 			if (address < minAddress)
 				minAddress = address;
 
-			if (address + memsize > maxAddress) {
-				System.out.println("Change : " + address + " memsz " + memsize);
+			if (address + memsize > maxAddress)
 				maxAddress = address + memsize;
-			}
 
 		}
 
@@ -151,6 +164,7 @@ public class ELF {
 		return r;
 	}
 
+	@SuppressWarnings("unused")
 	private void loadSegments(RandomAccessFile raf) {
 
 		List<ELF_Phdr> phs = elf_phdr.getAllLoadableSegment();
@@ -211,7 +225,7 @@ public class ELF {
 				elf_header.isLittleEndian());
 		bucket = Util.bytes2Int32(OS.getMemory(), elf_dynamic.getDT_HASH() + elf_start + 8, uint32_t,
 				elf_header.isLittleEndian());
-		chain = Util.bytes2Int32(OS.getMemory(), elf_dynamic.getDT_HASH() + elf_start + nbucket * 4, uint32_t,
+		chain = Util.bytes2Int32(OS.getMemory(), elf_dynamic.getDT_HASH() + elf_start + nbucket << 2, uint32_t,
 				elf_header.isLittleEndian()); // value
 
 		symtab = elf_dynamic.getDT_SYMTAB() + elf_start; // index
@@ -219,18 +233,18 @@ public class ELF {
 		strtab = elf_dynamic.getDT_STRTAB() + elf_start; // index
 
 		plt_rel = elf_dynamic.getDT_PLTREL() + elf_start;
-		plt_rel_count = (elf_dynamic.getDT_PLTRELSZ() + elf_start) >> 3;
+		plt_rel_count = elf_dynamic.getDT_PLTRELSZ() >> 3;
 
 		rel = elf_dynamic.getDT_REL() + elf_start;
-		rel_count = (elf_dynamic.getDT_RELSZ() + elf_start) >> 3;
+		rel_count = elf_dynamic.getDT_RELSZ() >> 3;
 
 		init_func = elf_dynamic.getDT_INIT() + elf_start;
 		init_array = elf_dynamic.getDT_INIT_ARRAY() + elf_start;
-		init_array_sz = elf_dynamic.getDT_INIT_ARRAYSZ();
+		init_array_sz = elf_dynamic.getDT_INIT_ARRAYSZ() / ELF32_Addr;
 
 		fini_func = elf_dynamic.getDT_FINI() + elf_start;
 		fini_array = elf_dynamic.getDT_FINI_ARRAY() + elf_start;
-		fini_array_sz = elf_dynamic.getDT_FINI_ARRAYSZ();
+		fini_array_sz = elf_dynamic.getDT_FINI_ARRAYSZ() / ELF32_Addr;
 
 		if (nbucket == 0)
 			throw new RuntimeException("empty/missing DT_HASH");
@@ -239,21 +253,21 @@ public class ELF {
 		if (symtab == 0)
 			throw new RuntimeException("empty/missing DT_SYMTAB");
 
-		System.out.println("nbucket : " + nbucket);
-		System.out.println("nchain : " + nchain);
-		System.out.println("bucket : " + bucket);
-		System.out.println("chain : " + chain);
-		System.out.println("symtab : " + symtab);
-		System.out.println("strtab : " + strtab);
-		System.out.println("plt_rel : " + plt_rel);
+		System.out.println("nbucket       : " + nbucket);
+		System.out.println("nchain        : " + nchain);
+		System.out.println("bucket        : " + bucket);
+		System.out.println("chain         : " + chain);
+		System.out.println("symtab        : " + symtab);
+		System.out.println("strtab        : " + strtab);
+		System.out.println("plt_rel       : " + plt_rel);
 		System.out.println("plt_rel_count : " + plt_rel_count);
-		System.out.println("rel : " + rel);
-		System.out.println("rel_count : " + rel_count);
-		System.out.println("init_func : " + init_func);
-		System.out.println("init_array : " + init_array);
+		System.out.println("rel           : " + rel);
+		System.out.println("rel_count     : " + rel_count);
+		System.out.println("init_func     : " + init_func);
+		System.out.println("init_array    : " + init_array);
 		System.out.println("init_array_sz : " + init_array_sz);
-		System.out.println("fini_func : " + fini_func);
-		System.out.println("fini_array : " + fini_array);
+		System.out.println("fini_func     : " + fini_func);
+		System.out.println("fini_array    : " + fini_array);
 		System.out.println("fini_array_sz : " + fini_array_sz);
 	}
 
@@ -302,16 +316,37 @@ public class ELF {
 					Log.e("sym : " + sym + "  index : " + (Util.bytes2Int32(st_name) + strtab) + "  st_name : "
 							+ sym_name);
 				} else
-					Log.e("  sym : " + sym + "  addend : " + Integer.toHexString(addend));
+					Log.e("  sym : " + sym + "  addend : " + Integer.toHexString(addend) + "  predata : "
+							+ Util.bytes2Hex(OS.getMemory(), reloc, ELF32_Addr));
 
 				switch (type) {
 				case R_GENERIC_GLOB_DAT:
+					Log.e("R_GENERIC_GLB_DAT at " + Util.bytes2Hex(Util.int2bytes(reloc))
+							+ " , but we didn't relocate");
 					break;
 				case R_GENERIC_JUMP_SLOT:
+					Log.e("R_GENERIC_JUMP_SLOT at " + Util.bytes2Hex(Util.int2bytes(reloc))
+							+ " , but we didn't relocate");
 					break;
 				case R_GENERIC_RELATIVE: { // *reinterpret_cast<ElfW(Addr)*>(reloc)
 											// = (load_bias + addend);
-					System.arraycopy(Util.int2bytes(elf_load_bias + addend), 0, OS.getMemory(), reloc, 4);  //yeah ! we need to pull the data out , fix it , then push it back
+					System.arraycopy(Util.int2bytes(elf_load_bias + addend), 0, OS.getMemory(), reloc, 4); // yeah
+																											// !
+																											// we
+																											// need
+																											// to
+																											// pull
+																											// the
+																											// data
+																											// out
+																											// ,
+																											// fix
+																											// it
+																											// ,
+																											// then
+																											// push
+																											// it
+																											// back
 
 					Log.e("reloc : " + Integer.toHexString(reloc) + "  become : "
 							+ Integer.toHexString(elf_load_bias + addend));
@@ -327,6 +362,36 @@ public class ELF {
 		}
 	}
 
+	private void callFunction(int func) {
+		Log.e("Calling -> " + func);
+		Log.e("Calling -> " + Util.bytes2Hex(Util.int2bytes(func)));
+	}
+
+	private void callConstructors() {
+
+		if (init_func != 0) {
+			Log.e("Calling Constructor : " + Util.bytes2Hex(Util.int2bytes(init_func)));
+			callFunction(init_func);
+		} else
+			Log.e("Constructor DT_INIT no found , skipping ... ");
+
+	}
+
+	private void callArrays() {
+
+		if (init_array == 0 || init_array_sz == 0) {
+			Log.e("init array no found , skipping ...");
+			return;
+		}
+
+		for (int i = 0; i < init_array_sz; i++)
+			callFunction(init_array + (i << 2)); // call_function("function" ,
+													// function[i])
+													// sizeof(function)
+													// = 4
+	}
+
+	@Deprecated
 	public Map<ELF_Phdr, List<ELF_Shdr>> getProgramSectionMapping(ELF_ProgramHeader programHeader,
 			ELF_SectionHeader sectionHeader) {
 

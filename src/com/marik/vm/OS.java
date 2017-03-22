@@ -1,10 +1,13 @@
 package com.marik.vm;
 
+import java.io.PrintStream;
 import java.io.RandomAccessFile;
 
 import com.marik.util.Util;
 
 public class OS {
+	
+	public static boolean debug = true;
 
 	/**
 	 * don't pull it out , because it will change the reference while running
@@ -69,6 +72,22 @@ public class OS {
 
 		}
 		System.out.println();
+	}
+
+	public static void dumpMemory(PrintStream out) {
+
+		int line = 0;
+		out.printf("%5s : ", line);
+		for (byte b : mMemory) {
+			out.print(Util.byte2Hex(b) + " ");
+			if (++line % 16 == 0) {
+				out.println();
+				out.printf("%5x : ", line);
+			} else if (line % 8 == 0)
+				out.print("  ");
+		}
+		out.println();
+		out.flush();
 	}
 
 }
