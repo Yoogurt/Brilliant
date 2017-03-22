@@ -37,6 +37,28 @@ public class ELF {
 		long max_address;
 	}
 
+	@SuppressWarnings("unused")
+	private static class MapEntry {
+
+		long seg_start;
+		long seg_end;
+
+		long seg_page_start;
+		long seg_page_end;
+
+		long seg_file_end;
+
+		// 文件偏移
+		long file_start;
+		long file_end;
+
+		long file_page_start;
+		long file_length;
+
+	}
+
+	private Map<ELF_Phdr, MapEntry> MAP = new HashMap<>();
+
 	public final ELF_Header elf_header;
 	public final ELF_ProgramHeader elf_phdr;
 	public final ELF_Dynamic elf_dynamic;
@@ -164,26 +186,27 @@ public class ELF {
 		return r;
 	}
 
-	@SuppressWarnings("unused")
 	private void loadSegments(RandomAccessFile raf) {
 
 		List<ELF_Phdr> phs = elf_phdr.getAllLoadableSegment();
 		for (ELF_Phdr ph : phs) {
 
-			long seg_start = Util.bytes2Int64(ph.p_vaddr) + elf_load_bias;
-			long seg_end = seg_start + Util.bytes2Int64(ph.p_memsz);
+			MapEntry m = new MapEntry();
 
-			long seg_page_start = OS.PAGE_START(seg_start);
-			long seg_page_end = OS.PAGE_END(seg_end);
+			m.seg_start = Util.bytes2Int64(ph.p_vaddr) + elf_load_bias;
+			m.seg_end = m.seg_start + Util.bytes2Int64(ph.p_memsz);
 
-			long seg_file_end = seg_start + Util.bytes2Int64(ph.p_filesz);
+			m.seg_page_start = OS.PAGE_START(m.seg_start);
+			m.seg_page_end = OS.PAGE_END(m.seg_end);
+
+			m.seg_file_end = m.seg_start + Util.bytes2Int64(ph.p_filesz);
 
 			// 文件偏移
-			long file_start = Util.bytes2Int64(ph.p_offset);
-			long file_end = file_start + Util.bytes2Int64(ph.p_filesz);
+			m.file_start = Util.bytes2Int64(ph.p_offset);
+			m.file_end = m.file_start + Util.bytes2Int64(ph.p_filesz);
 
-			long file_page_start = OS.PAGE_START(file_start);
-			long file_length = file_end - file_page_start;
+			m.file_page_start = OS.PAGE_START(m.file_start);
+			m.file_length = m.file_end - m.file_page_start;
 
 			// System.out.println("seg_start : " +
 			// Long.toHexString(seg_start));
@@ -212,8 +235,10 @@ public class ELF {
 			// System.out.println("Segment p_filesz : " +
 			// Util.bytes2Hex(ph.p_filesz));
 
-			if (0 > OS.mmap((int) seg_page_start, (int) file_length, OS.MAP_FIXED, raf, file_page_start))
+			if (0 > OS.mmap((int) m.seg_page_start, (int) m.file_length, OS.MAP_FIXED, raf, m.file_page_start))
 				throw new RuntimeException("Unable to mmap segment : " + ph.toString());
+
+			MAP.put(ph, m);
 		}
 
 	}

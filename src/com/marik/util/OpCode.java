@@ -6,6 +6,12 @@ import com.marik.vm.OS;
 
 public class OpCode {
 
+	private static final String[] COND_CODE = { "EQ", "NE", "CS", "CC", "MI", "PL", "VS", "VC", "HI", "LS", "GE", "LT",
+			"GT", "LE", "AL", "??" };
+
+	private static final String[] OP_CODE = { "MOV", "MVN", "ADD", "SUB", "RSB", "ADC", "SBC", "RSC", "AND", "ORR",
+			"EOR", "BIC", "CMP", "CMN", "TST", "TEQ" };
+
 	public static String decode(byte[] data) {
 		return decode(Util.bytes2Int32(data));
 	}
@@ -13,19 +19,21 @@ public class OpCode {
 	public static String decode(int data) {
 
 		String cond = parseCond(data);
+		String opcode = parseOpcode(data);
 
-		return "Unknown OpCode";
+		System.out.println(Util.bytes2Hex(Util.int2bytes(data)));
+		return new StringBuilder().append(opcode).append(cond).toString();
 	}
 
 	private static String parseCond(int data) {
-		int cond = getShiftInt(data, 21, 4);
-		switch (cond) {
-		case 0xC:
-			return "LDR";
+		int cond = getShiftInt(data, 28, 4);
+		return COND_CODE[cond];
+	}
 
-		default:
-			return "???";
-		}
+	private static String parseOpcode(int data) {
+		int opcodeType = getShiftInt(data, 2, 4);
+
+		return OP_CODE[opcodeType];
 	}
 
 	private static int getShiftInt(int data, int from, int length) {
@@ -42,8 +50,8 @@ public class OpCode {
 		ELF_Header header = elf.elf_header;
 		int entry = (int) header.getELFEntry();
 		int offset = 0;
-		System.out.println(Util.bytes2Hex(OS.getMemory(), entry + offset, 4));
-		System.out.println(Util.bytes2Hex(OS.getMemory(), entry + 8, 4));
+		System.out.println(decode(Util.bytes2Int32(OS.getMemory(), entry + offset, 4, true)));
+		System.out.println(decode(Util.bytes2Int32(OS.getMemory(), entry + 8, 4, true)));
 	}
 
 }

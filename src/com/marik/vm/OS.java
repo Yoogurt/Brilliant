@@ -59,19 +59,7 @@ public class OS {
 
 	public static void dumpMemory() {
 
-		int line = 0;
-		int i = 0;
-		System.out.printf("%5s : ", line);
-		for (byte b : mMemory) {
-			System.out.print(Util.byte2Hex(b) + " ");
-			line++;
-			if (++i % 16 == 0) {
-				System.out.println();
-				System.out.printf("%5x : ", line);
-			}
-
-		}
-		System.out.println();
+		dumpMemory(System.out);
 	}
 
 	public static void dumpMemory(PrintStream out) {
