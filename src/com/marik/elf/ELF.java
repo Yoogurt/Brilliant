@@ -48,7 +48,7 @@ public class ELF {
 
 		long seg_file_end;
 
-		// 文件偏移
+		// file offset
 		long file_start;
 		long file_end;
 
@@ -169,11 +169,11 @@ public class ELF {
 		for (ELF_Phdr phdr : loadableSegment) {/*
 												 * if (phdr->p_vaddr <
 												 * min_vaddr) { min_vaddr =
-												 * phdr->p_vaddr; // 记录最小的虚拟地址 }
+												 * phdr->p_vaddr; // min virtual address }
 												 * if (phdr->p_vaddr +
 												 * phdr->p_memsz > max_vaddr) {
 												 * max_vaddr = phdr->p_vaddr +
-												 * phdr->p_memsz; // 记录最大的虚拟地址 }
+												 * phdr->p_memsz; // max virtual address }
 												 */
 
 			int address = Util.bytes2Int32(phdr.p_vaddr);

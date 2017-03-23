@@ -57,12 +57,12 @@ public class ELF_Dynamic {
 	}
 
 	class Elf_Sym {
-		byte[] st_name; /* 名称 - index into string table 4B */
-		byte[] st_value; /* 偏移地址 4B */
-		byte[] st_size; /* 符号长度（ e.g. 函数的长度） 4B */
-		byte st_info; /* 类型和绑定类型 1B */
-		byte st_other; /* 未定义 1B */
-		byte[] st_shndx; /* section header的索引号，表示位于哪个 section 中 2B */
+		byte[] st_name; /* index into string table 4B */
+		byte[] st_value; /* 4B */
+		byte[] st_size; /* 4B */
+		byte st_info; /* 1B */
+		byte st_other; /* 1B */
+		byte[] st_shndx; /* 2B */
 	}
 
 	private List<Elf_Dyn> mInternalDynamics = new ArrayList<>();
