@@ -50,12 +50,12 @@ public class ELF_ProgramHeader {
 		public byte[] p_paddr;
 
 		/**
-		 * number of bytes in file for egment
+		 * number of bytes in file for segment
 		 */
 		public byte[] p_filesz;
 
 		/**
-		 * number of bytes in menory for segment
+		 * number of bytes in memory for segment
 		 */
 		public byte[] p_memsz;
 
@@ -65,7 +65,7 @@ public class ELF_ProgramHeader {
 		public byte[] p_flags;
 
 		/**
-		 * menory alignment
+		 * memory alignment
 		 */
 		public byte[] p_align;
 

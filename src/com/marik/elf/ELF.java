@@ -28,6 +28,7 @@ import com.marik.vm.OS;
  * @author lingb
  *
  */
+@SuppressWarnings("unused")
 public class ELF {
 
 	private static final Map<String, ELF> sos = new HashMap<>();
@@ -37,7 +38,6 @@ public class ELF {
 		long max_address;
 	}
 
-	@SuppressWarnings("unused")
 	private static class MapEntry {
 
 		long seg_start;
@@ -126,6 +126,9 @@ public class ELF {
 			elf_header = new ELF_Header(raf);
 			if (!elf_header.isLittleEndian())
 				throw new UnsupportedDataTypeException("ELFDecoder don't support big endian architecture");
+			
+			if (!elf_header.is32Bit())
+				throw new UnsupportedDataTypeException("ELFDecoder don't support except 32 bit architecture");  // 64bit will be supported someday
 
 			elf_phdr = new ELF_ProgramHeader(raf, elf_header, false);
 			elf_dynamic = new ELF_Dynamic(raf, elf_phdr.getDynamicSegment());
@@ -140,10 +143,10 @@ public class ELF {
 
 			callConstructors();
 			callArrays();
+			
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		}
-
 		sos.put(file.getAbsolutePath(), this);
 	}
 
