@@ -1,20 +1,20 @@
 package com.marik.elf;
 
-import static com.marik.elf.ELFConstant.ELFUnit.ELF32_Addr;
-import static com.marik.elf.ELFConstant.ELFUnit.ELF32_Off;
-import static com.marik.elf.ELFConstant.ELFUnit.ELF32_Word;
-import static com.marik.elf.ELFConstant.ELFUnit.ELF64_Addr;
-import static com.marik.elf.ELFConstant.ELFUnit.ELF64_Off;
-import static com.marik.elf.ELFConstant.ELFUnit.ELF64_Word;
-import static com.marik.elf.ELFConstant.ELFUnit.ELF64_Xword;
-import static com.marik.elf.ELFConstant.ProgramHeaderContent.PT_DYNAMIC;
-import static com.marik.elf.ELFConstant.ProgramHeaderContent.PT_GUN_STACK;
-import static com.marik.elf.ELFConstant.ProgramHeaderContent.PT_INTERP;
-import static com.marik.elf.ELFConstant.ProgramHeaderContent.PT_LOAD;
-import static com.marik.elf.ELFConstant.ProgramHeaderContent.PT_NOTE;
-import static com.marik.elf.ELFConstant.ProgramHeaderContent.PT_NULL;
-import static com.marik.elf.ELFConstant.ProgramHeaderContent.PT_PHDR;
-import static com.marik.elf.ELFConstant.ProgramHeaderContent.PT_SHLIB;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Addr;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Off;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Word;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF64_Addr;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF64_Off;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF64_Word;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF64_Xword;
+import static com.marik.elf.ELF_Constant.ProgramHeaderContent.PT_DYNAMIC;
+import static com.marik.elf.ELF_Constant.ProgramHeaderContent.PT_GUN_STACK;
+import static com.marik.elf.ELF_Constant.ProgramHeaderContent.PT_INTERP;
+import static com.marik.elf.ELF_Constant.ProgramHeaderContent.PT_LOAD;
+import static com.marik.elf.ELF_Constant.ProgramHeaderContent.PT_NOTE;
+import static com.marik.elf.ELF_Constant.ProgramHeaderContent.PT_NULL;
+import static com.marik.elf.ELF_Constant.ProgramHeaderContent.PT_PHDR;
+import static com.marik.elf.ELF_Constant.ProgramHeaderContent.PT_SHLIB;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;

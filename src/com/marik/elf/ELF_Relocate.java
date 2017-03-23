@@ -1,9 +1,9 @@
 package com.marik.elf;
 
-import static com.marik.elf.ELFConstant.DT_RelType.*;
-import static com.marik.elf.ELFConstant.ELFUnit.ELF32_Sword;
-import static com.marik.elf.ELFConstant.ELFUnit.ELF32_Addr;
-import static com.marik.elf.ELFConstant.ELFUnit.ELF32_Word;
+import static com.marik.elf.ELF_Constant.DT_RelType.*;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Sword;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Addr;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Word;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;

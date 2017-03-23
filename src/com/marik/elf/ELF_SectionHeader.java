@@ -1,8 +1,8 @@
 package com.marik.elf;
 
 import static com.marik.elf.Constant.*;
-import static com.marik.elf.ELFConstant.ELFUnit.*;
-import static com.marik.elf.ELFConstant.SectionHeaderContent.*;
+import static com.marik.elf.ELF_Constant.ELFUnit.*;
+import static com.marik.elf.ELF_Constant.SectionHeaderContent.*;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;

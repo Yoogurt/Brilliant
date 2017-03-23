@@ -1,6 +1,6 @@
 package com.marik.elf;
 
-public class ELFConstant {
+public class ELF_Constant {
 
 	public static class ELFUnit {
 

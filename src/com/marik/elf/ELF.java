@@ -1,10 +1,10 @@
 package com.marik.elf;
 
-import static com.marik.elf.ELFConstant.DT_RelType.R_GENERIC_GLOB_DAT;
-import static com.marik.elf.ELFConstant.DT_RelType.R_GENERIC_JUMP_SLOT;
-import static com.marik.elf.ELFConstant.DT_RelType.R_GENERIC_RELATIVE;
-import static com.marik.elf.ELFConstant.ELFUnit.ELF32_Addr;
-import static com.marik.elf.ELFConstant.ELFUnit.uint32_t;
+import static com.marik.elf.ELF_Constant.DT_RelType.R_GENERIC_GLOB_DAT;
+import static com.marik.elf.ELF_Constant.DT_RelType.R_GENERIC_JUMP_SLOT;
+import static com.marik.elf.ELF_Constant.DT_RelType.R_GENERIC_RELATIVE;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Addr;
+import static com.marik.elf.ELF_Constant.ELFUnit.uint32_t;
 
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -88,6 +88,7 @@ public class ELF {
 
 	private int elf_start;
 	private int elf_load_bias;
+	private int elf_size;
 
 	public ELF_Header getElf_header() {
 		return elf_header;
@@ -97,7 +98,7 @@ public class ELF {
 		return elf_phdr;
 	}
 
-	public static ELF decode(String file) throws Exception {
+	public static ELF dlopen(String file) throws Exception {
 
 		if (sos.containsKey(file))
 			return sos.get(file);
@@ -107,6 +108,11 @@ public class ELF {
 
 	private ELF(String file) throws Exception {
 		this(new File(file));
+	}
+
+	public int dlsym(String functionName) {
+
+		return 0;
 	}
 
 	private ELF(File file) throws Exception {
@@ -152,6 +158,7 @@ public class ELF {
 			throw new RuntimeException("mmap fail while reserse space");
 
 		elf_load_bias = (int) (elf_start - r.min_address);
+		elf_size = (int) (r.max_address + elf_load_bias + -elf_start);
 	}
 
 	private ReserseLoadableSegment phdr_table_get_load_size(List<ELF_Phdr> loadableSegment) {
@@ -464,4 +471,34 @@ public class ELF {
 		}
 		return map;
 	}
+
+	/*------------------------------------------------------------------------------------------------------------------------------*/
+
+	/*
+	 * uint32_t SymbolName::elf_hash() { if (!has_elf_hash_) { const uint8_t*
+	 * name = reinterpret_cast<const uint8_t*>(name_); uint32_t h = 0, g;
+	 * 
+	 * while (*name) { h = (h << 4) + *name++; g = h & 0xf0000000; h ^= g; h ^=
+	 * g >> 24; }
+	 * 
+	 * elf_hash_ = h; has_elf_hash_ = true; }
+	 * 
+	 * return elf_hash_; }
+	 */
+
+	public int elf_hash(String name) {
+
+		char[] name_array = name.toCharArray();
+		int h = 0, g;
+
+		for (char n : name_array) {
+			h = (h << 4) + n;
+			g = h & 0xf0000000;
+			h ^= g;
+			h ^= g >> 24;
+		}
+
+		return h;
+	}
+
 }

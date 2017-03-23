@@ -45,7 +45,7 @@ public class OpCode {
 		Log.DEBUG = false;
 		OS.debug = false;
 
-		ELF elf = ELF.decode("C:\\Users\\monitor\\Desktop\\test");
+		ELF elf = ELF.dlopen("C:\\Users\\monitor\\Desktop\\test");
 
 		ELF_Header header = elf.elf_header;
 		int entry = (int) header.getELFEntry();
