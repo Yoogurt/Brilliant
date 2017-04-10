@@ -47,11 +47,11 @@ public class OpCode {
 
 		ELF elf = ELF.dlopen("C:\\Users\\monitor\\Desktop\\test");
 
-		ELF_Header header = elf.elf_header;
-		int entry = (int) header.getELFEntry();
-		int offset = 0;
-		System.out.println(decode(Util.bytes2Int32(OS.getMemory(), entry + offset, 4, true)));
-		System.out.println(decode(Util.bytes2Int32(OS.getMemory(), entry + 8, 4, true)));
+//		ELF_Header header = elf.elf_header;
+//		int entry = (int) header.getELFEntry();
+//		int offset = 0;
+//		System.out.println(decode(Util.bytes2Int32(OS.getMemory(), entry + offset, 4, true)));
+//		System.out.println(decode(Util.bytes2Int32(OS.getMemory(), entry + 8, 4, true)));
 	}
 
 }

@@ -415,19 +415,147 @@ public class ELF_Constant {
 		public static final int DT_RELCOUNT = 0x6ffffffa;
 		public static final int DT_FLAGS_1 = 0x6ffffffb;
 		public static final int DT_FLAGS = 0x1e;
-		public static final int DT_LOOS =  0x6000000d;
+		public static final int DT_LOOS = 0x6000000d;
 		public static final int DT_ANDROID_REL = DT_LOOS + 2;
 		public static final int DT_ANDROID_RELSZ = DT_LOOS + 3;
-		
+
 		public static final int DT_GNU_HASH = 0x6ffffef5;
 		public static final int DT_LOPROC = 0x70000000;
 		public static final int DT_HIPROC = 0x7fffffff;
 	}
 
 	public static class DT_RelType {
-		public static final byte R_GENERIC_RELATIVE = 0x17;
-		public static final byte R_GENERIC_GLOB_DAT = 0x15;
-		public static final byte R_GENERIC_JUMP_SLOT = 0x16;
+//		public static final byte R_GENERIC_RELATIVE = 0x17;
+//		public static final byte R_GENERIC_GLOB_DAT = 0x15;
+//		public static final byte R_GENERIC_JUMP_SLOT = 0x16;
+
+		public static final int R_ARM_NONE = 0; /* No reloc */
+		public static final int R_ARM_PC24 = 1; /* PC relative 26 bit branch */
+		public static final int R_ARM_ABS32 = 2; /* Direct 32 bit */
+		public static final int R_ARM_REL32 = 3; /* PC relative 32 bit */
+		public static final int R_ARM_PC13 = 4;
+		public static final int R_ARM_ABS16 = 5; /* Direct 16 bit */
+		public static final int R_ARM_ABS12 = 6; /* Direct 12 bit */
+		public static final int R_ARM_THM_ABS5 = 7;
+		public static final int R_ARM_ABS8 = 8; /* Direct 8 bit */
+		public static final int R_ARM_SBREL32 = 9;
+		public static final int R_ARM_THM_PC22 = 10;
+		public static final int R_ARM_THM_PC8 = 11;
+		public static final int R_ARM_AMP_VCALL9 = 12;
+		public static final int R_ARM_SWI24 = 13; /*
+													 * Obsolete static relocation.
+													 */
+		public static final int R_ARM_TLS_DESC = 13; /* Dynamic relocation. */
+		public static final int R_ARM_THM_SWI8 = 14;
+		public static final int R_ARM_XPC25 = 15;
+		public static final int R_ARM_THM_XPC22 = 16;
+		public static final int R_ARM_TLS_DTPMOD32 = 17; /*
+															 * ID of module
+															 * containing symbol
+															 */
+		public static final int R_ARM_TLS_DTPOFF32 = 18; /*
+															 * Offset in TLS block
+															 */
+		public static final int R_ARM_TLS_TPOFF32 = 19; /*
+														 * Offset in static TLS
+														 * block
+														 */
+		public static final int R_ARM_COPY = 20; /* Copy symbol at runtime */
+		public static final int R_ARM_GLOB_DAT = 21; /* Create GOT entry */
+		public static final int R_ARM_JUMP_SLOT = 22; /* Create PLT entry */
+		public static final int R_ARM_RELATIVE = 23; /*
+														 * Adjust by program base
+														 */
+		public static final int R_ARM_GOTOFF = 24; /* 32 bit offset to GOT */
+		public static final int R_ARM_GOTPC = 25; /*
+													 * 32 bit PC relative offset
+													 * to GOT
+													 */
+		public static final int R_ARM_GOT32 = 26; /* 32 bit GOT entry */
+		public static final int R_ARM_PLT32 = 27; /* 32 bit PLT address */
+		public static final int R_ARM_ALU_PCREL_7_0 = 32;
+		public static final int R_ARM_ALU_PCREL_15_8 = 33;
+		public static final int R_ARM_ALU_PCREL_23_15 = 34;
+		public static final int R_ARM_LDR_SBREL_11_0 = 35;
+		public static final int R_ARM_ALU_SBREL_19_12 = 36;
+		public static final int R_ARM_ALU_SBREL_27_20 = 37;
+		public static final int R_ARM_TLS_GOTDESC = 90;
+		public static final int R_ARM_TLS_CALL = 91;
+		public static final int R_ARM_TLS_DESCSEQ = 92;
+		public static final int R_ARM_THM_TLS_CALL = 93;
+		public static final int R_ARM_GNU_VTENTRY = 100;
+		public static final int R_ARM_GNU_VTINHERIT = 101;
+		public static final int R_ARM_THM_PC11 = 102; /*
+														 * thumb unconditional
+														 * branch
+														 */
+		public static final int R_ARM_THM_PC9 = 103; /*
+														 * thumb conditional branch
+														 */
+		public static final int R_ARM_TLS_GD32 = 104; /*
+														 * PC-rel 32 bit for
+														 * global dynamic thread
+														 * local data
+														 */
+		public static final int R_ARM_TLS_LDM32 = 105; /*
+														 * PC-rel 32 bit for
+														 * local dynamic thread
+														 * local data
+														 */
+		public static final int R_ARM_TLS_LDO32 = 106; /*
+														 * 32 bit offset
+														 * relative to TLS block
+														 */
+		public static final int R_ARM_TLS_IE32 = 107; /*
+														 * PC-rel 32 bit for GOT
+														 * entry of static TLS
+														 * block offset
+														 */
+		public static final int R_ARM_TLS_LE32 = 108; /*
+														 * 32 bit offset
+														 * relative to static
+														 * TLS block
+														 */
+		public static final int R_ARM_THM_TLS_DESCSEQ = 129;
+		public static final int R_ARM_IRELATIVE = 160;
+		public static final int R_ARM_RXPC25 = 249;
+		public static final int R_ARM_RSBREL32 = 250;
+		public static final int R_ARM_THM_RPC22 = 251;
+		public static final int R_ARM_RREL32 = 252;
+		public static final int R_ARM_RABS22 = 253;
+		public static final int R_ARM_RPC24 = 254;
+		public static final int R_ARM_RBASE = 255;
+		/* Keep this the last entry. */
+		public static final int R_ARM_NUM = 256;
+
+	}
+
+	public static class SHT_Info {
+		public static final int STB_LOCAL = 0;
+		public static final int STB_GLOBAL = 1;
+		public static final int STB_WEAK = 2;
+		public static final int STB_LOPROC = 13;
+		public static final int STB_HIPROC = 15;
+	}
+
+	public static class ST_TYPE {
+		public static final int STT_NOTYPE = 0;
+		public static final int STT_OBJECT = 1;
+		public static final int STT_FUNC = 2;
+		public static final int STT_SECTION = 3;
+		public static final int STT_FILE = 4;
+		public static final int STT_LOPROC = 13;
+		public static final int STT_HIPROC = 15;
+	}
+
+	public static class SHN_Info {
+		public static final int SHN_UNDEF = 0;
+		public static final int SHN_LORESERVE = 0xff00;
+		public static final int SHN_LOPROC = 0xff00;
+		public static final int SHN_HIPROC = 0xff1f;
+		public static final int SHN_ABS = 0xfff1;
+		public static final int SHN_COMMON = 0xfff2;
+		public static final int SHN_HIRESERVE = 0xffff;
 	}
 
 }

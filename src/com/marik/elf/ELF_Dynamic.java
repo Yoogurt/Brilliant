@@ -1,5 +1,6 @@
 package com.marik.elf;
 
+import static com.marik.elf.ELF_Constant.ELFUnit.*;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Addr;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Word;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_DEBUG;
@@ -49,20 +50,49 @@ import com.marik.elf.ELF_ProgramHeader.ELF_Phdr;
 import com.marik.util.Log;
 import com.marik.util.Util;
 
-public class ELF_Dynamic {
+import Interface.CastSupport;
 
-	class Elf_Dyn {
+public final class ELF_Dynamic {
+
+	final static class Elf_Dyn {
 		public byte[] d_val;
 		public byte[] d_un;
 	}
 
-	class Elf_Sym {
+	final static class Elf_Sym extends CastSupport {
 		byte[] st_name; /* index into string table 4B */
 		byte[] st_value; /* 4B */
 		byte[] st_size; /* 4B */
 		byte st_info; /* 1B */
 		byte st_other; /* 1B */
 		byte[] st_shndx; /* 2B */
+
+		public static final Elf_Sym reinterpret_cast(byte[] data, int startIndex) {
+			Elf_Sym thz = new Elf_Sym();
+
+			thz.st_name = new byte[ELF32_Word];
+			thz.st_value = new byte[ELF32_Addr];
+			thz.st_size = new byte[ELF32_Word];
+			thz.st_shndx = new byte[ELF32_Half];
+
+			System.arraycopy(data, startIndex, thz.st_name, 0, ELF32_Word);
+			System.arraycopy(data, startIndex + ELF32_Word, thz.st_value, 0, ELF32_Addr);
+			System.arraycopy(data, startIndex + ELF32_Word + ELF32_Addr, thz.st_size, 0, ELF32_Word);
+			thz.st_info = data[startIndex + ELF32_Word + ELF32_Addr + ELF32_Word];
+			thz.st_other = data[startIndex + ELF32_Word + ELF32_Addr + ELF32_Word + 1];
+			System.arraycopy(data, startIndex + ELF32_Word + ELF32_Addr + ELF32_Word + 2, thz.st_shndx, 0, ELF32_Half);
+
+			return thz;
+		}
+
+		public static final Elf_Sym reinterpret_cast(byte[] data) {
+			return reinterpret_cast(data, 0);
+		}
+
+		public static final int size() {
+			return 0x10;
+		}
+
 	}
 
 	private List<Elf_Dyn> mInternalDynamics = new ArrayList<>();
@@ -92,7 +122,11 @@ public class ELF_Dynamic {
 	private int mRelaSz;
 
 	private int mJmpRel;
-	private int mJmpSz;
+	private int mJmpRelSz;
+
+	private int mDT_TEXTREL;
+
+	private boolean mDT_SYMBOLIC;
 
 	private List<ELF_Relocate> mRelocateSections = new ArrayList<>();
 
@@ -167,7 +201,6 @@ public class ELF_Dynamic {
 			Log.e("   " + "Need Dynamic Library : " + name);
 			break;
 		case DT_PLTRELSZ:
-			mJmpSz = (int) getVal(dynamic.d_val);
 			Log.e("   " + Constant.DIVISION_LINE);
 			Log.e("   " + "DT_PLTRELSZ " + +getVal(dynamic.d_val));
 			break;
@@ -233,6 +266,7 @@ public class ELF_Dynamic {
 			Log.e("   " + "DT_RPATH at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_SYMBOLIC:
+			readDT_SYMBOLIC(dynamic);
 			Log.e("   " + Constant.DIVISION_LINE);
 			Log.e("   " + "DT_SYMBOLIC at " + Util.bytes2Hex(dynamic.d_val));
 			break;
@@ -252,6 +286,7 @@ public class ELF_Dynamic {
 			Log.e("   " + "DT_RELENT : " + +getVal(dynamic.d_val));
 			break;
 		case DT_PLTREL:
+			verifyPltRel(dynamic);
 			Log.e("   " + Constant.DIVISION_LINE);
 			Log.e("   " + "DT_PLTREL at " + Util.bytes2Hex(dynamic.d_val));
 			break;
@@ -260,6 +295,7 @@ public class ELF_Dynamic {
 			Log.e("   " + "DT_DEBUG at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_TEXTREL:
+			readDT_TEXTREL(dynamic);
 			Log.e("   " + Constant.DIVISION_LINE);
 			Log.e("   " + "DT_TEXTREL at " + Util.bytes2Hex(dynamic.d_val));
 			break;
@@ -330,11 +366,27 @@ public class ELF_Dynamic {
 		return true;
 	}
 
-	private void readDT_RELA(Elf_Dyn dynamic) {
-		if (mRela == 0)
-			mRela = (int) getVal(dynamic.d_val);
+	private void verifyPltRel(Elf_Dyn dynamic) {
+		if (getVal(dynamic.d_val) != DT_REL)
+			throw new RuntimeException("Unsupported DT_PLTREL");
+	}
+
+	private void readDT_TEXTREL(Elf_Dyn dynamic) {
+		if (mDT_TEXTREL == 0)
+			mDT_TEXTREL = getVal(dynamic.d_val);
 		else
-			throw new IllegalStateException("DT_RELA appear over once");
+			throw new IllegalStateException("DT_TEXTREL appear over once");
+	}
+
+	private void readDT_SYMBOLIC(Elf_Dyn dynamic) {
+		if (!mDT_SYMBOLIC)
+			mDT_SYMBOLIC = true;
+		else
+			throw new IllegalStateException("DT_SYMBOLIC appear over once");
+	}
+
+	private void readDT_RELA(Elf_Dyn dynamic) {
+		throw new RuntimeException("Unsupported DT_RELA");
 	}
 
 	private void readDT_JMPREL(Elf_Dyn dynamic) {
@@ -352,7 +404,7 @@ public class ELF_Dynamic {
 	}
 
 	private void readDT_ANDROID_REL(Elf_Dyn dynamic) {
-		throw new UnsupportedOperationException("DT_ANDROID_REL no implements");
+		throw new UnsupportedOperationException("DT_ANDROID_REL is no supported");
 	}
 
 	private void readDT_GNU_HASH(Elf_Dyn dynamic) {
@@ -502,24 +554,24 @@ public class ELF_Dynamic {
 		return mRelocateSections;
 	}
 
-	public int getDT_REL() {
-		return mRel;
+	public boolean getDT_SYMBOLIC() {
+		return mDT_SYMBOLIC;
 	}
 
-	public int getDT_PLTREL() {
-		return mJmpRel;
+	public int getDT_REL() {
+		return mRel;
 	}
 
 	public int getDT_RELSZ() {
 		return mRelSz;
 	}
 
-	public int getDT_PLTRELSZ() {
-		return mJmpSz;
-	}
-
 	public int getDT_HASH() {
 		return mHash;
+	}
+
+	public List<String> getNeedLibraryName() {
+		return mNeededDynamicLibrary;
 	}
 
 	private void storeNeededDynamicLibraryName(String name) {
@@ -532,7 +584,7 @@ public class ELF_Dynamic {
 
 	private void loadRelocateSection(RandomAccessFile raf) throws IOException {
 		mRelocateSections.add(new ELF_Relocate(raf, mRel, mRelSz, this, false));
-		mRelocateSections.add(new ELF_Relocate(raf, mJmpRel, mJmpSz, this, false));
+		mRelocateSections.add(new ELF_Relocate(raf, mJmpRel, mJmpRelSz, this, false));
 
 		if (mRela != 0 && mRelaSz != 0)
 			mRelocateSections.add(new ELF_Relocate(raf, mRela, mRelaSz, this, true));

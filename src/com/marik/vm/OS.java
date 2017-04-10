@@ -6,8 +6,8 @@ import java.io.RandomAccessFile;
 import com.marik.util.Util;
 
 public class OS {
-	
-	public static boolean debug = true;
+
+	public static boolean debug = false;
 
 	/**
 	 * don't pull it out , because it will change the reference while running
@@ -57,6 +57,10 @@ public class OS {
 		return MemoryMapper.getMemory();
 	}
 
+	public static int unmmap(int start, int size) {
+		return MemoryMapper.unmmap(start, size);
+	}
+
 	public static void dumpMemory() {
 
 		dumpMemory(System.out);
@@ -77,5 +81,7 @@ public class OS {
 		out.println();
 		out.flush();
 	}
+
+	private native void mmapInternal();
 
 }

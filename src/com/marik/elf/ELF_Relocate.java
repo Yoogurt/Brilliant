@@ -1,6 +1,7 @@
 package com.marik.elf;
 
 import static com.marik.elf.ELF_Constant.DT_RelType.*;
+import static com.marik.elf.ELFDefinition.*;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Sword;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Addr;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Word;
@@ -17,26 +18,10 @@ public class ELF_Relocate {
 		public byte[] r_offset;
 
 		public byte[] r_info;
-
-		public byte getType() {
-			return (byte) Util.bytes2Int32(r_info);
-		}
-
-		public int getSym() {
-			return Util.bytes2Int32(r_info) >> 8;
-		}
 	}
 
 	public class Elf_rela extends Elf_rel {
 		public byte[] r_addend;
-
-		public byte getType() {
-			return (byte) Util.bytes2Int32(r_info);
-		}
-
-		public int getSym() {
-			return Util.bytes2Int32(r_info) >> 8;
-		}
 	}
 
 	private Elf_rel[] mInternalRelocates;
@@ -99,28 +84,28 @@ public class ELF_Relocate {
 		for (Elf_rel rel : mInternalRelocates) {
 
 			Log.e(Constant.DIVISION_LINE);
+			
+			byte r_info = ELF_R_TYPE(rel.r_info);
 
-			byte r_info = rel.getType();
-
-			int sym = rel.getSym();
+			int sym = ELF_R_SYM(rel.r_info);
 
 			switch (r_info) {
-			case R_GENERIC_GLOB_DAT:
+			case R_ARM_GLOB_DAT:
 				Log.e("       relocation section r_offset : " + Util.bytes2Hex(rel.r_offset)
 						+ " r_info : R_ARM_GLOB_DAT " + " , sym : " + sym
-						+ (sym > 0 ? " , symbol name : " + mSelf.getSymInStrTab(rel.getSym(), raf) : ""));
+						+ (sym > 0 ? " , symbol name : " + mSelf.getSymInStrTab(sym, raf) : ""));
 				break;
 
-			case R_GENERIC_RELATIVE:
+			case R_ARM_RELATIVE:
 				Log.e("       relocation section r_offset : " + Util.bytes2Hex(rel.r_offset)
 						+ " r_info : R_ARM_RELATIVE" + " , sym : " + sym
-						+ (sym > 0 ? " , symbol name : " + mSelf.getSymInStrTab(rel.getSym(), raf) : ""));
+						+ (sym > 0 ? " , symbol name : " + mSelf.getSymInStrTab(sym, raf) : ""));
 				break;
 
-			case R_GENERIC_JUMP_SLOT:
+			case R_ARM_JUMP_SLOT:
 				Log.e("       relocation section r_offset : " + Util.bytes2Hex(rel.r_offset)
 						+ " r_info : R_ARM_JUMP_SLOT" + " , sym : " + sym
-						+ (sym > 0 ? " , symbol name : " + mSelf.getSymInStrTab(rel.getSym(), raf) : ""));
+						+ (sym > 0 ? " , symbol name : " + mSelf.getSymInStrTab(sym, raf) : ""));
 				break;
 
 			default:
