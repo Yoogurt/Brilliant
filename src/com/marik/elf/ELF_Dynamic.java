@@ -46,11 +46,10 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.marik.Interface.CastSupport;
 import com.marik.elf.ELF_ProgramHeader.ELF_Phdr;
 import com.marik.util.Log;
 import com.marik.util.Util;
-
-import Interface.CastSupport;
 
 public final class ELF_Dynamic {
 
@@ -121,7 +120,7 @@ public final class ELF_Dynamic {
 	private int mRela;
 	private int mRelaSz;
 
-	private int mJmpRel;
+	private int mJmpRel; // in linker , this call PltRel
 	private int mJmpRelSz;
 
 	private int mDT_TEXTREL;
@@ -201,6 +200,7 @@ public final class ELF_Dynamic {
 			Log.e("   " + "Need Dynamic Library : " + name);
 			break;
 		case DT_PLTRELSZ:
+			readDT_PLTRELSZ(dynamic);
 			Log.e("   " + Constant.DIVISION_LINE);
 			Log.e("   " + "DT_PLTRELSZ " + +getVal(dynamic.d_val));
 			break;
@@ -364,6 +364,13 @@ public final class ELF_Dynamic {
 			break;
 		}
 		return true;
+	}
+
+	private void readDT_PLTRELSZ(Elf_Dyn dynamic) {
+		if (mJmpRel == 0) 
+			mJmpRelSz = getVal(dynamic.d_val);
+		else
+			throw new IllegalStateException("DT_PLTRELSZ appear over once");
 	}
 
 	private void verifyPltRel(Elf_Dyn dynamic) {
@@ -583,10 +590,11 @@ public final class ELF_Dynamic {
 	}
 
 	private void loadRelocateSection(RandomAccessFile raf) throws IOException {
-		mRelocateSections.add(new ELF_Relocate(raf, mRel, mRelSz, this, false));
-		mRelocateSections.add(new ELF_Relocate(raf, mJmpRel, mJmpRelSz, this, false));
-
-		if (mRela != 0 && mRelaSz != 0)
+		if (mRel != 0)
+			mRelocateSections.add(new ELF_Relocate(raf, mRel, mRelSz, this, false));
+		if (mJmpRel != 0) // we don't check size
+			mRelocateSections.add(new ELF_Relocate(raf, mJmpRel, mJmpRelSz, this, false));
+		if (mRela != 0)
 			mRelocateSections.add(new ELF_Relocate(raf, mRela, mRelaSz, this, true));
 	}
 }

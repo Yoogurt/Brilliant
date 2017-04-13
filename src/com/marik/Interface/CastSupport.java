@@ -1,4 +1,4 @@
-package Interface;
+package com.marik.Interface;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
