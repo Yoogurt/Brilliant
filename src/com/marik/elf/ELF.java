@@ -26,6 +26,8 @@ import java.util.TreeSet;
 
 import javax.activation.UnsupportedDataTypeException;
 
+import org.w3c.dom.ls.LSInput;
+
 import com.marik.elf.ELF_Dynamic.Elf_Sym;
 import com.marik.elf.ELF_ProgramHeader.ELF_Phdr;
 import com.marik.elf.ELF_Relocate.Elf_rel;
@@ -57,7 +59,7 @@ public class ELF {
 
 	static {
 		SYS_CALL = new TreeSet<>();
-		for (String name : SYS_CALL_STR)  //
+		for (String name : SYS_CALL_STR) //
 			SYS_CALL.add(name);
 	}
 
@@ -188,6 +190,16 @@ public class ELF {
 		if (!elf.mEnable)
 			return 0;
 
+		if (elf == null) {
+			/* linear search here */
+		} else {
+
+			Elf_Sym sym = soinfo_elf_lookup(elf, elf_hash(functionName), functionName);
+
+			if (sym != null)
+				if (ELF_ST_BIND(sym.st_info) == STB_GLOBAL && Util.bytes2Int32(sym.st_shndx) != 0)
+					return Util.bytes2Int32(sym.st_value) + elf.elf_load_bias;
+		}
 		return 0;
 	}
 
@@ -254,7 +266,11 @@ public class ELF {
 		if (elf_base < 0)
 			throw new RuntimeException("mmap fail while reservse space");
 
-		elf_load_bias = (int) (elf_base - r.min_address);
+		elf_load_bias = (int) (elf_base
+				- r.min_address); /*
+									 * r.min_address is supposed to be 0 , in
+									 * face , it is
+									 */
 		elf_size = (int) (r.max_address + elf_load_bias - elf_base);
 	}
 
@@ -389,9 +405,15 @@ public class ELF {
 		}
 	}
 
+	/**
+	 * 
+	 * It appears above Android 5.0
+	 * 
+	 */
 	public int get_addend(Elf_rel rel, int reloc_addr) {
 
-		if (ELF_R_TYPE(rel.r_info) == R_ARM_RELATIVE || ELF_R_TYPE(rel.r_info) == R_ARM_IRELATIVE)
+		if (ELF_R_TYPE(rel.r_info) == R_ARM_RELATIVE || ELF_R_TYPE(rel.r_info) == R_ARM_IRELATIVE
+				|| ELF_R_TYPE(rel.r_info) == R_ARM_ABS32)
 			return Util.bytes2Int32(OS.getMemory(), reloc_addr, ELF32_Addr, elf_header.isLittleEndian()); // Extract
 																											// reloc_addr(pointer)'s
 																											// value
@@ -407,6 +429,12 @@ public class ELF {
 	 * what is relocation ? relocation fix a pointer which point at somewhere in
 	 * file , but we need to let it point to memory correct
 	 */
+	/**
+	 * 
+	 */
+	/**
+	 * 
+	 */
 	public void soinfo_relocate() {
 
 		List<ELF_Relocate> rels = elf_dynamic.getRelocateSections();
@@ -416,6 +444,7 @@ public class ELF {
 		Elf_Sym s = null;
 
 		for (ELF_Relocate r : rels) {
+
 			Elf_rel[] entries = r.getRelocateEntry();
 			for (Elf_rel rel : entries) {
 				// ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rel->r_offset +
@@ -425,33 +454,40 @@ public class ELF {
 				int type = ELF_R_TYPE(rel.r_info);
 				int addend = get_addend(rel, reloc);
 
+				String sym_name = Util.getStringFromMemory(Util.bytes2Int32(
+						Elf_Sym.reinterpret_cast(OS.getMemory(), symtab + Elf_Sym.size() * sym).st_name) + strtab);
+
+				int sym_address = 0;
+
 				if (type == 0)
 					continue;
 
 				if (sym != 0) {
-								/*
-								 * sym > 0 means the symbol are global , not in
-								 * this file , we will search it
-								 * 
-								 * byte[] st_name = new byte[4];
-								 * System.arraycopy(OS.getMemory(), symtab + sym
-								 * Elf_Sym.size(), st_name, 0, 4); // we get
-								 * st_name(index) from symtab
-								 */
-					String sym_name = Util.getStringFromMemory(Util.bytes2Int32(
-							Elf_Sym.reinterpret_cast(OS.getMemory(), symtab + Elf_Sym.size() * sym).st_name) + strtab);
+					/*
+					 * sym > 0 means the symbol are global , not in this file ,
+					 * we will search it
+					 * 
+					 * byte[] st_name = new byte[4];
+					 * System.arraycopy(OS.getMemory(), symtab + sym
+					 * Elf_Sym.size(), st_name, 0, 4); // we get st_name(index)
+					 * from symtab
+					 */
 
 					ELF[] lsi = new ELF[1];
-					if (null == soinfo_do_lookup(this, sym_name, lsi, needed)) {
+					if (null == (s = soinfo_do_lookup(this, sym_name, lsi, needed))) {
 
 						s = Elf_Sym.reinterpret_cast(OS.getMemory(), symtab + sym * Elf_Sym.size());
 
-						if (ELF_ST_BIND(s.st_info) != STB_WEAK) {
+						/*
+						 * we only allow STB_WEAK which is compiling with key
+						 * word "extern" when we can't found symbol
+						 * 
+						 */
 
+						if (ELF_ST_BIND(s.st_info) != STB_WEAK)
 							throw new RuntimeException("cannot locate symbol \"" + sym_name + "\" referenced by \""
 									+ name + "\"... s.st_info " + Integer.toHexString(ELF_ST_BIND(s.st_info))
 									+ " , s at " + Integer.toHexString(symtab + sym * Elf_Sym.size()));
-						}
 
 						switch (type) {
 
@@ -464,42 +500,77 @@ public class ELF {
 						case R_ARM_COPY:
 						default:
 							throw new RuntimeException("unknown weak reloc type " + Util.bytes2Hex(rel.r_info));
-
 						}
-						
-						
+						/*
+						 * sym_address == 0 , we don't care STB_WEAK Symbol's
+						 * address
+						 * 
+						 */
+						Log.e(" Got a STB_WEAK Reference : " + sym_name);
 
-					} else {// we got
+					} else {// we got a definition
+
+						sym_address = lsi[0].elf_load_bias + Util.bytes2Int32(s.st_value);
+
+						Log.e("Found Sym : " + sym_name + " at : " + Integer.toHexString(sym_address));
 					}
 
 				} else
-					// Log.e("sym : " + sym + " addend : " +
-					// Integer.toHexString(addend) + " predata : "
-					// + Util.bytes2Hex(OS.getMemory(), reloc, ELF32_Addr));
+					s = null;
 
-					switch (type) {
-					case R_ARM_GLOB_DAT:
-						Log.e("R_GENERIC_GLB_DAT at " + Util.bytes2Hex(Util.int2bytes(reloc)) + " , but we didn't ");
-						break;
-					case R_ARM_JUMP_SLOT:
-						Log.e("R_GENERIC_JUMP_SLOT at " + Util.bytes2Hex(Util.int2bytes(reloc)) + " , but we didn't ");
-						break;
-					case R_ARM_RELATIVE: { // *reinterpret_cast<ElfW(Addr)*>(reloc)
-											// = (load_bias + addend);
+				/*---------------------------------------------------------------------------------------*/
 
-						System.arraycopy(Util.int2bytes(elf_load_bias + addend), 0, OS.getMemory(), reloc, 4); //
-																												// here
+				switch (type) {
+				case R_ARM_GLOB_DAT:
 
-						Log.e("reloc : " + Util.bytes2Hex(OS.getMemory(), reloc, 4) + "  become : "
-								+ Integer.toHexString(elf_load_bias + addend));
+					System.arraycopy(Util.int2bytes(sym_address), 0, OS.getMemory(), reloc,
+							ELF32_Addr);/*
+										 * reinterpret_cast<Elf32_Addr*>(reloc)
+										 * = sym_addr;
+										 */
 
-					}
-						break;
+					Log.e("name : " + sym_name + " R_GENERIC_GLB_DAT at " + Util.bytes2Hex(Util.int2bytes(reloc))
+							+ " , relocating to 0x" + Integer.toHexString(sym_address));
+					break;
+				case R_ARM_JUMP_SLOT:
 
-					default:
-						throw new RuntimeException("unknown weak reloc type" + type);
-					}
+					System.arraycopy(Util.int2bytes(sym_address), 0, OS.getMemory(), reloc, ELF32_Addr);
 
+					Log.e("name : " + sym_name + " R_GENERIC_JUMP_SLOT at " + Util.bytes2Hex(Util.int2bytes(reloc))
+							+ " , relocating to 0x" + Integer.toHexString(sym_address));
+					break;
+
+				case R_ARM_ABS32:
+					System.arraycopy(Util.int2bytes(sym_address + addend), 0, OS.getMemory(), reloc, ELF32_Addr);
+
+					Log.e("name : " + sym_name + " R_ARM_ABS32 at " + Util.bytes2Hex(Util.int2bytes(reloc)) + " , relocating to 0x"
+							+ Integer.toHexString(sym_address + addend));
+					break;
+
+				case R_ARM_REL32:
+					System.arraycopy(Util.int2bytes(addend + sym_address - Util.bytes2Int32(rel.r_offset)), 0,
+							OS.getMemory(), reloc, ELF32_Addr);
+
+					Log.e("name : " + sym_name + " R_ARM_REL32 at " + Util.bytes2Hex(Util.int2bytes(reloc)) + " , relocating to 0x"
+							+ Integer.toHexString(addend + sym_address - Util.bytes2Int32(rel.r_offset)));
+					break;
+				case R_ARM_RELATIVE: { // *reinterpret_cast<ElfW(Addr)*>(reloc)
+										// = (load_bias + addend);
+
+					System.arraycopy(Util.int2bytes(elf_load_bias + addend), 0, OS.getMemory(), reloc, ELF32_Addr);
+					// relocate here*/
+
+					Log.e("local sym : " + sym_name + " reloc : " + Util.bytes2Hex(OS.getMemory(), reloc, 4) + "  become : "
+							+ Integer.toHexString(elf_load_bias + addend));
+
+				}
+					break;
+
+				default:
+					throw new RuntimeException("unknown weak reloc type" + type);
+				}
+
+				Log.e();
 			}
 		}
 	}
@@ -522,12 +593,7 @@ public class ELF {
 
 		if (hasInitArray)
 			for (int i = 0; i < init_array_sz; i++)
-				callFunction(init_array + (i << 2)); // call_function("function"
-														// ,
-														// function[i])
-														// sizeof(function)
-														// = 4
-
+				callFunction(init_array + (i << 2));
 		else
 			Log.e("InitArray DT_INIARR no found , skipping ...");
 
@@ -661,19 +727,16 @@ public class ELF {
 				si.elf_header.isLittleEndian()); n != 0; n = Util.bytes2Int32(OS.getMemory(), si.chain + n * uint32_t,
 						uint32_t, si.elf_header.isLittleEndian())) {
 
-			Elf_Sym s = Elf_Sym.reinterpret_cast(OS.getMemory(), symtab + (n * Elf_Sym.size())); // Elf_Sym
-																									// size
-																									// is
-																									// 0x10
+			Elf_Sym s = Elf_Sym.reinterpret_cast(OS.getMemory(), symtab + (n * Elf_Sym.size()));
 
-			if (!name.equals(Util.getStringFromMemory(strtab + Util.bytes2Int32(s.st_name)))) {
+			if (!name.equals(Util.getStringFromMemory(strtab + Util.bytes2Int32(s.st_name))))
 				// Log.e("finding name : "
 				// + name
 				// + " but we found : "
 				// + Util.getStringFromMemory(strtab
 				// + Util.bytes2Int32(s.st_name)) + " , continue ...");
 				continue;
-			} else {
+			else {
 
 				switch (ELF_ST_BIND(s.st_info)) {
 				case STB_LOCAL:
@@ -682,9 +745,9 @@ public class ELF {
 
 				case STB_GLOBAL:
 				case STB_WEAK:
-					if (Util.bytes2Int32(s.st_shndx) == SHN_UNDEF) {
+					if (Util.bytes2Int32(s.st_shndx) == SHN_UNDEF)
 						continue;
-					}
+
 					return s;
 
 				default:
@@ -692,8 +755,6 @@ public class ELF {
 				}
 			}
 		}
-
-		// Log.e("cann't find " + name);
 		return null;
 	}
 
@@ -704,7 +765,7 @@ public class ELF {
 
 		do {
 
-			if (si != null/* && somain != null*/) {
+			if (si != null/* && somain != null */) {// somain is null
 
 				if (si == somain) {
 					s = soinfo_elf_lookup(si, elf_hash, name);
@@ -766,17 +827,22 @@ public class ELF {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
-		ELF elf = ELF.dlopen("C:\\Users\\monitor\\Desktop\\Decomplied File\\libtest.so");
-//		ELF elf = ELF.dlopen("C:\\Users\\monitor\\Desktop\\env\\libc.so");
-//		 String name = "__cxa_atexit";
-//		 Elf_Sym s = soinfo_elf_lookup(elf, elf_hash(name), name);
-//		 if (s == null)
-//		 System.out.println("unable to find " + name);
-//		 else
-//		 System.out.println("found " + name);
-//		
-//		 System.out.println(Util.byte2Hex(s.st_info));
-//		 System.out.println(Util.bytes2Hex(s.st_shndx));
+		ELF elf = ELF.dlopen("C:\\Users\\monitor\\Desktop\\Decomplied File\\crackme\\lib\\armeabi\\libdata.so");
+
+		String name = "Jni_OnLoad";
+
+		System.out.println("  --  search  " + name + " at : " + ELF.dlsym(elf, name));
+
+		// ELF elf = ELF.dlopen("C:\\Users\\monitor\\Desktop\\env\\libc.so");
+		// String name = "__cxa_atexit";
+		// Elf_Sym s = soinfo_elf_lookup(elf, elf_hash(name), name);
+		// if (s == null)
+		// System.out.println("unable to find " + name);
+		// else
+		// System.out.println("found " + name);
+		//
+		// System.out.println(Util.byte2Hex(s.st_info));
+		// System.out.println(Util.bytes2Hex(s.st_shndx));
 	}
 
 }
