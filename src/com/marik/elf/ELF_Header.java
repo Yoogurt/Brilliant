@@ -47,60 +47,60 @@ public class ELF_Header {
 	/**
 	 * ELF Identification 00 - 0F(32、64 bit)
 	 */
-	private byte[] e_ident;
+	byte[] e_ident;
 	/**
 	 * object file type 10 - 11(32、64 bit)
 	 */
-	private byte[] e_type;
+	byte[] e_type;
 	/**
 	 * target machine 12 - 13(32、64 bit)
 	 */
-	private byte[] e_machine;
+	byte[] e_machine;
 	/**
 	 * object file version 14 - 17(32、64 bit)
 	 */
-	private byte[] e_version;
+	byte[] e_version;
 	/**
 	 * virtual entry point , it's doesn't work when ELF is a shared object 18 -
 	 * 1B (64bit 18 - 1F)
 	 */
-	private byte[] e_entry;
+	byte[] e_entry;
 	/**
 	 * program header table offset 1C - 1F (64 bit 20 - 27)
 	 */
-	private byte[] e_phoff;
+	byte[] e_phoff;
 	/**
 	 * section hreader table offset 20 - 23 (64 bit 28 - 2F)
 	 */
-	private byte[] e_shoff;
+	byte[] e_shoff;
 	/**
 	 * processor-specific flags 24 - 27 (64 bit 30 - 33)
 	 */
-	private byte[] e_flags;
+	byte[] e_flags;
 	/**
 	 * ELF header size(the size of this class) 28 - 29 (64 bit 34 - 35)
 	 */
-	private byte[] e_ehsize;
+	byte[] e_ehsize;
 	/**
 	 * program hreader entry size 2A - 2B (64 bit 36 - 37)
 	 */
-	private byte[] e_phentsize;
+	byte[] e_phentsize;
 	/**
 	 * number of program header entries 2C - 2D (64 bit 38 - 39)
 	 */
-	private byte[] e_phnum;
+	byte[] e_phnum;
 	/**
-	 * sectin hreader entry size 2E - 2F (64 bit 3A - 3B)
+	 * section header entry size 2E - 2F (64 bit 3A - 3B)
 	 */
-	private byte[] e_shentsize;
+	byte[] e_shentsize;
 	/**
 	 * number of section header entries 30 - 31 (64 bit 3C - 3D)
 	 */
-	private byte[] e_shnum;
+	byte[] e_shnum;
 	/**
 	 * section header table's string table entry offset 32 - 33 (64 bit 3E - 3F)
 	 */
-	private byte[] e_shstrndex;
+	byte[] e_shstrndex;
 
 	ELF_Header(RandomAccessFile is) throws Exception {
 
@@ -112,9 +112,12 @@ public class ELF_Header {
 
 		if (is32Bit())
 			read32BitHeader(is);
+		else
+			throw new ELFDecodeException("64 bit not supported yet");
+
+		checkHeaderParameters();
 
 		readELFHeader();
-
 	}
 
 	private void read32BitHeader(RandomAccessFile is) throws Exception {
@@ -168,8 +171,10 @@ public class ELF_Header {
 																// Code correct
 																// or not
 				StandardELFMagicCode.length))
-			throw new Exception("Not a ELF File");
+			throw new ELFDecodeException("Not a ELF File");
+	}
 
+	private void checkHeaderParameters() throws ELFDecodeException {
 		switch (e_ident[EI_CALSS]) {
 		case ELFCLASS32:
 			Log.i("for 32 bit machine");
@@ -180,7 +185,7 @@ public class ELF_Header {
 			throw new UnsupportedOperationException("64 bit elf are not supported to decode");
 
 		default:
-			throw new Exception("ELF illegal class file , EI_CLASS = " + Util.byte2Hex(e_ident[EI_CALSS]));
+			throw new ELFDecodeException("ELF illegal class file , EI_CLASS = " + Util.byte2Hex(e_ident[EI_CALSS]));
 		}
 
 		switch (e_ident[EI_DATA]) {
@@ -192,15 +197,20 @@ public class ELF_Header {
 			Log.i("for big endian machine");
 
 		default:
-			throw new Exception("Unknown target endian machine");
+			throw new ELFDecodeException("Unknown target endian machine");
 		}
 
-		if (e_ident[EI_VERSION] != EV_CURRENT)
-			throw new Exception("Unknown ELF Version");
+		if (Util.bytes2Int32(e_type) != ET_DYN)
+			throw new ELFDecodeException();
 
+		if (Util.bytes2Int32(e_version) != EV_CURRENT)
+			throw new ELFDecodeException("Unknown ELF Version");
+
+		if (Util.bytes2Int32(e_machine) != EM_ARM)
+			throw new ELFDecodeException("elf has unexpected e_machine : " + Util.bytes2Hex(e_machine));
 	}
 
-	public void readELFHeader() throws Exception {
+	public void readELFHeader() throws ELFDecodeException {
 
 		Log.e();
 
@@ -225,7 +235,7 @@ public class ELF_Header {
 			Log.i("Specify Architecture ELF");
 			break;
 		default:
-			throw new Exception("Unknown ELF Type While reading ELF Header");
+			throw new ELFDecodeException("Unknown ELF Type While reading ELF Header");
 		}
 
 		switch (Util.bytes2Int32(e_machine, isLittleEndian())) {
@@ -245,11 +255,11 @@ public class ELF_Header {
 			Log.e("for Intel x86(64 bit processor)");
 			break;
 		default:
-			throw new Exception("Unsupport processor Architecture for this ELF !");
+			throw new ELFDecodeException("Unsupport processor Architecture for this ELF !");
 		}
 
 		if (Util.bytes2Int32(e_version, isLittleEndian()) != EV_CURRENT)
-			throw new Exception("Unknown ELF Version");
+			throw new ELFDecodeException("Unknown ELF Version");
 
 		Log.e();
 

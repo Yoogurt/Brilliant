@@ -12,6 +12,7 @@ import java.lang.reflect.Modifier;
 public abstract class CastSupport {
 
 	public CastSupport() {
+		
 		try {
 			Method reinterpret_cast_b_i = getClass().getDeclaredMethod("reinterpret_cast", byte[].class, Integer.TYPE);
 			Method reinterpret_cast_i = getClass().getDeclaredMethod("reinterpret_cast", byte[].class);

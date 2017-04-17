@@ -1,7 +1,6 @@
 package com.marik.elf;
 
 import static com.marik.elf.ELFDefinition.ELF_R_SYM;
-
 import static com.marik.elf.ELF_Constant.DT_RelType.*;
 import static com.marik.elf.ELFDefinition.ELF_R_TYPE;
 import static com.marik.elf.ELFDefinition.ELF_ST_BIND;
@@ -11,6 +10,8 @@ import static com.marik.elf.ELF_Constant.SHN_Info.SHN_UNDEF;
 import static com.marik.elf.ELF_Constant.SHT_Info.STB_GLOBAL;
 import static com.marik.elf.ELF_Constant.SHT_Info.STB_LOCAL;
 import static com.marik.elf.ELF_Constant.SHT_Info.STB_WEAK;
+
+import static com.marik.vm.OS.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -52,6 +53,8 @@ public class ELF {
 
 	public static final int LDPRELOAD_BUFSIZE = 512;
 	public static final int LDPRELOAD_MAX = 8;
+	
+	public static final int FLAG_LINKED = 2;
 
 	private static final String[] SYS_CALL_STR = { "__cxa_atexit", "__cxa_finalize", "__gnu_Unwind_Find_exidx", "abort",
 			"memcpy", "__cxa_begin_cleanup", "__cxa_type_match" };
@@ -109,6 +112,7 @@ public class ELF {
 	private Map<ELF_Phdr, MapEntry> MAP = new HashMap<>();
 
 	private boolean mEnable = false;
+	private int mFlag = 0;
 
 	private String name;
 
@@ -180,7 +184,7 @@ public class ELF {
 
 	private ELF(String file) throws Exception {
 		this(new File(file));
-		System.out.println(name + " loaded ! base : " + Integer.toHexString(elf_base) + " to : "
+		System.out.println("\n" + name + " loaded ! base : " + Integer.toHexString(elf_base) + " to : "
 				+ Integer.toHexString(elf_base + elf_size) + "  load_bias : " + Integer.toHexString(elf_load_bias)
 				+ "\n\n\n");
 	}
@@ -205,7 +209,7 @@ public class ELF {
 
 	public static void dlcolse(ELF elf) {
 
-		OS.unmmap(elf.elf_base, elf.elf_size);
+		unmmap(elf.elf_base, elf.elf_size);
 		elf.mEnable = false;
 
 	}
@@ -227,7 +231,6 @@ public class ELF {
 	private void findLibrary(RandomAccessFile raf) throws Exception {
 
 		elf_header = new ELF_Header(raf);
-
 		/*
 		 * big endian will be supported someday rather than now
 		 */
@@ -241,19 +244,14 @@ public class ELF {
 			throw new UnsupportedDataTypeException("ELFDecoder don't support except 32 bit architecture");
 
 		elf_phdr = new ELF_ProgramHeader(raf, elf_header, false);
-		elf_dynamic = new ELF_Dynamic(raf, elf_phdr.getDynamicSegment());
-
 		reserveAddressSpace();
-
 		loadSegments(raf);
-
+		
+		elf_dynamic = new ELF_Dynamic(raf, elf_phdr.getDynamicSegment());
 		link_image();
-
-		soinfo_relocate();
 
 		callConstructors();
 		callArrays();
-
 	}
 
 	private void reserveAddressSpace() {
@@ -262,7 +260,7 @@ public class ELF {
 
 		ReserveLoadableSegment r = phdr_table_get_load_size(allLoadableSegment);
 
-		elf_base = OS.mmap(0, (int) (r.max_address - r.min_address), (byte) 0, null, 0);
+		elf_base = mmap(0, (int) (r.max_address - r.min_address), (byte) 0, null, 0);
 		if (elf_base < 0)
 			throw new RuntimeException("mmap fail while reservse space");
 
@@ -301,8 +299,8 @@ public class ELF {
 		}
 
 		ReserveLoadableSegment r = new ReserveLoadableSegment();
-		r.min_address = OS.PAGE_START(minAddress);
-		r.max_address = OS.PAGE_END(maxAddress);
+		r.min_address = PAGE_START(minAddress);
+		r.max_address = PAGE_END(maxAddress);
 
 		if (minAddress > maxAddress || maxAddress < 0 || minAddress < 0)
 			throw new RuntimeException("can not parse phdr address");
@@ -320,8 +318,8 @@ public class ELF {
 			m.seg_start = Util.bytes2Int64(ph.p_vaddr) + elf_load_bias;
 			m.seg_end = m.seg_start + Util.bytes2Int64(ph.p_memsz);
 
-			m.seg_page_start = OS.PAGE_START(m.seg_start);
-			m.seg_page_end = OS.PAGE_END(m.seg_end);
+			m.seg_page_start = PAGE_START(m.seg_start);
+			m.seg_page_end = PAGE_END(m.seg_end);
 
 			m.seg_file_end = m.seg_start + Util.bytes2Int64(ph.p_filesz);
 
@@ -329,14 +327,19 @@ public class ELF {
 			m.file_start = Util.bytes2Int64(ph.p_offset);
 			m.file_end = m.file_start + Util.bytes2Int64(ph.p_filesz);
 
-			m.file_page_start = OS.PAGE_START(m.file_start);
+			m.file_page_start = PAGE_START(m.file_start);
 			m.file_length = m.file_end - m.file_page_start;
 
-			if (0 > OS.mmap((int) m.seg_page_start, (int) m.file_length, OS.MAP_FIXED, raf, m.file_page_start))
+			if (0 > mmap((int) m.seg_page_start, (int) m.file_length, MAP_FIXED, raf, m.file_page_start))
 				throw new RuntimeException("Unable to mmap segment : " + ph.toString());
 
 			MAP.put(ph, m);
 		}
+		
+		/*
+		 * zero full the remain space , in java it generate automatic
+		 * and we don't check elf_phdr is in memory or not
+		 * */
 
 	}
 
@@ -403,6 +406,9 @@ public class ELF {
 
 			this.needed[count++] = elf;
 		}
+		
+		soinfo_relocate();
+		
 	}
 
 	/**

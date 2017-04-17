@@ -75,8 +75,8 @@ class MemoryMapper {
 		if (OS.PAGE_OFFSET(start) != 0)
 			return -1;
 
-		int startIndex = (int) (start >> OS.PAGE_BIT);
-		int endIndex = (int) ((OS.PAGE_END(length) >> OS.PAGE_BIT) + startIndex);
+		int startIndex = (int) (start >> OS.PAGE_SHIFT);
+		int endIndex = (int) ((OS.PAGE_END(length) >> OS.PAGE_SHIFT) + startIndex);
 		if(OS.debug){
 		System.out.println("start " + start + " length " + length);
 		System.out.println("startIndex " + startIndex + " endIndex " + endIndex);
@@ -92,8 +92,8 @@ class MemoryMapper {
 				raf.seek(offset);
 				raf.read(OS.mMemory, start, length);
 
-				int inc_Bit = (int) (OS.PAGE_END(length) + start) >> OS.PAGE_BIT;
-				for (int mPtr = start >> OS.PAGE_BIT; mPtr < inc_Bit; mPtr++)
+				int inc_Bit = (int) (OS.PAGE_END(length) + start) >> OS.PAGE_SHIFT;
+				for (int mPtr = start >> OS.PAGE_SHIFT; mPtr < inc_Bit; mPtr++)
 					OS.mFlag[mPtr] = flag;
 
 			} catch (IOException e) {
@@ -108,16 +108,16 @@ class MemoryMapper {
 
 		int blockCount = 0;
 		int lastSearch = 0;
-		int needBlockCount = (int) (OS.PAGE_END(length) >> OS.PAGE_BIT);
+		int needBlockCount = (int) (OS.PAGE_END(length) >> OS.PAGE_SHIFT);
 
 		int arrayLength = OS.mFlag.length;
 		for (int i = 0; i < arrayLength; i++) {
 			if (OS.mFlag[i] == -1)
 				if (++blockCount >= needBlockCount)
 					if (needBlockCount == 1)
-						return i << OS.PAGE_BIT;
+						return i << OS.PAGE_SHIFT;
 					else
-						return lastSearch << OS.PAGE_BIT;
+						return lastSearch << OS.PAGE_SHIFT;
 
 				else if (lastSearch == -1)
 					lastSearch = i;
@@ -128,7 +128,7 @@ class MemoryMapper {
 				blockCount = 0;
 			}
 		}
-		return blockCount == needBlockCount ? (lastSearch << OS.PAGE_BIT) : -1;
+		return blockCount == needBlockCount ? (lastSearch << OS.PAGE_SHIFT) : -1;
 	}
 
 	private static int mmapNotFix(int length, byte flag, RandomAccessFile raf, long offset) {
@@ -152,9 +152,9 @@ class MemoryMapper {
 				return -1;
 			}
 
-		int inc_Bit = (int) (OS.PAGE_END(length) + startAddr) >> OS.PAGE_BIT;
+		int inc_Bit = (int) (OS.PAGE_END(length) + startAddr) >> OS.PAGE_SHIFT;
 
-		for (int mPtr = startAddr >> OS.PAGE_BIT; mPtr < inc_Bit; mPtr++)
+		for (int mPtr = startAddr >> OS.PAGE_SHIFT; mPtr < inc_Bit; mPtr++)
 			OS.mFlag[mPtr] = flag;
 
 		return startAddr;
@@ -168,9 +168,9 @@ class MemoryMapper {
 		if (OS.PAGE_OFFSET(start) > 0)
 			return -1;
 
-		int blockCount = (int) (OS.PAGE_END(length) >> OS.PAGE_BIT);
+		int blockCount = (int) (OS.PAGE_END(length) >> OS.PAGE_SHIFT);
 
-		int startBlock = start >> OS.PAGE_BIT;
+		int startBlock = start >> OS.PAGE_SHIFT;
 		int endIndex = startBlock + blockCount;
 
 		if (endIndex > OS.mFlag.length)
@@ -195,7 +195,7 @@ class MemoryMapper {
 
 		byte[] result = new byte[size];
 		System.arraycopy(OS.mMemory, 0, result, 0, OS.mMemory.length);
-		byte[] flag = new byte[size >> OS.PAGE_BIT];
+		byte[] flag = new byte[size >> OS.PAGE_SHIFT];
 		System.arraycopy(OS.mFlag, 0, flag, 0, OS.mFlag.length);
 
 		int start = OS.mFlag.length;

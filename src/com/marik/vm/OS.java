@@ -31,11 +31,11 @@ public class OS {
 
 	public static final byte MAP_FIXED = 16;
 	@Deprecated
-	public static final byte MAP_ANONYMOUS = 32; // not implements
+	public static final byte MAP_ANONYMOUS = 32; // not implements , mmap flag will carry this flag automatic
 
-	static final long PAGE_MASK = ~(4096 - 1);
-	static final int PAGE_SIZE = 4096;
-	static final int PAGE_BIT = 12;
+	public static final long PAGE_MASK = ~(4096 - 1);
+	public static final int PAGE_SIZE = 4096;
+	public static final int PAGE_SHIFT = 12;
 
 	public static long PAGE_START(long val) {
 		return val & PAGE_MASK;
@@ -50,7 +50,7 @@ public class OS {
 	}
 
 	public static int mmap(int start, int length, int flags, RandomAccessFile fd, long offset) {
-		return MemoryMapper.mmap(start, length, (byte) flags, fd, offset);
+		return MemoryMapper.mmap(start, length, (byte) (flags & MAP_ANONYMOUS), fd, offset);
 	}
 
 	public static byte[] getMemory() {

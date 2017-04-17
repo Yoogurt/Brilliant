@@ -3,10 +3,6 @@ package com.marik.elf;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Addr;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Off;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Word;
-import static com.marik.elf.ELF_Constant.ELFUnit.ELF64_Addr;
-import static com.marik.elf.ELF_Constant.ELFUnit.ELF64_Off;
-import static com.marik.elf.ELF_Constant.ELFUnit.ELF64_Word;
-import static com.marik.elf.ELF_Constant.ELFUnit.ELF64_Xword;
 import static com.marik.elf.ELF_Constant.ProgramHeaderContent.PT_DYNAMIC;
 import static com.marik.elf.ELF_Constant.ProgramHeaderContent.PT_GUN_STACK;
 import static com.marik.elf.ELF_Constant.ProgramHeaderContent.PT_INTERP;
@@ -21,13 +17,13 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.marik.Interface.CastSupport;
 import com.marik.util.Log;
 import com.marik.util.Util;
 
-@SuppressWarnings("all")
 public class ELF_ProgramHeader {
 
-	public class ELF_Phdr {
+	static public class ELF_Phdr extends CastSupport {
 
 		/**
 		 * segment type
@@ -101,6 +97,18 @@ public class ELF_ProgramHeader {
 			return Util.bytes2Int32(p_filesz);
 		}
 
+		public static ELF_Phdr reinterpret_cast(byte[] data) {
+			return reinterpret_cast(data, 0);
+		}
+
+		public static ELF_Phdr reinterpret_cast(byte[] data, int startIndex) {
+			throw new UnsupportedOperationException();
+		}
+
+		public static int size() {
+			return 32;
+		}
+
 	}
 
 	private ELF_Header header;
@@ -111,29 +119,28 @@ public class ELF_ProgramHeader {
 
 	private ELF_Phdr mDynamicSegment;
 
-	private boolean isPT_PHDRExist;
-	private boolean isPT_INTERPExist;
-
-	private boolean mCheck;
-
 	public ELF_ProgramHeader(RandomAccessFile is, ELF_Header header, boolean check) throws Exception {
 
 		Log.e(Constant.DIVISION_LINE);
 		Log.e(Constant.ELF_PROGRAM_TABLE);
 		Log.e(Constant.DIVISION_LINE);
 
-		mCheck = check;
-
-		isPT_PHDRExist = false;
-		isPT_INTERPExist = false;
-
 		this.header = header;
+
+		verifyPhdrNum(header);
 
 		is.seek(header.getProgramHeaderTableOffset());
 
 		if (header.is32Bit())
 			read32ProgramHeader(is);
+	}
 
+	private void verifyPhdrNum(ELF_Header header) throws ELFDecodeException {
+
+		int phdr_num_ = header.getProgramHeaderTableNum();
+
+		if (phdr_num_ < 1 || phdr_num_ > 65536 / ELF_Phdr.size())
+			throw new ELFDecodeException("Elf_Phdr larger than 64 KB");
 	}
 
 	private void read32ProgramHeader(RandomAccessFile is) throws Exception {
@@ -179,9 +186,7 @@ public class ELF_ProgramHeader {
 				break;
 
 			case PT_PHDR:
-
 				Log.e("Program Header " + m + " type : PT_PHDR");
-				verifyProgramHeader32(ph);
 				break;
 
 			case PT_GUN_STACK:
@@ -206,72 +211,16 @@ public class ELF_ProgramHeader {
 	}
 
 	private void verifyInterpretorSegment(ELF_Phdr ph, RandomAccessFile raf) {
-		if (!isPT_INTERPExist) {
-			isPT_INTERPExist = true;
 
-			try {
-				long prePosition = raf.getFilePointer();
-				raf.seek(Util.bytes2Int64(ph.p_offset));
-				Log.e("Interpretor : " + Util.getStringFromBytes(raf));
-				raf.seek(prePosition);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		} else
-			throw new RuntimeException("Interpret Segment appear over once!");
+		try {
+			long prePosition = raf.getFilePointer();
+			raf.seek(Util.bytes2Int64(ph.p_offset));
+			Log.e("Interpretor : " + Util.getStringFromBytes(raf));
+			raf.seek(prePosition);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-
-	// @Deprecated
-	// private void verifyDynamicSegmentBeforAllLoadableSegment32(ELF_Phdr
-	// dynamicSegment, ELF_Header header) {
-	//
-	// for (int m = 0; m < mLoadablePtr; m++) {
-	// ELF_Phdr mT = mInternalProgramHeader[mLoadableSegment[m]];
-	//
-	// if (Util.bytes2Int32(mT.p_offset, header.isLittleEndian()) <
-	// Util.bytes2Int32(dynamicSegment.p_offset,
-	// header.isLittleEndian()))
-	// throw new RuntimeException("Loadable Segment before Dynamic Segment ,
-	// dynamic Segment : "
-	// + Util.bytes2Hex(dynamicSegment.p_offset) + " , Loadable Segment : "
-	// + Util.bytes2Hex(mT.p_offset));
-	// }
-	//
-	// }
-
-	// private void verifyDynamicSegmentBeforAllLoadableSegment64(ELF_Phdr
-	// dynamicSegment) {
-	//
-	// for (int m = 0; m < mLoadablePtr; m++) {
-	// ELF_Phdr mT = mInternalProgramHeader[mLoadableSegment[m]];
-	//
-	// // if (Util.bytes2Int64(mT.p_offset) <
-	// // Util.bytes2Int64(dynamicSegment.p_offset))
-	// // throw new RuntimeException("Loadable Segment before Dynamic
-	// // Segment , dynamic Segment : "
-	// // + Util.bytes2Hex(dynamicSegment.p_offset) + " , Loadable Segment
-	// // : "
-	// // + Util.bytes2Hex(mT.p_offset));
-	// }
-	//
-	// }
-
-	// private void addLoadableInfoIntoArray(int index) {
-	//
-	// mLoadableSegment[mLoadablePtr++] = index;
-	//
-	// }
-	//
-	// private void initializeLoadableSegmentArray(int maxHeaderCount) {
-	//
-	// mLoadableSegment = new int[maxHeaderCount];
-	// mLoadablePtr = 0;
-	//
-	// for (int m = 0; m < maxHeaderCount; m++)
-	// mLoadableSegment[m] = -1;
-	//
-	// }
 
 	public ELF_Phdr getDynamicSegment() {
 		return mDynamicSegment;
@@ -290,58 +239,6 @@ public class ELF_ProgramHeader {
 
 	}
 
-	private void read64ProgramHeaderInternal(ELF_Phdr ph, RandomAccessFile is) throws IOException {
-
-		is.read(ph.p_type);
-		is.read(ph.p_flags);
-		is.read(ph.p_offset);
-		is.read(ph.p_vaddr);
-		is.read(ph.p_paddr);
-		is.read(ph.p_filesz);
-		is.read(ph.p_memsz);
-		is.read(ph.p_align);
-
-	}
-
-	private void verifyProgramHeader32(ELF_Phdr ph) {
-		if (!mCheck)
-			return;
-
-		if (isPT_PHDRExist)
-			throw new RuntimeException("Multi-PT_PHDR defined !");
-		isPT_PHDRExist = true;
-
-		if (header.getProgramHeaderTableOffset() != Util.bytes2Int32(ph.p_offset, header.isLittleEndian()))
-			throw new RuntimeException("Program Header Offset Verify Fail");
-
-		if (header.getProgramHeaderTableEntrySize() * header.getProgramHeaderTableNum() != Util.bytes2Int32(ph.p_filesz,
-				header.isLittleEndian()))
-			throw new RuntimeException("Program Header Size Verify Fail , exspect " + Util.bytes2Hex(ph.p_filesz)
-					+ " , got "
-					+ Integer.toHexString(header.getProgramHeaderTableEntrySize() * header.getProgramHeaderTableNum()));
-
-		Log.e("Program Header Verify Success\n");
-	}
-
-	private void verifyProgramHeader64(ELF_Phdr ph) {
-
-		if (!mCheck)
-			return;
-
-		if (isPT_PHDRExist)
-			throw new RuntimeException("Multi-PT_PHDR defined !");
-		isPT_PHDRExist = true;
-
-		if (header.getProgramHeaderTableOffset() != Util.bytes2Int64(ph.p_offset))
-			throw new RuntimeException("Program Header Offset Verify Fail");
-
-		if (header.getProgramHeaderTableEntrySize() * header.getProgramHeaderTableNum() != Util
-				.bytes2Int64(ph.p_filesz))
-			throw new RuntimeException("Program Header Size Verify Fail");
-
-		Log.e("Program Header Verify Success\n");
-	}
-
 	private void logSegmentInfo(ELF_Phdr ph) {
 
 		Log.e("Segment p_offset :  " + Util.bytes2Hex(ph.p_offset));
@@ -358,30 +255,14 @@ public class ELF_ProgramHeader {
 	private ELF_Phdr generate32ProgramHeaderStruture(int id) {
 
 		ELF_Phdr ph = new ELF_Phdr(this, id);
-		ph.p_type = new byte[ELF32_Word];
-		ph.p_offset = new byte[ELF32_Off];
-		ph.p_vaddr = new byte[ELF32_Addr];
-		ph.p_paddr = new byte[ELF32_Addr];
-		ph.p_filesz = new byte[ELF32_Word];
-		ph.p_memsz = new byte[ELF32_Word];
-		ph.p_flags = new byte[ELF32_Word];
-		ph.p_align = new byte[ELF32_Word];
-
-		return ph;
-
-	}
-
-	private ELF_Phdr generate64ProgramHeaderStruture(int id) {
-
-		ELF_Phdr ph = new ELF_Phdr(this, id);
-		ph.p_type = new byte[ELF64_Word];
-		ph.p_offset = new byte[ELF64_Off];
-		ph.p_vaddr = new byte[ELF64_Addr];
-		ph.p_paddr = new byte[ELF64_Addr];
-		ph.p_filesz = new byte[ELF64_Xword];
-		ph.p_memsz = new byte[ELF64_Xword];
-		ph.p_flags = new byte[ELF64_Word];
-		ph.p_align = new byte[ELF64_Xword];
+		ph.p_type = new byte[ELF32_Word];// 4
+		ph.p_offset = new byte[ELF32_Off];// 4
+		ph.p_vaddr = new byte[ELF32_Addr];// 4
+		ph.p_paddr = new byte[ELF32_Addr];// 4
+		ph.p_filesz = new byte[ELF32_Word];// 4
+		ph.p_memsz = new byte[ELF32_Word];// 4
+		ph.p_flags = new byte[ELF32_Word];// 4
+		ph.p_align = new byte[ELF32_Word];// 4
 
 		return ph;
 

@@ -596,5 +596,8 @@ public final class ELF_Dynamic {
 			mRelocateSections.add(new ELF_Relocate(raf, mJmpRel, mJmpRelSz, this, false));
 		if (mRela != 0)
 			mRelocateSections.add(new ELF_Relocate(raf, mRela, mRelaSz, this, true));
+		
+		if(mRelocateSections.size() == 0)
+			Log.e("\n no relocation Section Detected !\n");
 	}
 }
