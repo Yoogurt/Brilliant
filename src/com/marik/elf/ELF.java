@@ -53,7 +53,7 @@ public class ELF {
 
 	public static final int LDPRELOAD_BUFSIZE = 512;
 	public static final int LDPRELOAD_MAX = 8;
-	
+
 	public static final int FLAG_LINKED = 2;
 
 	private static final String[] SYS_CALL_STR = { "__cxa_atexit", "__cxa_finalize", "__gnu_Unwind_Find_exidx", "abort",
@@ -220,9 +220,7 @@ public class ELF {
 		name = file.getName();
 
 		try {
-
 			findLibrary(raf);
-
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		}
@@ -246,7 +244,7 @@ public class ELF {
 		elf_phdr = new ELF_ProgramHeader(raf, elf_header, false);
 		reserveAddressSpace();
 		loadSegments(raf);
-		
+
 		elf_dynamic = new ELF_Dynamic(raf, elf_phdr.getDynamicSegment());
 		link_image();
 
@@ -335,11 +333,11 @@ public class ELF {
 
 			MAP.put(ph, m);
 		}
-		
+
 		/*
-		 * zero full the remain space , in java it generate automatic
-		 * and we don't check elf_phdr is in memory or not
-		 * */
+		 * zero full the remain space , in java it generate automatic and we
+		 * don't check elf_phdr is in memory or not
+		 */
 
 	}
 
@@ -406,9 +404,9 @@ public class ELF {
 
 			this.needed[count++] = elf;
 		}
-		
+
 		soinfo_relocate();
-		
+
 	}
 
 	/**
@@ -419,7 +417,7 @@ public class ELF {
 	public int get_addend(Elf_rel rel, int reloc_addr) {
 
 		if (ELF_R_TYPE(rel.r_info) == R_ARM_RELATIVE || ELF_R_TYPE(rel.r_info) == R_ARM_IRELATIVE
-				|| ELF_R_TYPE(rel.r_info) == R_ARM_ABS32)
+				|| ELF_R_TYPE(rel.r_info) == R_ARM_ABS32 || ELF_R_TYPE(rel.r_info) == R_ARM_REL32)
 			return Util.bytes2Int32(OS.getMemory(), reloc_addr, ELF32_Addr, elf_header.isLittleEndian()); // Extract
 																											// reloc_addr(pointer)'s
 																											// value
@@ -453,8 +451,10 @@ public class ELF {
 
 			Elf_rel[] entries = r.getRelocateEntry();
 			for (Elf_rel rel : entries) {
-				// ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rel->r_offset +
-				// load_bias);
+				/*
+				 * ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rel->r_offset +
+				 * load_bias);
+				 */
 				int reloc = Util.bytes2Int32(rel.r_offset) + elf_load_bias;
 				int sym = ELF_R_SYM(rel.r_info);
 				int type = ELF_R_TYPE(rel.r_info);
@@ -549,25 +549,25 @@ public class ELF {
 				case R_ARM_ABS32:
 					System.arraycopy(Util.int2bytes(sym_address + addend), 0, OS.getMemory(), reloc, ELF32_Addr);
 
-					Log.e("name : " + sym_name + " R_ARM_ABS32 at " + Util.bytes2Hex(Util.int2bytes(reloc)) + " , relocating to 0x"
-							+ Integer.toHexString(sym_address + addend));
+					Log.e("name : " + sym_name + " R_ARM_ABS32 at " + Util.bytes2Hex(Util.int2bytes(reloc))
+							+ " , relocating to 0x" + Integer.toHexString(sym_address + addend));
 					break;
 
 				case R_ARM_REL32:
 					System.arraycopy(Util.int2bytes(addend + sym_address - Util.bytes2Int32(rel.r_offset)), 0,
 							OS.getMemory(), reloc, ELF32_Addr);
 
-					Log.e("name : " + sym_name + " R_ARM_REL32 at " + Util.bytes2Hex(Util.int2bytes(reloc)) + " , relocating to 0x"
+					Log.e("name : " + sym_name + " R_ARM_REL32 at " + Util.bytes2Hex(Util.int2bytes(reloc))
+							+ " , relocating to 0x"
 							+ Integer.toHexString(addend + sym_address - Util.bytes2Int32(rel.r_offset)));
 					break;
 				case R_ARM_RELATIVE: { // *reinterpret_cast<ElfW(Addr)*>(reloc)
 										// = (load_bias + addend);
 
 					System.arraycopy(Util.int2bytes(elf_load_bias + addend), 0, OS.getMemory(), reloc, ELF32_Addr);
-					// relocate here*/
-
-					Log.e("local sym : " + sym_name + " reloc : " + Util.bytes2Hex(OS.getMemory(), reloc, 4) + "  become : "
-							+ Integer.toHexString(elf_load_bias + addend));
+					/* relocate here*/
+					Log.e("local sym : " + sym_name + " reloc : " + Util.bytes2Hex(OS.getMemory(), reloc, 4)
+							+ "  become : " + Integer.toHexString(elf_load_bias + addend));
 
 				}
 					break;
@@ -604,86 +604,6 @@ public class ELF {
 			Log.e("InitArray DT_INIARR no found , skipping ...");
 
 	}
-
-	// /**
-	// * Useless in linker
-	// */
-	// @Deprecated
-	// public Map<ELF_Phdr, List<ELF_Shdr>>
-	// getProgramSectionMapping(ELF_ProgramHeader programHeader,
-	// ELF_SectionHeader sectionHeader) {
-	//
-	// if (true)
-	// throw new UnsupportedOperationException();
-	//
-	// Map<ELF_Phdr, List<ELF_Shdr>> map = new HashMap<>();
-	//
-	// ELF_ProgramHeader.ELF_Phdr[] programs =
-	// programHeader.getAllDecodedProgramHeader();
-	// ELF_SectionHeader.ELF_Shdr[] sections =
-	// sectionHeader.getAllDecodedSectionHeader();
-	//
-	// boolean puts = false;
-	//
-	// for (ELF_SectionHeader.ELF_Shdr section : sections) {
-	// puts = false;
-	// for (ELF_ProgramHeader.ELF_Phdr program : programs)
-	//
-	// if ((section.getMemoryOffset() >= program.getMemoryOffset()) &&
-	// ((section.getMemoryOffset()
-	// + section.getMemorySize()) <= (program.getMemoryOffset() +
-	// program.getMemorySize()))) { // os
-	// // mapping
-	// // it
-	// // in
-	// // memory
-	// // ,
-	// // so
-	// // we
-	// // use
-	// // memory
-	// // address
-	// // to
-	// // map
-	// // it
-	//
-	// List<ELF_SectionHeader.ELF_Shdr> list = map.get(program);
-	// if (list == null) {
-	// list = new ArrayList<>();
-	// map.put(program, list);
-	// }
-	//
-	// list.add(section);
-	// puts = true;
-	// break;
-	// }
-	// if (!puts)
-	// Log.e("Unable to mapping " + section.getName() + " , offset at " +
-	// Util.bytes2Hex(section.sh_offset)
-	// + " , program offset : " + section.getSectionOffset() + " , size : "
-	// + section.getSectionSize());
-	// }
-	// return map;
-	// }
-
-	/*------------------------------------------------------------------------------------------------------------------------------*/
-
-	/*
-	 * uint32_t SymbolName::elf_hash() { if (!has_elf_hash_) { const uint8_t*
-	 * name = reinterpret_cast<const uint8_t*>(name_); uint32_t h = 0, g;
-	 * 
-	 * while (*name) { h = (h << 4) + *name++; g = h & 0xf0000000; h ^= g; h ^=
-	 * g >> 24; }
-	 * 
-	 * elf_hash_ = h; has_elf_hash_ = true; }
-	 * 
-	 * return elf_hash_; }
-	 * 
-	 * 
-	 * h , g are long instead of int , because it will overflow if they are
-	 * integer , unsigned -> 32bit but int in Java -> 31bit + 1 sym bit we
-	 * return long for avoiding overflow
-	 */
 
 	private static long elf_hash(String name) {
 
