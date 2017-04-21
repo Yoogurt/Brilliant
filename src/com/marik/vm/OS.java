@@ -50,7 +50,7 @@ public class OS {
 	}
 
 	public static int mmap(int start, int length, int flags, RandomAccessFile fd, long offset) {
-		return MemoryMapper.mmap(start, length, (byte) (flags & MAP_ANONYMOUS), fd, offset);
+		return MemoryMapper.mmap(start, length, (byte) (flags | MAP_ANONYMOUS), fd, offset);
 	}
 
 	public static byte[] getMemory() {
