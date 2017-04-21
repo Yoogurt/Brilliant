@@ -1,11 +1,14 @@
-package com.marik.arm.OpCode.instructionSet;
+package com.marik.arm.OpCode.arm.instructionSet;
 
-import static com.marik.arm.OpCode.OpUtil.*;
+import static com.marik.arm.OpCode.OpUtil.assert0;
+import static com.marik.arm.OpCode.OpUtil.assert1;
+import static com.marik.arm.OpCode.OpUtil.assertBit0;
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 
-import com.marik.arm.OpCode.instruction.AND_Register_A8_326;
-import com.marik.arm.OpCode.instruction.EOR_Register_A8_384;
+import com.marik.arm.OpCode.arm.instruction.AND_Register_A8_326;
+import com.marik.arm.OpCode.arm.instruction.EOR_Register_A8_384;
 
-public class DataProcessingAndMiscellaneousInstructions_A5_190 extends ParseSupport {
+public class DataProcessingAndMiscellaneousInstructions_A5_190 {
 	public static String parse(int data) {
 
 		int op = getShiftInt(data, 25, 1);
@@ -91,13 +94,10 @@ public class DataProcessingAndMiscellaneousInstructions_A5_190 extends ParseSupp
 		int op = getShiftInt(data, 20, 5);
 
 		if (assert0(op, 1, 2, 3, 4))
-			return AND_Register_A8_326.parse(data);
+			return AND_Register_A8_326.INSTANCE.parse(data);
 
 		if (assert0(op, 2, 3, 4) && assert1(op, 1))
 			return EOR_Register_A8_384.parse(data);
-
-		int imm5 = getShiftInt(data, 7, 5);
-		int op2 = getShiftInt(data, 5, 2);
 
 		return null;
 	}

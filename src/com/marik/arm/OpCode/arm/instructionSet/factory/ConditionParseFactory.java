@@ -1,12 +1,12 @@
-package com.marik.arm.OpCode;
+package com.marik.arm.OpCode.arm.instructionSet.factory;
 
 import static com.marik.arm.OpCode.OpUtil.*;
 
-import com.marik.arm.OpCode.instructionSet.BranchWithLinkAndBlockDataTransfer_A5_214;
-import com.marik.arm.OpCode.instructionSet.CoprocessorInstructionAndSupervisorCall_A5_215;
-import com.marik.arm.OpCode.instructionSet.DataProcessingAndMiscellaneousInstructions_A5_190;
-import com.marik.arm.OpCode.instructionSet.LoadAndStoreWord_A5_208;
-import com.marik.arm.OpCode.instructionSet.MediaInstruction_A5_209;
+import com.marik.arm.OpCode.arm.instructionSet.BranchWithLinkAndBlockDataTransfer_A5_214;
+import com.marik.arm.OpCode.arm.instructionSet.CoprocessorInstructionAndSupervisorCall_A5_215;
+import com.marik.arm.OpCode.arm.instructionSet.DataProcessingAndMiscellaneousInstructions_A5_190;
+import com.marik.arm.OpCode.arm.instructionSet.LoadAndStoreWord_A5_208;
+import com.marik.arm.OpCode.arm.instructionSet.MediaInstruction_A5_209;
 
 public class ConditionParseFactory {
 
