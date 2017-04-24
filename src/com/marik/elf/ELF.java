@@ -746,22 +746,11 @@ public class ELF {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
-		ELF elf = ELF.dlopen("C:\\Users\\monitor\\Desktop\\Decomplied File\\crackme\\lib\\armeabi\\libdata.so");
+		ELF elf = ELF.dlopen("C:\\Users\\monitor\\Desktop\\Decomplied File\\libtest.so");
 
-		String name = "Jni_OnLoad";
 
-		System.out.println("  --  search  " + name + " at : " + ELF.dlsym(elf, name));
-
-		// ELF elf = ELF.dlopen("C:\\Users\\monitor\\Desktop\\env\\libc.so");
-		// String name = "__cxa_atexit";
-		// Elf_Sym s = soinfo_elf_lookup(elf, elf_hash(name), name);
-		// if (s == null)
-		// System.out.println("unable to find " + name);
-		// else
-		// System.out.println("found " + name);
-		//
-		// System.out.println(Util.byte2Hex(s.st_info));
-		// System.out.println(Util.bytes2Hex(s.st_shndx));
+		OS.dumpMemory(new PrintStream(new File("C:\\Users\\monitor\\Desktop\\dump.txt")), elf.elf_base, elf.elf_size);
 	}
+	
 
 }

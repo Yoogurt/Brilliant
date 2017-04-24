@@ -3,23 +3,32 @@ package com.marik.arm.OpCode.thumb16.instruction;
 import com.marik.arm.OpCode.OpUtil;
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
-public class LDM_A8_396 implements ParseSupport {
+public class LDM_A8_396 extends ParseSupport {
 	public static final LDM_A8_396 INSTANCE = new LDM_A8_396();
 
-	public String parse(int data) {
-
-		int head = OpUtil.getShiftInt(data, 12, 4);
-		if (head == 0b11001)
-			decodeThumb16(data);
-
-		throw new IllegalArgumentException("Unable to decode instruction " + Integer.toBinaryString(data));
+	@Override
+	protected String getOpCode() {
+		return "LDM";
 	}
 
-	private String decodeThumb16(int data) {
+	@Override
+	protected String getRn(int data) {
+		int Rn = OpUtil.getShiftInt(data, 8, 3);
+		int registerList = OpUtil.getShiftInt(data, 0, 8);
 
-		StringBuilder sb = new StringBuilder("LDM");
+		if (!OpUtil.isRigisterInRegisterList(Rn, registerList))
+			return OpUtil.parseRegister(Rn) + "!";
+		return OpUtil.parseRegister(Rn);
+	}
 
-		return sb.toString();
+	@Override
+	protected String getRm(int data) {
+		return OpUtil.parseRigisterBit(OpUtil.getShiftInt(data, 0, 8), OpUtil.getShiftInt(data, 8, 3));
+	}
+
+	@Override
+	protected boolean isRmRegisterList() {
+		return true;
 	}
 
 }

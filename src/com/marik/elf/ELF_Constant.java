@@ -425,9 +425,6 @@ public class ELF_Constant {
 	}
 
 	public static class DT_RelType {
-//		public static final byte R_GENERIC_RELATIVE = 0x17;
-//		public static final byte R_GENERIC_GLOB_DAT = 0x15;
-//		public static final byte R_GENERIC_JUMP_SLOT = 0x16;
 
 		public static final int R_ARM_NONE = 0; /* No reloc */
 		public static final int R_ARM_PC24 = 1; /* PC relative 26 bit branch */
@@ -443,7 +440,8 @@ public class ELF_Constant {
 		public static final int R_ARM_THM_PC8 = 11;
 		public static final int R_ARM_AMP_VCALL9 = 12;
 		public static final int R_ARM_SWI24 = 13; /*
-													 * Obsolete static relocation.
+													 * Obsolete static
+													 * relocation.
 													 */
 		public static final int R_ARM_TLS_DESC = 13; /* Dynamic relocation. */
 		public static final int R_ARM_THM_SWI8 = 14;
@@ -454,7 +452,8 @@ public class ELF_Constant {
 															 * containing symbol
 															 */
 		public static final int R_ARM_TLS_DTPOFF32 = 18; /*
-															 * Offset in TLS block
+															 * Offset in TLS
+															 * block
 															 */
 		public static final int R_ARM_TLS_TPOFF32 = 19; /*
 														 * Offset in static TLS
@@ -464,7 +463,8 @@ public class ELF_Constant {
 		public static final int R_ARM_GLOB_DAT = 21; /* Create GOT entry */
 		public static final int R_ARM_JUMP_SLOT = 22; /* Create PLT entry */
 		public static final int R_ARM_RELATIVE = 23; /*
-														 * Adjust by program base
+														 * Adjust by program
+														 * base
 														 */
 		public static final int R_ARM_GOTOFF = 24; /* 32 bit offset to GOT */
 		public static final int R_ARM_GOTPC = 25; /*
@@ -490,7 +490,8 @@ public class ELF_Constant {
 														 * branch
 														 */
 		public static final int R_ARM_THM_PC9 = 103; /*
-														 * thumb conditional branch
+														 * thumb conditional
+														 * branch
 														 */
 		public static final int R_ARM_TLS_GD32 = 104; /*
 														 * PC-rel 32 bit for

@@ -4,7 +4,10 @@ import com.marik.arm.OpCode.CondFactory;
 import com.marik.arm.OpCode.OpUtil;
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
-public class B_A8_334 implements ParseSupport {
+/**
+ * PC = current + 4 + imm
+ */
+public class B_A8_334 extends ParseSupport {
 	public static final B_A8_334 INSTANCE = new B_A8_334();
 
 	public String parse(int data) {
@@ -18,7 +21,6 @@ public class B_A8_334 implements ParseSupport {
 				return decodeEncodingT2(data);
 		}
 		throw new IllegalArgumentException("Unable to decode instruction " + Integer.toBinaryString(data));
-
 	}
 
 	private String decodeEncodingT1(int data) {
@@ -47,6 +49,21 @@ public class B_A8_334 implements ParseSupport {
 
 		int imm11 = OpUtil.getShiftInt(data, 0, 11);
 
-		return sb.append(imm11).toString();
+		return sb.append(OpUtil.signExtend(imm11, 11) << 1).toString();
+	}
+
+	@Override
+	protected String getOpCode() {
+		return null;
+	}
+
+	@Override
+	protected String getRn(int data) {
+		return null;
+	}
+
+	@Override
+	protected String getRm(int data) {
+		return null;
 	}
 }

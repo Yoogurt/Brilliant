@@ -3,27 +3,28 @@ package com.marik.arm.OpCode.thumb16.instruction;
 import com.marik.arm.OpCode.OpUtil;
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
-public class STM_A8_664 extends ParseSupport {
+public class STR_A8_676 extends ParseSupport {
 
-	public static final STM_A8_664 INSTANCE = new STM_A8_664();
+	public static final STR_A8_676 INSTANCE = new STR_A8_676();
 
 	@Override
 	protected String getOpCode() {
-		return "STM";
+		return "STR";
 	}
 
 	@Override
 	protected String getRn(int data) {
-		return OpUtil.parseRegister(OpUtil.getShiftInt(data, 8, 3)) + "!";
+		return OpUtil.parseRegister(OpUtil.getShiftInt(data, 0, 3));
 	}
 
 	@Override
 	protected String getRm(int data) {
-		return OpUtil.parseRigisterBit(OpUtil.getShiftInt(data, 0, 8), -1);
+		return OpUtil.parseRegister(OpUtil.getShiftInt(data, 3, 3)) + " , "
+				+ OpUtil.parseRegister(OpUtil.getShiftInt(data, 6, 3));
 	}
 
 	@Override
-	protected boolean isRmRegisterList() {
+	protected boolean isRmMenory() {
 		return true;
 	}
 

@@ -68,10 +68,19 @@ public class OS {
 
 	public static void dumpMemory(PrintStream out) {
 
-		int line = 0;
+		dumpMemory(out , 0 , mMemory.length);
+	}
+	
+	public static void dumpMemory(PrintStream out , int startIndex , int endIndex) {
+
+		int line = startIndex >> 4;
 		out.printf("%5s : ", line);
-		for (byte b : mMemory) {
-			out.print(Util.byte2Hex(b) + " ");
+		
+		for(int i = startIndex % 16 ; i > 0 ; i--)
+			out.print("    ");
+		
+		for (int i = startIndex ; i < endIndex ;i++ ) {
+			out.print(Util.byte2Hex(mMemory[i]) + " ");
 			if (++line % 16 == 0) {
 				out.println();
 				out.printf("%5x : ", line);
@@ -81,7 +90,5 @@ public class OS {
 		out.println();
 		out.flush();
 	}
-
-	private native void mmapInternal();
 
 }
