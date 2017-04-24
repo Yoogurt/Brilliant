@@ -7,9 +7,9 @@ import static com.marik.elf.ELFDefinition.ELF_ST_BIND;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Addr;
 import static com.marik.elf.ELF_Constant.ELFUnit.uint32_t;
 import static com.marik.elf.ELF_Constant.SHN_Info.SHN_UNDEF;
-import static com.marik.elf.ELF_Constant.SHT_Info.STB_GLOBAL;
-import static com.marik.elf.ELF_Constant.SHT_Info.STB_LOCAL;
-import static com.marik.elf.ELF_Constant.SHT_Info.STB_WEAK;
+import static com.marik.elf.ELF_Constant.STB_Info.STB_GLOBAL;
+import static com.marik.elf.ELF_Constant.STB_Info.STB_LOCAL;
+import static com.marik.elf.ELF_Constant.STB_Info.STB_WEAK;
 
 import static com.marik.vm.OS.*;
 
@@ -32,7 +32,6 @@ import org.w3c.dom.ls.LSInput;
 import com.marik.elf.ELF_Dynamic.Elf_Sym;
 import com.marik.elf.ELF_ProgramHeader.ELF_Phdr;
 import com.marik.elf.ELF_Relocate.Elf_rel;
-import com.marik.elf.ELF_SectionHeader.ELF_Shdr;
 import com.marik.util.Log;
 import com.marik.util.Util;
 import com.marik.vm.OS;
@@ -432,12 +431,6 @@ public class ELF {
 	/**
 	 * what is relocation ? relocation fix a pointer which point at somewhere in
 	 * file , but we need to let it point to memory correct
-	 */
-	/**
-	 * 
-	 */
-	/**
-	 * 
 	 */
 	public void soinfo_relocate() {
 

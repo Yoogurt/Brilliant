@@ -1,6 +1,6 @@
 package com.marik.elf;
 
-import static com.marik.elf.Constant.*;
+import static com.marik.elf.LogConstant.*;
 import static com.marik.elf.ELF_Constant.ELFUnit.*;
 import static com.marik.elf.ELF_Constant.SectionHeaderContent.*;
 
@@ -10,6 +10,7 @@ import java.io.RandomAccessFile;
 import com.marik.util.Log;
 import com.marik.util.Util;
 
+@Deprecated
 public class ELF_SectionHeader {
 
 	public class ELF_Shdr {

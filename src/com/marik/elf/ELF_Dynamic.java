@@ -170,7 +170,7 @@ public final class ELF_Dynamic {
 			mInternalDynamics.add(dynamic);
 		}
 
-		Log.e("   " + Constant.DIVISION_LINE);
+		Log.e("   " + LogConstant.DIVISION_LINE);
 		Log.e("   " + mInternalDynamics.size() + " DT_DYNAMIC Found");
 		raf.seek(prePosition);
 	}
@@ -196,170 +196,170 @@ public final class ELF_Dynamic {
 		case DT_NEEDED: // elf necessary library
 			String name = getStrTabIndexString(Util.bytes2Int32(dynamic.d_val), raf);
 			storeNeededDynamicLibraryName(name);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "Need Dynamic Library : " + name);
 			break;
 		case DT_PLTRELSZ:
 			readDT_PLTRELSZ(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_PLTRELSZ " + +getVal(dynamic.d_val));
 			break;
 		case DT_PLTGOT:
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_PLTGOT at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_HASH:
 			readDT_HASH(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_HASH at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_STRTAB:
 			readDT_STRTAB(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_STRTAB at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_SYMTAB:
 			readDT_SYMTAB(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_SYMTAB at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_RELA:
 			readDT_RELA(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_RELA at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_RELASZ:
 			mRelaSz = getVal(dynamic.d_val);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_RELASZ : " + +getVal(dynamic.d_val));
 			break;
 		case DT_RELAENT:
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_RELAENT at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_STRSZ:
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_STRSZ : " + +getVal(dynamic.d_val));
 			break;
 		case DT_SYMENT:
 			assertSYMENT(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_SYMENT : " + +getVal(dynamic.d_val));
 			break;
 		case DT_INIT:
 			readDT_INIT(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_INIT at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_FINI:
 			readDT_FINI(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_FINI at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_SONAME:
 			mDynamicLibraryName = getStrTabIndexString(Util.bytes2Int32(dynamic.d_val), raf);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "My Dynamic Library : " + mDynamicLibraryName);
 			break;
 		case DT_RPATH:
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_RPATH at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_SYMBOLIC:
 			readDT_SYMBOLIC(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_SYMBOLIC at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_REL:
 			readDT_REL(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_REL at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_RELSZ:
 			mRelSz = (int) getVal(dynamic.d_val);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_RELSZ : " + getVal(dynamic.d_val));
 			break;
 		case DT_RELENT:
 			assertRELENT(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_RELENT : " + +getVal(dynamic.d_val));
 			break;
 		case DT_PLTREL:
 			verifyPltRel(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_PLTREL at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_DEBUG:
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_DEBUG at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_TEXTREL:
 			readDT_TEXTREL(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_TEXTREL at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_JMPREL:
 			readDT_JMPREL(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_JMPREL at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_LOPROC:
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_LOPROC at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_HIPROC:
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_HIPROC at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_INIT_ARRAY:
 			readDT_INIT_ARRAY(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_INIT_ARRAY at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_FINI_ARRAY:
 			readDT_FINI_ARRAY(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_FINI_ARRAY at " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_RELCOUNT:
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_RELCOUNT : " + +getVal(dynamic.d_val) + " (ignore)");
 			break;
 		case DT_FINI_ARRAYSZ:
 			readDT_FINI_ARRAYSZ(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_FINI_ARRAYSZ : " + getVal(dynamic.d_val));
 			break;
 		case DT_INIT_ARRAYSZ:
 			readDT_INIT_ARRAYSZ(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_INIT_ARRAYSZ : " + getVal(dynamic.d_val));
 			break;
 		case DT_FLAGS_1:
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_FLAGS_1 : " + getVal(dynamic.d_val));
 			break;
 		case DT_FLAGS:
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_FLAGS : " + getVal(dynamic.d_val));
 			break;
 		case DT_GNU_HASH:
 			readDT_GNU_HASH(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_GNU_HASH : " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_ANDROID_REL:
 			readDT_ANDROID_REL(dynamic);
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_ANDROID_REL : " + Util.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_ANDROID_RELSZ:
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_ANDROID_RELSZ : " + getVal(dynamic.d_val));
 			break;
 		default:
-			Log.e("   " + Constant.DIVISION_LINE);
+			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "Unknown DT type " + Util.bytes2Hex(dynamic.d_un));
 			break;
 		}

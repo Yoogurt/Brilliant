@@ -121,9 +121,9 @@ public class ELF_ProgramHeader {
 
 	public ELF_ProgramHeader(RandomAccessFile is, ELF_Header header, boolean check) throws Exception {
 
-		Log.e(Constant.DIVISION_LINE);
-		Log.e(Constant.ELF_PROGRAM_TABLE);
-		Log.e(Constant.DIVISION_LINE);
+		Log.e(LogConstant.DIVISION_LINE);
+		Log.e(LogConstant.ELF_PROGRAM_TABLE);
+		Log.e(LogConstant.DIVISION_LINE);
 
 		this.header = header;
 
@@ -200,7 +200,7 @@ public class ELF_ProgramHeader {
 			}
 
 			logSegmentInfo(ph);
-			Log.e(Constant.DIVISION_LINE);
+			Log.e(LogConstant.DIVISION_LINE);
 
 		}
 

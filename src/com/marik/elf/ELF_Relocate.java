@@ -83,7 +83,7 @@ public class ELF_Relocate {
 
 		for (Elf_rel rel : mInternalRelocates) {
 
-			Log.e(Constant.DIVISION_LINE);
+			Log.e(LogConstant.DIVISION_LINE);
 			
 			byte r_info = ELF_R_TYPE(rel.r_info);
 
@@ -114,7 +114,7 @@ public class ELF_Relocate {
 
 		}
 
-		Log.e(Constant.DIVISION_LINE);
+		Log.e(LogConstant.DIVISION_LINE);
 		Log.e("Found " + mInternalRelocates.length + " Relocate Info");
 
 	}

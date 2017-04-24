@@ -1,6 +1,6 @@
 package com.marik.elf;
 
-public class Constant {
+public class LogConstant {
 
 	public static final String DIVISION_LINE = "----------------------------------------------------";
 

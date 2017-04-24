@@ -27,7 +27,7 @@ public class ELF_Constant {
 	public static class HeaderContent {
 
 		public static final int EI_NIDENT = 0x10;
-		public static final byte[] StandardELFMagicCode = { 0x7f, 0x45, 0x4c, 0x46 };
+		public static final byte[] ELFMagicCode = { 0x7f, 0x45, 0x4c, 0x46 };
 
 		public static final int EI_CALSS = 4;
 		public static final int ELFCLASS32 = 1;
@@ -530,7 +530,7 @@ public class ELF_Constant {
 
 	}
 
-	public static class SHT_Info {
+	public static class STB_Info {
 		public static final int STB_LOCAL = 0;
 		public static final int STB_GLOBAL = 1;
 		public static final int STB_WEAK = 2;

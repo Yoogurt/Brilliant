@@ -5,7 +5,7 @@ import java.io.RandomAccessFile;
 
 import com.marik.elf.ELF_SectionHeader.ELF_Shdr;
 import com.marik.util.Util;
-
+@Deprecated
 public class ELF_Section {
 
 	protected ELF_Shdr mHeader;

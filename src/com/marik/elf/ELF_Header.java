@@ -29,7 +29,7 @@ import static com.marik.elf.ELF_Constant.HeaderContent.ET_LOPROC;
 import static com.marik.elf.ELF_Constant.HeaderContent.ET_NONE;
 import static com.marik.elf.ELF_Constant.HeaderContent.ET_REL;
 import static com.marik.elf.ELF_Constant.HeaderContent.EV_CURRENT;
-import static com.marik.elf.ELF_Constant.HeaderContent.StandardELFMagicCode;
+import static com.marik.elf.ELF_Constant.HeaderContent.ELFMagicCode;
 
 import java.io.RandomAccessFile;
 
@@ -104,9 +104,9 @@ public class ELF_Header {
 
 	ELF_Header(RandomAccessFile is) throws Exception {
 
-		Log.e(Constant.DIVISION_LINE);
-		Log.e(Constant.ELF_HEADER);
-		Log.e(Constant.DIVISION_LINE);
+		Log.e(LogConstant.DIVISION_LINE);
+		Log.e(LogConstant.ELF_HEADER);
+		Log.e(LogConstant.DIVISION_LINE);
 
 		verifyElfMagicCode(is);
 
@@ -167,10 +167,10 @@ public class ELF_Header {
 		e_ident = new byte[EI_NIDENT];
 		is.read(e_ident);
 
-		if (!Util.equals(StandardELFMagicCode, 0, e_ident, 0, // assert Magic
+		if (!Util.equals(ELFMagicCode, 0, e_ident, 0, // assert Magic
 																// Code correct
 																// or not
-				StandardELFMagicCode.length))
+				ELFMagicCode.length))
 			throw new ELFDecodeException("Not a ELF File");
 	}
 
