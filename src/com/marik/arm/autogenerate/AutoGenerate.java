@@ -12,7 +12,7 @@ import java.util.List;
 public class AutoGenerate {
 
 	public static final String THUMB16_PATH = "D:/Android/ELFDecorder/src/com/marik/arm/OpCode/thumb16/instruction/";
-	public static final String THUMB16_CFG = "src/com/marik/autogenerate/Thumb16Instruction.cfg";
+	public static final String THUMB16_CFG = "src/com/marik/arm/autogenerate/Thumb16Instruction.cfg";
 
 	public static void main(String[] args) {
 		try {
