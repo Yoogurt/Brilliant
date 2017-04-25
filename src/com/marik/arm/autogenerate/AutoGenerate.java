@@ -1,4 +1,4 @@
-package com.marik.autogenerate;
+package com.marik.arm.autogenerate;
 
 import java.io.BufferedReader;
 import java.io.File;
