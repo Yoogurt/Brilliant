@@ -27,7 +27,14 @@ public class STR_A8_672 extends ParseSupport {
 	}
 
 	private String EncodingT2(int data) {
-		return null;
+		int Rt = getShiftInt(data, 8, 3);
+		int imm8 = getShiftInt(data, 0, 8);
+
+		StringBuilder sb = new StringBuilder("STR ");
+		sb.append(parseRegister(Rt));
+		sb.append(" , [SP , #").append(zeroExtend(imm8, 2)).append("]");
+
+		return sb.toString();
 	}
 
 	private String EncodingT1(int data) {

@@ -14,10 +14,11 @@ public class LDR_A8_406 extends ParseSupport {
 
 	@Override
 	public String parse(int data) {
+
 		int head = getShiftInt(data, 11, 5);
 		if (head == 0b01101)
 			return EncodingT1(data);
-		if (head == 0b10010)
+		if (head == 0b10011)
 			return super.parse(data);
 
 		return error(data);
@@ -30,7 +31,7 @@ public class LDR_A8_406 extends ParseSupport {
 		StringBuilder sb = new StringBuilder("LDR ");
 		sb.append(parseRegister(Rt)).append(" , [").append(parseRegister(Rn));
 		if (imm5 != 0b00000)
-			sb.append(" , { #").append(imm5).append(" }");
+			sb.append(" , #").append(zeroExtend(imm5, 2));
 
 		sb.append("]");
 
@@ -53,7 +54,7 @@ public class LDR_A8_406 extends ParseSupport {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[SP");
 		if (imm8 != 0b00000000)
-			sb.append(" , { #").append(imm8).append(" }");
+			sb.append(" , #").append(zeroExtend(imm8, 2));
 
 		sb.append("]");
 		return sb.toString();

@@ -39,9 +39,9 @@ public class B_A8_334 extends ParseSupport {
 
 		sb.append(CondFactory.parse(cond));
 
-		sb.append(" ");
+		sb.append(" {PC , #");
 
-		sb.append(getShiftInt(data, 0, 8));
+		sb.append((signExtend(getShiftInt(data, 0, 8), 8) + 1) << 1).append("}");
 
 		return sb.toString();
 
@@ -52,21 +52,7 @@ public class B_A8_334 extends ParseSupport {
 
 		int imm11 = getShiftInt(data, 0, 11);
 
-		return sb.append(signExtend(imm11, 11) << 1).toString();
-	}
-
-	@Override
-	protected String getOpCode() {
-		return null;
-	}
-
-	@Override
-	protected String getRn(int data) {
-		return null;
-	}
-
-	@Override
-	protected String getRm(int data) {
-		return null;
+		sb.append(" {PC , #");
+		return sb.append((signExtend(imm11, 11) + 1) << 1).append("}").toString();
 	}
 }

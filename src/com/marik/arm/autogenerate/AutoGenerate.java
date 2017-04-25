@@ -14,17 +14,25 @@ public class AutoGenerate {
 	public static final String THUMB16_PATH = "D:/Android/ELFDecorder/src/com/marik/arm/OpCode/thumb16/instruction/";
 	public static final String THUMB16_CFG = "src/com/marik/arm/autogenerate/Thumb16Instruction.cfg";
 
+	public static final String ARM_PATH = "D:/Android/ELFDecorder/src/com/marik/arm/OpCode/arm/instruction/";
+	public static final String ARM_CFG = "src/com/marik/arm/autogenerate/ArmInstruction.cfg";
+
 	public static void main(String[] args) {
 		try {
 			genrateThumb16Class();
+			genrateArmClass();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	private static void genrateArmClass() throws Exception {
+
+	}
+
 	private static void genrateThumb16Class() throws Exception {
 
-		List<String> THUMB16_CLASS_NAME = parseNeededClass();
+		List<String> THUMB16_CLASS_NAME = parseNeededClass(THUMB16_CFG);
 
 		for (String fileName : THUMB16_CLASS_NAME) {
 			File file = new File(THUMB16_PATH + fileName + ".java");
@@ -35,9 +43,9 @@ public class AutoGenerate {
 		}
 	}
 
-	private static List<String> parseNeededClass() throws Exception {
+	private static List<String> parseNeededClass(String cfg) throws Exception {
 
-		File file = new File(THUMB16_CFG);
+		File file = new File(cfg);
 		if (file.exists()) {
 
 			List<String> clz = new ArrayList<>();
@@ -50,9 +58,7 @@ public class AutoGenerate {
 					clz.add(className);
 
 			br.close();
-
 			return clz;
-
 		}
 		return null;
 	}

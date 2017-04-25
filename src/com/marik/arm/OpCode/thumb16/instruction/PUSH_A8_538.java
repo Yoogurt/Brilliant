@@ -14,18 +14,23 @@ public class PUSH_A8_538 extends ParseSupport {
 
 	@Override
 	public String parse(int data) {
-		
+
 		int M = getShiftInt(data, 8, 1);
 		int registerList = getShiftInt(data, 0, 7);
-		
+
 		StringBuilder sb = new StringBuilder("PUSH ");
+
 		sb.append("{");
-		
-		sb.append(parseRigisterBit(registerList, -1));
-		if(M == 1)
-			sb.append(" , LR");
+		if (registerList != 0b00000000) {
+			sb.append(parseRigisterBit(registerList, -1));
+		}
+		if (M == 1) {
+			if (registerList != 0b00000000)
+				sb.append(" , ");
+			sb.append("LR");
+		}
 		sb.append("}");
-		
+
 		return sb.toString();
 	}
 

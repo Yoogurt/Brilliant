@@ -34,6 +34,10 @@ public class MOV_A8_486 extends ParseSupport {
 		Rd = D << 3 | Rd;
 		StringBuilder sb = new StringBuilder("MOV ");
 		sb.append(parseRegister(Rd)).append(" , ").append(parseRegister(Rm));
+
+		if (Rd == Rm)
+			sb.append("  (NOP)");
+
 		return sb.toString();
 	}
 
@@ -42,6 +46,10 @@ public class MOV_A8_486 extends ParseSupport {
 		int Rd = getShiftInt(data, 0, 3);
 		StringBuilder sb = new StringBuilder("MOV ");
 		sb.append(parseRegister(Rd)).append(" , ").append(parseRegister(Rm));
+
+		if (Rd == Rm)
+			sb.append("  (NOP)");
+
 		return sb.toString();
 	}
 

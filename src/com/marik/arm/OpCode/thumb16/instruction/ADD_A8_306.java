@@ -30,6 +30,8 @@ public class ADD_A8_306 extends ParseSupport {
 		int Rd = getShiftInt(data, 0, 3);
 		int Rn = getShiftInt(data, 3, 3);
 		int imm3 = getShiftInt(data, 6, 3);
+		if(imm3 == 0b000)
+			imm3 = 0x20;
 		
 		StringBuilder sb = new StringBuilder("ADDS ");
 		sb.append(parseRegister(Rd)).append(" , ").append(parseRegister(Rn)).append(" , #").append(imm3);
