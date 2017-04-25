@@ -2,7 +2,6 @@ package com.marik.arm.OpCode.arm.instructionSet;
 
 import static com.marik.arm.OpCode.OpUtil.assert0;
 import static com.marik.arm.OpCode.OpUtil.assert1;
-import static com.marik.arm.OpCode.OpUtil.assertBit0;
 import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 
 import com.marik.arm.OpCode.arm.instruction.AND_Register_A8_326;
@@ -15,7 +14,7 @@ public class DataProcessingAndMiscellaneousInstructions_A5_190 {
 		int op1 = getShiftInt(data, 20, 5);
 		int op2 = getShiftInt(data, 4, 4);
 
-		if (assertBit0(op)) {
+		if (assert0(op, 0)) {
 			if (!assert0(op1, 0, 3) || !assert1(op1, 4))/* op1 != 10xx0 */
 				if (assert0(op2, 0))/* xxx0 */
 					return DataProcessingRegister_A5_197(data);

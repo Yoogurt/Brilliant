@@ -30,17 +30,24 @@ public abstract class ParseSupport {
 				sb.append("[");
 				sb.append(getRm(data));
 				sb.append("]");
-			}else sb.append(getRm(data));
+			} else
+				sb.append(getRm(data));
 		}
 
 		return sb.toString();
 	}
 
-	protected abstract String getOpCode();
+	protected String getOpCode() {
+		return null;
+	}
 
-	protected abstract String getRn(int data);
+	protected String getRn(int data) {
+		return null;
+	}
 
-	protected abstract String getRm(int data);
+	protected String getRm(int data) {
+		return null;
+	}
 
 	protected void verify(int data) {
 
@@ -60,5 +67,9 @@ public abstract class ParseSupport {
 
 	protected boolean isRmMenory() {
 		return false;
+	}
+
+	protected String error(int data) {
+		throw new IllegalArgumentException("Unable to decode instruction " + Integer.toBinaryString(data));
 	}
 }

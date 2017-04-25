@@ -21,7 +21,7 @@ public class ConditionParseFactory {
 			return LoadAndStoreWord_A5_208.parse(data);
 
 		if (assert0(op1, 2) && assert1(op1, 0, 1))
-			if (assertBit0(op))
+			if (assert0(op , 0))
 				return LoadAndStoreWord_A5_208.parse(data);
 			else
 				return MediaInstruction_A5_209.parse(data);

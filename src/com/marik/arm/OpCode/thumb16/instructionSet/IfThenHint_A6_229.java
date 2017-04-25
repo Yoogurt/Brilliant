@@ -25,7 +25,5 @@ public class IfThenHint_A6_229 {
 		default:
 			throw new IllegalArgumentException("Unable to decode " + Integer.toBinaryString(data));
 		}
-
 	}
-
 }
