@@ -30,7 +30,7 @@ public class OpCode {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(decodeThumb16(0b0110000000000001));
+		System.out.println(decodeThumb16(0x4805));
 	}
 
 }

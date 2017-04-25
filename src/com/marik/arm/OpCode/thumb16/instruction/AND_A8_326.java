@@ -8,36 +8,18 @@ package com.marik.arm.OpCode.thumb16.instruction;
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 import static com.marik.arm.OpCode.OpUtil.*;
 
-public class POP_A8_534 extends ParseSupport {
-	
-	public static final POP_A8_534 INSTANCE = new POP_A8_534();
+public class AND_A8_326 extends ParseSupport {
 
-	@Override
-	public String parse(int data) {
-		int M = getShiftInt(data, 8, 1);
-		int registerList = getShiftInt(data, 0, 7);
-		
-		StringBuilder sb = new StringBuilder("POP ");
-		sb.append("{");
-		
-		sb.append(parseRigisterBit(registerList, -1));
-		if(M == 1)
-			sb.append(" , PC");
-		sb.append("}");
-		
-		return sb.toString();
-	}
-	
+	public static final AND_A8_326 INSTANCE = new AND_A8_326();
+
 	@Override
 	protected String getOpCode() {
 		return null;
 	}
-
 	@Override
 	protected String getRn(int data) {
 		return null;
 	}
-
 	@Override
 	protected String getRm(int data) {
 		return null;
