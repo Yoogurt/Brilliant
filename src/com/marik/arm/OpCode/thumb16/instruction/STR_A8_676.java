@@ -26,8 +26,7 @@ public class STR_A8_676 extends ParseSupport {
 
 	@Override
 	protected String getRm(int data) {
-		return parseRegister(getShiftInt(data, 3, 3)) + " , "
-				+ parseRegister(getShiftInt(data, 6, 3));
+		return parseRegister(getShiftInt(data, 3, 3)) + " , " + parseRegister(getShiftInt(data, 6, 3));
 	}
 
 	@Override
@@ -36,7 +35,7 @@ public class STR_A8_676 extends ParseSupport {
 	}
 
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

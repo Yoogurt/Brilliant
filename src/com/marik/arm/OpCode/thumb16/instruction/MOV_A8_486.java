@@ -71,7 +71,7 @@ public class MOV_A8_486 extends ParseSupport {
 	}
 
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

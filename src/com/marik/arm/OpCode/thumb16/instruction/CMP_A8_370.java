@@ -30,6 +30,6 @@ public class CMP_A8_370 extends ParseSupport {
 	}
 
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 }

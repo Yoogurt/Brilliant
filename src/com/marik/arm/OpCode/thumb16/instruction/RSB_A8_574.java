@@ -30,7 +30,7 @@ public class RSB_A8_574 extends ParseSupport {
 	}
 
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

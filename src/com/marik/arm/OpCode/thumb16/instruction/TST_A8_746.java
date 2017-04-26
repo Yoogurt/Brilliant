@@ -30,6 +30,6 @@ public class TST_A8_746 extends ParseSupport {
 	}
 
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 }

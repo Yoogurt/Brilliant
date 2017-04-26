@@ -29,6 +29,6 @@ public class ADR_A8_322 extends ParseSupport {
 	}
 
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 }

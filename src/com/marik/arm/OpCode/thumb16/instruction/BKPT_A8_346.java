@@ -7,6 +7,7 @@ package com.marik.arm.OpCode.thumb16.instruction;
 
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
+@Deprecated
 public class BKPT_A8_346 extends ParseSupport {
 
 	public static final BKPT_A8_346 INSTANCE = new BKPT_A8_346();
@@ -16,7 +17,7 @@ public class BKPT_A8_346 extends ParseSupport {
 	}
 
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

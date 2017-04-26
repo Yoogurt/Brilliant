@@ -30,7 +30,7 @@ public class ORR_A8_518 extends ParseSupport {
 	}
 
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

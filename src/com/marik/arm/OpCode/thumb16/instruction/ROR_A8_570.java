@@ -18,6 +18,7 @@ public class ROR_A8_570 extends ParseSupport {
 	protected String getOpCode() {
 		return "RORS";
 	}
+
 	@Override
 	protected String getRn(int data) {
 		return parseRegister(getShiftInt(data, 0, 3));
@@ -27,8 +28,9 @@ public class ROR_A8_570 extends ParseSupport {
 	protected String getRm(int data) {
 		return parseRegister(getShiftInt(data, 3, 3));
 	}
+
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

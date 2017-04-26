@@ -119,6 +119,10 @@ public class AutoGenerate {
 			}
 
 			pw.println();
+
+			if (no_implements)
+				pw.println("@Deprecated");
+
 			pw.println("public class " + className + " extends ParseSupport {");
 			pw.println();
 			pw.println("	public static final " + className + " INSTANCE = new " + className + "();");
@@ -149,7 +153,7 @@ public class AutoGenerate {
 			}
 
 			pw.println("	@Override");
-			pw.println("	protected void performExecuteCommand() {");
+			pw.println("	public void performExecuteCommand(int data) {");
 			pw.println("	}");
 
 			pw.println();
@@ -186,8 +190,11 @@ public class AutoGenerate {
 				pw.println("import static com.marik.vm.Register.*;");
 				pw.println("import static com.marik.arm.OpCode.OpUtil.*;");
 			}
-
 			pw.println();
+			
+			if (no_implements)
+				pw.println("@Deprecated");
+
 			pw.println("public class " + className + " extends ParseSupport {");
 			pw.println();
 			pw.println("	public static final " + className + " INSTANCE = new " + className + "();");
@@ -216,11 +223,10 @@ public class AutoGenerate {
 				pw.println("	}");
 
 			}
-			
-			pw.println("	@Override");
-			pw.println("	protected void performExecuteCommand() {");
-			pw.println("	}");
 
+			pw.println("	@Override");
+			pw.println("	public void performExecuteCommand(int data) {");
+			pw.println("	}");
 
 			pw.println();
 			pw.print("}");

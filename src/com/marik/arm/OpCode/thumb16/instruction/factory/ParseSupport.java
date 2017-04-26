@@ -73,5 +73,5 @@ public abstract class ParseSupport {
 		throw new IllegalArgumentException("Unable to decode instruction " + Integer.toBinaryString(data));
 	}
 	
-	protected abstract void performExecuteCommand();
+	public abstract void performExecuteCommand(int data);
 }

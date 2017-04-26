@@ -7,15 +7,17 @@ package com.marik.arm.OpCode.thumb16.instruction;
 
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
+@Deprecated
 public class LDRB_A8_416 extends ParseSupport {
 
 	public static final LDRB_A8_416 INSTANCE = new LDRB_A8_416();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("LDRB no implements");
+		throw new UnsupportedOperationException("LDRB no implements");
 	}
+
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

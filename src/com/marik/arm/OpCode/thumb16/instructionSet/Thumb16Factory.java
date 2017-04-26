@@ -10,9 +10,10 @@ import com.marik.arm.OpCode.thumb16.instruction.B_A8_334;
 import com.marik.arm.OpCode.thumb16.instruction.LDM_A8_396;
 import com.marik.arm.OpCode.thumb16.instruction.LDR_A8_410;
 import com.marik.arm.OpCode.thumb16.instruction.STM_A8_664;
+import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
 public class Thumb16Factory {
-	public static String parse(int data) {
+	public static ParseSupport parse(int data) {
 
 		int OpCode = getShiftInt(data, 10, 6);
 
@@ -26,7 +27,7 @@ public class Thumb16Factory {
 			return SpecialDataInstrucationsAndBranchAndExchange_A6_226.parse(data);
 
 		if (assert0(OpCode, 2, 3, 5) && assert1(OpCode, 1, 4))/* 01001x */
-			return LDR_A8_410.INSTANCE.parse(data);
+			return LDR_A8_410.INSTANCE;
 
 		if ((assert0(OpCode, 5, 3) && assert1(OpCode, 2, 4)) || (assert0(OpCode, 5) && assert1(OpCode, 3, 4))
 				|| (assert0(OpCode, 3, 4)
@@ -34,25 +35,25 @@ public class Thumb16Factory {
 			return LoadOrStoreSingleData_A6_227.parse(data);
 
 		if (assert0(OpCode, 1, 2, 4) && assert1(OpCode, 3, 5))/*10100x*/
-			return ADR_A8_322.INSTANCE.parse(data);
+			return ADR_A8_322.INSTANCE;
 		
 		if(assert0(OpCode , 2,4) &&  assert1(OpCode, 1,3,5))/*10101x*/
-			return ADD_A8_316.INSTANCE.parse(data);
+			return ADD_A8_316.INSTANCE;
 		
 		if(assert0(OpCode , 4) && assert1(OpCode , 2,3,5))
 			return Miscellaneous16Bitinstructions_A6_228.parse(data);
 		
 		if(assert0(OpCode , 1,2,3) && assert1(OpCode , 4,5))
-			return STM_A8_664.INSTANCE.parse(data);
+			return STM_A8_664.INSTANCE;
 		
 		if(assert0(OpCode , 2,3)&&assert1(OpCode , 1,4,5))
-			return LDM_A8_396.INSTANCE.parse(data);
+			return LDM_A8_396.INSTANCE;
 		
 		if(assert0(OpCode , 3) && assert1(OpCode , 2,4,5))
 			return ConditionalBranchAndSupervisorCall_A6_229.parse(data);
 		
 		if(assert0(OpCode , 1,2)&&assert1(OpCode , 3,4,5))
-			return B_A8_334.INSTANCE.parse(data);
+			return B_A8_334.INSTANCE;
 
 		throw new IllegalArgumentException("cann't decode instruction " + Integer.toBinaryString(data));
 	}

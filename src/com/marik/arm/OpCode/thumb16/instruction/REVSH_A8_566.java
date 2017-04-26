@@ -7,15 +7,17 @@ package com.marik.arm.OpCode.thumb16.instruction;
 
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
+@Deprecated
 public class REVSH_A8_566 extends ParseSupport {
 
 	public static final REVSH_A8_566 INSTANCE = new REVSH_A8_566();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("REVSH no implements");
+		throw new UnsupportedOperationException("REVSH no implements");
 	}
+
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

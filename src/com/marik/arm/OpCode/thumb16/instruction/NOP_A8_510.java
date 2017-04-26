@@ -27,7 +27,6 @@ public class NOP_A8_510 extends ParseSupport {
 		return null;
 	}
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
-
 }

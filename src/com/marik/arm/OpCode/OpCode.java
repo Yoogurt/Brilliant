@@ -4,6 +4,7 @@ import static com.marik.arm.OpCode.OpUtil.*;
 
 import com.marik.arm.OpCode.arm.instructionSet.factory.ConditionParseFactory;
 import com.marik.arm.OpCode.arm.instructionSet.factory.UnConditionParseFactory;
+import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 import com.marik.arm.OpCode.thumb16.instructionSet.Thumb16Factory;
 import com.marik.util.Util;
 
@@ -21,7 +22,7 @@ public class OpCode {
 			return UnConditionParseFactory.parseUncondition(data);
 	}
 
-	public static String decodeThumb16(int data) {
+	public static ParseSupport decodeThumb16(int data) {
 		return Thumb16Factory.parse(data & 0xffff);
 	}
 

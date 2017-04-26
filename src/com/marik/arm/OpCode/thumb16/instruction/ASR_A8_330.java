@@ -33,6 +33,6 @@ public class ASR_A8_330 extends ParseSupport {
 	}
 
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 }

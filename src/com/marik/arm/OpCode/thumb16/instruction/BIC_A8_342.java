@@ -30,6 +30,6 @@ public class BIC_A8_342 extends ParseSupport {
 	}
 
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 }

@@ -7,15 +7,17 @@ package com.marik.arm.OpCode.thumb16.instruction;
 
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
+@Deprecated
 public class CPS_B9_1978 extends ParseSupport {
 
 	public static final CPS_B9_1978 INSTANCE = new CPS_B9_1978();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("CPS no implements");
+		throw new UnsupportedOperationException("CPS no implements");
 	}
+
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

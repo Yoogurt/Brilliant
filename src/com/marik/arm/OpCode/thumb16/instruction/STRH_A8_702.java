@@ -7,15 +7,17 @@ package com.marik.arm.OpCode.thumb16.instruction;
 
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
+@Deprecated
 public class STRH_A8_702 extends ParseSupport {
 
 	public static final STRH_A8_702 INSTANCE = new STRH_A8_702();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("STRH no implements");
+		throw new UnsupportedOperationException("STRH no implements");
 	}
+
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

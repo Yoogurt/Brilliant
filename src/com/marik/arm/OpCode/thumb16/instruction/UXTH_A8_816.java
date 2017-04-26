@@ -7,15 +7,17 @@ package com.marik.arm.OpCode.thumb16.instruction;
 
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
+@Deprecated
 public class UXTH_A8_816 extends ParseSupport {
 
 	public static final UXTH_A8_816 INSTANCE = new UXTH_A8_816();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("UXTH no implements");
+		throw new UnsupportedOperationException("UXTH no implements");
 	}
+
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

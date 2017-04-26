@@ -7,15 +7,17 @@ package com.marik.arm.OpCode.thumb16.instruction;
 
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
+@Deprecated
 public class LDRSH_A8_462 extends ParseSupport {
 
 	public static final LDRSH_A8_462 INSTANCE = new LDRSH_A8_462();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("LDRSH no implements");
+		throw new UnsupportedOperationException("LDRSH no implements");
 	}
+
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

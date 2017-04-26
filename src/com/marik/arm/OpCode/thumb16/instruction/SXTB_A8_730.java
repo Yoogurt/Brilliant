@@ -7,6 +7,7 @@ package com.marik.arm.OpCode.thumb16.instruction;
 
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
+@Deprecated
 public class SXTB_A8_730 extends ParseSupport {
 
 	public static final SXTB_A8_730 INSTANCE = new SXTB_A8_730();
@@ -15,7 +16,6 @@ public class SXTB_A8_730 extends ParseSupport {
 			throw new UnsupportedOperationException("SXTB no implements");
 	}
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
-
 }

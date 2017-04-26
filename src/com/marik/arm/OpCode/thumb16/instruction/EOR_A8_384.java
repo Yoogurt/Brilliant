@@ -28,9 +28,8 @@ public class EOR_A8_384 extends ParseSupport {
 	protected String getRm(int data) {
 		return parseRegister(getShiftInt(data, 3, 3));
 	}
-
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

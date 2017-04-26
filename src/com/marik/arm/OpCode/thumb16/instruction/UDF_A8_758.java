@@ -7,15 +7,16 @@ package com.marik.arm.OpCode.thumb16.instruction;
 
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
+@Deprecated
 public class UDF_A8_758 extends ParseSupport {
 
 	public static final UDF_A8_758 INSTANCE = new UDF_A8_758();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("UDF no implements");
-	}
-	@Override
-	protected void performExecuteCommand() {
+		throw new UnsupportedOperationException("UDF no implements");
 	}
 
+	@Override
+	public void performExecuteCommand(int data) {
+	}
 }

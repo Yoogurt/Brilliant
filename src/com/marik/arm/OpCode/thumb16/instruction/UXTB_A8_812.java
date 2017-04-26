@@ -7,15 +7,16 @@ package com.marik.arm.OpCode.thumb16.instruction;
 
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
+@Deprecated
 public class UXTB_A8_812 extends ParseSupport {
 
 	public static final UXTB_A8_812 INSTANCE = new UXTB_A8_812();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("UXTB no implements");
+		throw new UnsupportedOperationException("UXTB no implements");
 	}
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

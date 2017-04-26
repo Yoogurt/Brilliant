@@ -37,9 +37,8 @@ public class LSL_A8_468 extends ParseSupport {
 	protected String getRm(int data) {
 		return parseRegister(getShiftInt(data, 3, 3)) + " , #" + getShiftInt(data, 6, 5);
 	}
-
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

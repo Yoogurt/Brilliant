@@ -56,23 +56,7 @@ public class STR_A8_672 extends ParseSupport {
 	}
 
 	@Override
-	protected String getOpCode() {
-		return null;
-	}
-
-	@Override
-	protected String getRn(int data) {
-		return null;
-	}
-
-	@Override
-	protected String getRm(int data) {
-
-		return null;
-	}
-
-	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

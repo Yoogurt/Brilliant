@@ -30,7 +30,6 @@ public class MVN_A8_506 extends ParseSupport {
 	}
 
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
-
 }

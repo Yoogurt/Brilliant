@@ -7,15 +7,16 @@ package com.marik.arm.OpCode.thumb16.instruction;
 
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
+@Deprecated
 public class SXTH_A8_734 extends ParseSupport {
 
 	public static final SXTH_A8_734 INSTANCE = new SXTH_A8_734();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("SXTH no implements");
+		throw new UnsupportedOperationException("SXTH no implements");
 	}
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

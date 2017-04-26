@@ -28,9 +28,8 @@ public class BLX_A8_350 extends ParseSupport {
 	protected String getRm(int data) {
 		return null;
 	}
-
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

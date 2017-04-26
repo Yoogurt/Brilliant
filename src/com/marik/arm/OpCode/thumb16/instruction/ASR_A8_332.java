@@ -28,7 +28,7 @@ public class ASR_A8_332 extends ParseSupport {
 		return parseRegister(getShiftInt(data, 3, 3));
 	}
 	@Override
-	protected void performExecuteCommand() {
+	public void performExecuteCommand(int data) {
 	}
 
 }

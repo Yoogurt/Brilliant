@@ -22,7 +22,7 @@ public class Optest {
 			System.arraycopy(buffer, ptr, command, 0, 2);
 			String OpCodes = null;
 			try {
-				OpCodes = OpCode.decodeThumb16(Util.bytes2Int32(command));
+//				OpCodes = OpCode.decodeThumb16(Util.bytes2Int32(command));
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.err.println("Not Thumb code");
