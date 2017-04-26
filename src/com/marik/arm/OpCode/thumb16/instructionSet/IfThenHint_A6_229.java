@@ -1,6 +1,11 @@
 package com.marik.arm.OpCode.thumb16.instructionSet;
 
 import com.marik.arm.OpCode.OpUtil;
+import com.marik.arm.OpCode.thumb16.instruction.IT_A8_390;
+import com.marik.arm.OpCode.thumb16.instruction.SEV_A8_606;
+import com.marik.arm.OpCode.thumb16.instruction.WFE_A8_1104;
+import com.marik.arm.OpCode.thumb16.instruction.WFI_A8_1106;
+import com.marik.arm.OpCode.thumb16.instruction.YIELD_A8_1108;
 
 public class IfThenHint_A6_229 {
 
@@ -9,19 +14,19 @@ public class IfThenHint_A6_229 {
 		int opB = OpUtil.getShiftInt(data, 0, 4);
 
 		if (opB != 0b0000)
-			throw new UnsupportedOperationException("IT not implements");
+			return IT_A8_390.INSTANCE.parse(data);
 
 		switch (opA) {
 		case 0b0000:
 			return "NOP";
 		case 0b0001:
-			throw new UnsupportedOperationException("YIELD not implements");
+			return YIELD_A8_1108.INSTANCE.parse(data);
 		case 0b0010:
-			throw new UnsupportedOperationException("WFE not implements");
+			return WFE_A8_1104.INSTANCE.parse(data);
 		case 0b0011:
-			throw new UnsupportedOperationException("WFI not implements");
+			return WFI_A8_1106.INSTANCE.parse(data);
 		case 0b0100:
-			throw new UnsupportedOperationException("SEV not implements");
+			return SEV_A8_606.INSTANCE.parse(data);
 		default:
 			throw new IllegalArgumentException("Unable to decode " + Integer.toBinaryString(data));
 		}

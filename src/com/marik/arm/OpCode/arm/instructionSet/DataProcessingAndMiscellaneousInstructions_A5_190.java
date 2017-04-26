@@ -4,9 +4,6 @@ import static com.marik.arm.OpCode.OpUtil.assert0;
 import static com.marik.arm.OpCode.OpUtil.assert1;
 import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 
-import com.marik.arm.OpCode.arm.instruction.AND_Register_A8_326;
-import com.marik.arm.OpCode.arm.instruction.EOR_Register_A8_384;
-
 public class DataProcessingAndMiscellaneousInstructions_A5_190 {
 	public static String parse(int data) {
 
@@ -93,10 +90,10 @@ public class DataProcessingAndMiscellaneousInstructions_A5_190 {
 		int op = getShiftInt(data, 20, 5);
 
 		if (assert0(op, 1, 2, 3, 4))
-			return AND_Register_A8_326.INSTANCE.parse(data);
+			return null;
 
 		if (assert0(op, 2, 3, 4) && assert1(op, 1))
-			return EOR_Register_A8_384.parse(data);
+			return null;
 
 		return null;
 	}

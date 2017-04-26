@@ -5,12 +5,14 @@
 -------------------------------*/
 package com.marik.arm.OpCode.thumb16.instruction;
 
-import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
+import static com.marik.vm.OS.*;
+import static com.marik.vm.Register.*;
 import static com.marik.arm.OpCode.OpUtil.*;
+import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
 public class LDR_A8_412 extends ParseSupport {
 
-	public static LDR_A8_412 INSTANCE = new LDR_A8_412();
+	public static final LDR_A8_412 INSTANCE = new LDR_A8_412();
 	
 	@Override
 	protected String getOpCode() {
@@ -31,6 +33,10 @@ public class LDR_A8_412 extends ParseSupport {
 	@Override
 	protected boolean isRmMenory() {
 		return true;
+	}
+
+	@Override
+	protected void performExecuteCommand() {
 	}
 
 }

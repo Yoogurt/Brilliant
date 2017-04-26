@@ -5,10 +5,12 @@
 -------------------------------*/
 package com.marik.arm.OpCode.thumb16.instruction;
 
-import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
+import static com.marik.vm.OS.*;
+import static com.marik.vm.Register.*;
 import static com.marik.arm.OpCode.OpUtil.*;
 
 import com.marik.arm.OpCode.CondFactory;
+import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
 public class B_A8_334 extends ParseSupport {
 	public static final B_A8_334 INSTANCE = new B_A8_334();
@@ -54,5 +56,9 @@ public class B_A8_334 extends ParseSupport {
 
 		sb.append(" {PC , #");
 		return sb.append((signExtend(imm11, 11) + 1) << 1).append("}").toString();
+	}
+
+	@Override
+	protected void performExecuteCommand() {
 	}
 }

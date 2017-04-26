@@ -5,8 +5,10 @@
 -------------------------------*/
 package com.marik.arm.OpCode.thumb16.instruction;
 
-import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
+import static com.marik.vm.OS.*;
+import static com.marik.vm.Register.*;
 import static com.marik.arm.OpCode.OpUtil.*;
+import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
 public class LSR_A8_472 extends ParseSupport {
 
@@ -28,6 +30,10 @@ public class LSR_A8_472 extends ParseSupport {
 		if (imm5 == 0)
 			imm5 = 0x20;
 		return parseRegister(getShiftInt(data, 3, 3)) + " , #" + imm5;
+	}
+
+	@Override
+	protected void performExecuteCommand() {
 	}
 
 }

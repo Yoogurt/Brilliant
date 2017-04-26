@@ -1,17 +1,75 @@
 package com.marik.arm.OpCode.arm.instruction.factory;
 
+import com.marik.arm.OpCode.arm.instructionSet.factory.ConditionParseFactory;
+
 public abstract class ParseSupport {
-	protected abstract int getS(int data);
 
-	protected abstract int getRn(int data);
+	public String parse(int data) {
 
-	protected abstract int getRd(int data);
+		verify(data);
 
-	protected abstract int getShift(int data);
+		StringBuilder sb = new StringBuilder(getOpCode());
 
-	protected abstract int getType(int data);
+		if (enableCond())
+			sb.append(ConditionParseFactory.parseCondition(getCond()));
 
-	protected abstract int getRm(int data);
+		sb.append(" ");
 
-	protected abstract String getOpCode();
+		sb.append(getRn(data));
+
+		String Rm = getRm(data);
+		if (Rm != null) {
+			sb.append(" , ");
+			if (isRmRegisterList()) {
+				sb.append("{");
+				sb.append(getRm(data));
+				sb.append("}");
+			} else if (isRmMenory()) {
+				sb.append("[");
+				sb.append(getRm(data));
+				sb.append("]");
+			} else
+				sb.append(getRm(data));
+		}
+
+		return sb.toString();
+	}
+
+	protected String getOpCode() {
+		return null;
+	}
+
+	protected String getRn(int data) {
+		return null;
+	}
+
+	protected String getRm(int data) {
+		return null;
+	}
+
+	protected void verify(int data) {
+
+	}
+
+	protected boolean isRmRegisterList() {
+		return false;
+	}
+
+	protected boolean enableCond() {
+		return false;
+	}
+
+	protected int getCond() {
+		return 0;
+	}
+
+	protected boolean isRmMenory() {
+		return false;
+	}
+
+	protected String error(int data) {
+		throw new IllegalArgumentException("Unable to decode instruction " + Integer.toBinaryString(data));
+	}
+
+	protected abstract void performExecuteCommand();
 }

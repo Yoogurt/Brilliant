@@ -5,14 +5,13 @@
 -------------------------------*/
 package com.marik.arm.OpCode.thumb16.instruction;
 
-import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
+import static com.marik.vm.OS.*;
+import static com.marik.vm.Register.*;
 import static com.marik.arm.OpCode.OpUtil.*;
-
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
-import static com.marik.arm.OpCode.OpUtil.*;
 
 /**
- * load from memory , <Rn> = [PC + zerExtend(imm8)]
+ * load from memory , <Rn> = [PC + zeroExtend(imm8)]
  * */
 public class LDR_A8_410 extends ParseSupport {
 
@@ -31,6 +30,10 @@ public class LDR_A8_410 extends ParseSupport {
 	@Override
 	protected String getRm(int data) {
 		return "label_#" + zeroExtend(getShiftInt(data, 0, 8), 2);
+	}
+
+	@Override
+	protected void performExecuteCommand() {
 	}
 
 }

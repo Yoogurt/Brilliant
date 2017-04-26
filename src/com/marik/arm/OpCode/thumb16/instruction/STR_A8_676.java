@@ -5,8 +5,10 @@
 -------------------------------*/
 package com.marik.arm.OpCode.thumb16.instruction;
 
-import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
+import static com.marik.vm.OS.*;
+import static com.marik.vm.Register.*;
 import static com.marik.arm.OpCode.OpUtil.*;
+import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
 public class STR_A8_676 extends ParseSupport {
 
@@ -31,6 +33,10 @@ public class STR_A8_676 extends ParseSupport {
 	@Override
 	protected boolean isRmMenory() {
 		return true;
+	}
+
+	@Override
+	protected void performExecuteCommand() {
 	}
 
 }

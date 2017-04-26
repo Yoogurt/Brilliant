@@ -9,7 +9,6 @@ import com.marik.arm.OpCode.thumb16.instruction.CMP_A8_370;
 import com.marik.arm.OpCode.thumb16.instruction.LSL_A8_468;
 import com.marik.arm.OpCode.thumb16.instruction.LSR_A8_472;
 import com.marik.arm.OpCode.thumb16.instruction.MOV_A8_484;
-import com.marik.arm.OpCode.thumb16.instruction.MOV_A8_486;
 import com.marik.arm.OpCode.thumb16.instruction.SUB_A8_708;
 import com.marik.arm.OpCode.thumb16.instruction.SUB_A8_712;
 

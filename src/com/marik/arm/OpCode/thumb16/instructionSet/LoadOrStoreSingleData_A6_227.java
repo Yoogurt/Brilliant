@@ -2,8 +2,18 @@ package com.marik.arm.OpCode.thumb16.instructionSet;
 
 import static com.marik.arm.OpCode.OpUtil.*;
 
+import com.marik.arm.OpCode.thumb16.instruction.LDRB_A8_416;
+import com.marik.arm.OpCode.thumb16.instruction.LDRB_A8_422;
+import com.marik.arm.OpCode.thumb16.instruction.LDRH_A8_440;
+import com.marik.arm.OpCode.thumb16.instruction.LDRH_A8_446;
+import com.marik.arm.OpCode.thumb16.instruction.LDRSB_A8_454;
+import com.marik.arm.OpCode.thumb16.instruction.LDRSH_A8_462;
 import com.marik.arm.OpCode.thumb16.instruction.LDR_A8_406;
 import com.marik.arm.OpCode.thumb16.instruction.LDR_A8_412;
+import com.marik.arm.OpCode.thumb16.instruction.STRB_A8_678;
+import com.marik.arm.OpCode.thumb16.instruction.STRB_A8_682;
+import com.marik.arm.OpCode.thumb16.instruction.STRH_A8_698;
+import com.marik.arm.OpCode.thumb16.instruction.STRH_A8_702;
 import com.marik.arm.OpCode.thumb16.instruction.STR_A8_672;
 import com.marik.arm.OpCode.thumb16.instruction.STR_A8_676;
 
@@ -18,59 +28,58 @@ public class LoadOrStoreSingleData_A6_227 {
 				return STR_A8_676.INSTANCE.parse(data);
 
 			if (opB == 0b001)
-				throw new UnsupportedOperationException("STRH not implemets");
+				return STRH_A8_702.INSTANCE.parse(data);
 
 			if (opB == 0b010)
-				throw new UnsupportedOperationException("STRB not implemets");
+				return STRB_A8_682.INSTANCE.parse(data);
 
 			if (opB == 0b011)
-				throw new UnsupportedOperationException("LDRSB not implemets");
+				return LDRSB_A8_454.INSTANCE.parse(data);
 
 			if (opB == 0b100)
 				return LDR_A8_412.INSTANCE.parse(data);
 
 			if (opB == 0b101)
-				throw new UnsupportedOperationException("LDRH not implemets");
+				return LDRH_A8_446.INSTANCE.parse(data);
 
 			if (opB == 0b110)
-				throw new UnsupportedOperationException("ldrb not implemets");
+				return LDRB_A8_422.INSTANCE.parse(data);
 
 			if (opB == 0b111)
-				throw new UnsupportedOperationException("LDRSH not implemets");
+				return LDRSH_A8_462.INSTANCE.parse(data);
+
+			if (opA == 0b0110) {
+				if (assert0(opB, 2))
+					return STR_A8_672.INSTANCE.parse(data);
+
+				if (assert1(opB, 2))
+					return LDR_A8_406.INSTANCE.parse(data);
+			}
+
+			if (opA == 0b0111) {
+				if (assert0(opB, 2))
+					return STRB_A8_678.INSTANCE.parse(data);
+
+				if (assert1(opB, 2))
+					return LDRB_A8_416.INSTANCE.parse(data);
+			}
+
+			if (opA == 0b1000) {
+				if (assert0(opB, 2))
+					return STRH_A8_698.INSTANCE.parse(data);
+
+				if (assert1(opB, 2))
+					return LDRH_A8_440.INSTANCE.parse(data);
+			}
+
+			if (opA == 0b1001) {
+				if (assert0(opB, 2))
+					return STR_A8_672.INSTANCE.parse(data);
+
+				if (assert1(opB, 2))
+					return LDR_A8_406.INSTANCE.parse(data);
+			}
 		}
-
-		if (opA == 0b0110) {
-			if (assert0(opB, 2))
-				return STR_A8_672.INSTANCE.parse(data);
-
-			if (assert1(opB, 2))
-				return LDR_A8_406.INSTANCE.parse(data);
-		}
-
-		if (opA == 0b0111) {
-			if (assert0(opB, 2))
-				throw new UnsupportedOperationException("STRB no implements");
-
-			if (assert1(opB, 2))
-				throw new UnsupportedOperationException("LDRB no implements");
-		}
-		
-		if (opA == 0b1000) {
-			if (assert0(opB, 2))
-				throw new UnsupportedOperationException("STRH no implements");
-
-			if (assert1(opB, 2))
-				throw new UnsupportedOperationException("LDRH no implements");
-		}
-		
-		if (opA == 0b1001) {
-			if (assert0(opB, 2))
-				return STR_A8_672.INSTANCE.parse(data);
-
-			if (assert1(opB, 2))
-				return LDR_A8_406.INSTANCE.parse(data);
-		}
-
 		throw new IllegalArgumentException("Unable to decode instruction " + Integer.toBinaryString(data));
 	}
 }
