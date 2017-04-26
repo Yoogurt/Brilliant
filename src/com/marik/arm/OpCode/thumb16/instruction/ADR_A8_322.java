@@ -25,7 +25,7 @@ public class ADR_A8_322 extends ParseSupport {
 
 	@Override
 	protected String getRm(int data) {
-		return "" + (getShiftInt(data, 0, 8)<<2);
+		return "" + (getShiftInt(data, 0, 8) << 2);
 	}
 
 	@Override
