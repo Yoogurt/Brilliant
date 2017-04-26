@@ -4,6 +4,7 @@ import static com.marik.arm.OpCode.OpUtil.assert0;
 import static com.marik.arm.OpCode.OpUtil.assert1;
 import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 
+import com.marik.arm.OpCode.ParseTemplate;
 import com.marik.arm.OpCode.thumb16.instruction.ADD_A8_316;
 import com.marik.arm.OpCode.thumb16.instruction.ADR_A8_322;
 import com.marik.arm.OpCode.thumb16.instruction.B_A8_334;
@@ -13,7 +14,7 @@ import com.marik.arm.OpCode.thumb16.instruction.STM_A8_664;
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
 public class Thumb16Factory {
-	public static ParseSupport parse(int data) {
+	public static ParseTemplate parse(int data) {
 
 		int OpCode = getShiftInt(data, 10, 6);
 

@@ -1,8 +1,9 @@
 package com.marik.arm.OpCode.arm.instruction.factory;
 
+import com.marik.arm.OpCode.ParseTemplate;
 import com.marik.arm.OpCode.arm.instructionSet.factory.ConditionParseFactory;
 
-public abstract class ParseSupport {
+public abstract class ParseSupport implements ParseTemplate{
 
 	public String parse(int data) {
 

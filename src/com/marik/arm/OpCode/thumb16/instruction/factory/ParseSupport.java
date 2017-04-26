@@ -1,8 +1,9 @@
 package com.marik.arm.OpCode.thumb16.instruction.factory;
 
+import com.marik.arm.OpCode.ParseTemplate;
 import com.marik.arm.OpCode.arm.instructionSet.factory.ConditionParseFactory;
 
-public abstract class ParseSupport {
+public abstract class ParseSupport implements ParseTemplate {
 
 	public String parse(int data) {
 
@@ -72,6 +73,6 @@ public abstract class ParseSupport {
 	protected String error(int data) {
 		throw new IllegalArgumentException("Unable to decode instruction " + Integer.toBinaryString(data));
 	}
-	
+
 	public abstract void performExecuteCommand(int data);
 }

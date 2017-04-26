@@ -39,7 +39,7 @@ import com.marik.vm.OS;
 /**
  * Construct a new Elf decoder which only support arm/32bit
  * 
- * @author lingb
+ * @author Yoogurt
  *
  */
 @SuppressWarnings("unused")

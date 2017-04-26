@@ -22,7 +22,7 @@ public class OpCode {
 			return UnConditionParseFactory.parseUncondition(data);
 	}
 
-	public static ParseSupport decodeThumb16(int data) {
+	public static ParseTemplate decodeThumb16(int data) {
 		return Thumb16Factory.parse(data & 0xffff);
 	}
 
