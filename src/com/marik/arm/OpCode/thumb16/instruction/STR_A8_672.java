@@ -34,7 +34,7 @@ public class STR_A8_672 extends ParseSupport {
 
 		StringBuilder sb = new StringBuilder("STR ");
 		sb.append(parseRegister(Rt));
-		sb.append(" , [SP , #").append(zeroExtend(imm8, 2)).append("]");
+		sb.append(" , [SP , #").append(imm8 << 2).append("]");
 
 		return sb.toString();
 	}
@@ -47,7 +47,7 @@ public class STR_A8_672 extends ParseSupport {
 		sb.append(parseRegister(getShiftInt(data, 0, 3))).append(" , [");
 
 		if (imm > 0)
-			sb.append(parseRegister(getShiftInt(data, 3, 3)) + " , #" + zeroExtend(imm, 2));
+			sb.append(parseRegister(getShiftInt(data, 3, 3)) + " , #" + (imm << 2));
 		else
 			sb.append(parseRegister(getShiftInt(data, 3, 3)));
 

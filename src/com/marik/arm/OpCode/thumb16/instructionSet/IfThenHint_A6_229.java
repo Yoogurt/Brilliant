@@ -9,7 +9,7 @@ import com.marik.arm.OpCode.thumb16.instruction.WFI_A8_1106;
 import com.marik.arm.OpCode.thumb16.instruction.YIELD_A8_1108;
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
-public class IfThenHint_A6_229 {
+class IfThenHint_A6_229 {
 
 	public static ParseSupport parse(int data) {
 		int opA = OpUtil.getShiftInt(data, 4, 4);

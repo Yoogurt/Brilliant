@@ -20,7 +20,7 @@ import com.marik.arm.OpCode.thumb16.instruction.SBC_A8_594;
 import com.marik.arm.OpCode.thumb16.instruction.TST_A8_746;
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
-public class DataProcessing_A6_225 {
+class DataProcessing_A6_225 {
 
 	public static ParseSupport parse(int data) {
 		int OpCode = getShiftInt(data, 6, 4);

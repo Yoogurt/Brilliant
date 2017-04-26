@@ -9,7 +9,7 @@ import com.marik.arm.OpCode.thumb16.instruction.CMP_A8_372;
 import com.marik.arm.OpCode.thumb16.instruction.MOV_A8_486;
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
-public class SpecialDataInstrucationsAndBranchAndExchange_A6_226 {
+class SpecialDataInstrucationsAndBranchAndExchange_A6_226 {
 
 	public static ParseSupport parse(int data) {
 		int OpCode = getShiftInt(data, 6, 4);

@@ -29,7 +29,7 @@ public class ADD_A8_316 extends ParseSupport {
 		int imm7 = getShiftInt(data, 0, 7);
 
 		StringBuilder sb = new StringBuilder("ADD SP , SP , #");
-		sb.append(zeroExtend(imm7, 2));
+		sb.append(imm7 << 2);
 		return sb.toString();
 	}
 
@@ -40,7 +40,7 @@ public class ADD_A8_316 extends ParseSupport {
 		StringBuilder sb = new StringBuilder("ADD ");
 		sb.append(parseRegister(Rd)).append(" , SP , #");
 
-		sb.append(zeroExtend(imm8, 2));
+		sb.append(imm8 << 2);
 
 		return sb.toString();
 	}

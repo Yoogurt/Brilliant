@@ -33,7 +33,7 @@ public class LDR_A8_406 extends ParseSupport {
 		StringBuilder sb = new StringBuilder("LDR ");
 		sb.append(parseRegister(Rt)).append(" , [").append(parseRegister(Rn));
 		if (imm5 != 0b00000)
-			sb.append(" , #").append(zeroExtend(imm5, 2));
+			sb.append(" , #").append(imm5 << 2);
 
 		sb.append("]");
 
@@ -56,7 +56,7 @@ public class LDR_A8_406 extends ParseSupport {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[SP");
 		if (imm8 != 0b00000000)
-			sb.append(" , #").append(zeroExtend(imm8, 2));
+			sb.append(" , #").append(imm8 << 2);
 
 		sb.append("]");
 		return sb.toString();

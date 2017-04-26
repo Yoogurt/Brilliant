@@ -26,7 +26,7 @@ public class SUB_A8_716 extends ParseSupport {
 
 	@Override
 	protected String getRm(int data) {
-		return "SP , #" + (zeroExtend(getShiftInt(data, 0, 7), 2));
+		return "SP , #" + ((getShiftInt(data, 0, 7)<< 2));
 	}
 
 	@Override

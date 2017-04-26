@@ -18,7 +18,7 @@ import com.marik.arm.OpCode.thumb16.instruction.STR_A8_672;
 import com.marik.arm.OpCode.thumb16.instruction.STR_A8_676;
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
-public class LoadOrStoreSingleData_A6_227 {
+class LoadOrStoreSingleData_A6_227 {
 	public static ParseSupport parse(int data) {
 
 		int opA = getShiftInt(data, 12, 4);

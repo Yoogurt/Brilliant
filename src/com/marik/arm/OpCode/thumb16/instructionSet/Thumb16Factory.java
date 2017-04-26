@@ -34,25 +34,25 @@ public class Thumb16Factory {
 						&& assert1(OpCode, 5)))/* 0101xx 011xxx 100xxx */
 			return LoadOrStoreSingleData_A6_227.parse(data);
 
-		if (assert0(OpCode, 1, 2, 4) && assert1(OpCode, 3, 5))/*10100x*/
+		if (assert0(OpCode, 1, 2, 4) && assert1(OpCode, 3, 5))/* 10100x */
 			return ADR_A8_322.INSTANCE;
-		
-		if(assert0(OpCode , 2,4) &&  assert1(OpCode, 1,3,5))/*10101x*/
+
+		if (assert0(OpCode, 2, 4) && assert1(OpCode, 1, 3, 5))/* 10101x */
 			return ADD_A8_316.INSTANCE;
-		
-		if(assert0(OpCode , 4) && assert1(OpCode , 2,3,5))
+
+		if (assert0(OpCode, 4) && assert1(OpCode, 2, 3, 5))
 			return Miscellaneous16Bitinstructions_A6_228.parse(data);
-		
-		if(assert0(OpCode , 1,2,3) && assert1(OpCode , 4,5))
+
+		if (assert0(OpCode, 1, 2, 3) && assert1(OpCode, 4, 5))
 			return STM_A8_664.INSTANCE;
-		
-		if(assert0(OpCode , 2,3)&&assert1(OpCode , 1,4,5))
+
+		if (assert0(OpCode, 2, 3) && assert1(OpCode, 1, 4, 5))
 			return LDM_A8_396.INSTANCE;
-		
-		if(assert0(OpCode , 3) && assert1(OpCode , 2,4,5))
+
+		if (assert0(OpCode, 3) && assert1(OpCode, 2, 4, 5))
 			return ConditionalBranchAndSupervisorCall_A6_229.parse(data);
-		
-		if(assert0(OpCode , 1,2)&&assert1(OpCode , 3,4,5))
+
+		if (assert0(OpCode, 1, 2) && assert1(OpCode, 3, 4, 5))
 			return B_A8_334.INSTANCE;
 
 		throw new IllegalArgumentException("cann't decode instruction " + Integer.toBinaryString(data));

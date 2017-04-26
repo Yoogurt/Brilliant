@@ -29,7 +29,7 @@ public class LDR_A8_410 extends ParseSupport {
 
 	@Override
 	protected String getRm(int data) {
-		return "label_#" + zeroExtend(getShiftInt(data, 0, 8), 2);
+		return "label_#" + (getShiftInt(data, 0, 8)<<2);
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import com.marik.arm.OpCode.thumb16.instruction.SUB_A8_708;
 import com.marik.arm.OpCode.thumb16.instruction.SUB_A8_712;
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
-public class ShiftAddSubtractMoveCompare_A6_224 {
+class ShiftAddSubtractMoveCompare_A6_224 {
 
 	public static ParseSupport parse(int data) {
 

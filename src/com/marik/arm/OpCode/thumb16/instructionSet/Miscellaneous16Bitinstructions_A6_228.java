@@ -18,7 +18,7 @@ import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
 import static com.marik.arm.OpCode.OpUtil.*;
 
-public class Miscellaneous16Bitinstructions_A6_228 {
+class Miscellaneous16Bitinstructions_A6_228 {
 	public static ParseSupport parse(int data) {
 
 		int OpCode = getShiftInt(data, 5, 7);

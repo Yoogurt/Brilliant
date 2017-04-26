@@ -102,10 +102,6 @@ public class OpUtil {
 		return data;
 	}
 
-	public static int zeroExtend(int data, int extendLength) {
-		return data << extendLength;
-	}
-
 	public static void main(String[] args) {
 		int no = 0b11111100001;
 		System.out.println(Integer.toBinaryString(signExtend(no, 11)));
