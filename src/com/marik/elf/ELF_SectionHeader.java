@@ -8,10 +8,16 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 import com.marik.util.Log;
-import com.marik.util.Util;
+import com.marik.util.ByteUtil;
 
+/**
+ * @author Yoogurt
+ *
+ *	SectionHeaders are useless when we parse a dynamic library or executable
+ *  Debug Only
+ */
 @Deprecated
-public class ELF_SectionHeader {
+class ELF_SectionHeader {
 
 	public class ELF_Shdr {
 
@@ -84,19 +90,19 @@ public class ELF_SectionHeader {
 		}
 
 		public long getMemoryOffset() {
-			return Util.bytes2Int64(sh_addr);
+			return ByteUtil.bytes2Int64(sh_addr);
 		}
 
 		public long getMemorySize() {
-			return Util.bytes2Int32(sh_size);
+			return ByteUtil.bytes2Int32(sh_size);
 		}
 
 		public long getSectionOffset() {
-			return Util.bytes2Int64(sh_offset);
+			return ByteUtil.bytes2Int64(sh_offset);
 		}
 
 		public int getSectionSize() {
-			return Util.bytes2Int32(sh_size);
+			return ByteUtil.bytes2Int32(sh_size);
 		}
 	}
 
@@ -197,77 +203,77 @@ public class ELF_SectionHeader {
 
 			Log.e(DIVISION_LINE);
 
-			switch (Util.bytes2Int32(mS.sh_type, header.isLittleEndian())) {
+			switch (ByteUtil.bytes2Int32(mS.sh_type, header.isLittleEndian())) {
 
 			case SHT_NULL:/* 0 */
 				Log.e("This Section is Unvalueable");
 				break;
 
 			case SHT_PROGBITS:/* 1 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_PROGBITS " + ", at " + Util.bytes2Hex(mS.sh_offset)
-						+ " , size : " + Util.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName() + " , type : SHT_PROGBITS " + ", at " + ByteUtil.bytes2Hex(mS.sh_offset)
+						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_SYMTAB:/* 2 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_SYMTAB , at " + Util.bytes2Hex(mS.sh_offset)
-						+ " , size : " + Util.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName() + " , type : SHT_SYMTAB , at " + ByteUtil.bytes2Hex(mS.sh_offset)
+						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_STRTAB:/* 3 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_STRTAB , at " + Util.bytes2Hex(mS.sh_offset)
-						+ " , size : " + Util.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName() + " , type : SHT_STRTAB , at " + ByteUtil.bytes2Hex(mS.sh_offset)
+						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
 
 				if (mInternalSectionHeaders[mStringSectionHeaderIndex] == mS)
 					Log.e("This is a Section contains other Section's Name");
 				break;
 
 			case SHT_RELA:/* 4 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_RELA , at " + Util.bytes2Hex(mS.sh_offset)
-						+ " , size : " + Util.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName() + " , type : SHT_RELA , at " + ByteUtil.bytes2Hex(mS.sh_offset)
+						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_HASH:/* 5 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_HASH , at " + Util.bytes2Hex(mS.sh_offset)
-						+ " , size : " + Util.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName() + " , type : SHT_HASH , at " + ByteUtil.bytes2Hex(mS.sh_offset)
+						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_DYNAMIC:/* 6 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_DYNAMIC , at " + Util.bytes2Hex(mS.sh_offset)
-						+ " , size : " + Util.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName() + " , type : SHT_DYNAMIC , at " + ByteUtil.bytes2Hex(mS.sh_offset)
+						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_NOTE:/* 7 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_NOTE , at " + Util.bytes2Hex(mS.sh_offset)
-						+ " , size : " + Util.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName() + " , type : SHT_NOTE , at " + ByteUtil.bytes2Hex(mS.sh_offset)
+						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_REL:/* 9 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_REL , at " + Util.bytes2Hex(mS.sh_offset)
-						+ " , size : " + Util.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName() + " , type : SHT_REL , at " + ByteUtil.bytes2Hex(mS.sh_offset)
+						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_SHLIB:/* 10 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_SHLIB , at " + Util.bytes2Hex(mS.sh_offset)
-						+ " , size : " + Util.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName() + " , type : SHT_SHLIB , at " + ByteUtil.bytes2Hex(mS.sh_offset)
+						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_DYMSYM:/* 11 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_DYMSYM , at " + Util.bytes2Hex(mS.sh_offset)
-						+ " , size : " + Util.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName() + " , type : SHT_DYMSYM , at " + ByteUtil.bytes2Hex(mS.sh_offset)
+						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_NUM:/* 12 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_NUM , at " + Util.bytes2Hex(mS.sh_offset)
-						+ " , size : " + Util.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName() + " , type : SHT_NUM , at " + ByteUtil.bytes2Hex(mS.sh_offset)
+						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_NOBITS:/* 8 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_NOBITS , at " + Util.bytes2Hex(mS.sh_offset)
-						+ " , size : " + Util.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName() + " , type : SHT_NOBITS , at " + ByteUtil.bytes2Hex(mS.sh_offset)
+						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 			default:
 				Log.e("Section : " + mS.getName() + " , type : Unknown Section Header Type ! at "
-						+ Util.bytes2Hex(mS.sh_offset) + " , size : " + Util.bytes2Int32(mS.sh_size));
+						+ ByteUtil.bytes2Hex(mS.sh_offset) + " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 			}
 		}

@@ -1,7 +1,7 @@
 package com.marik.arm.OpCode;
 
 public class OpUtil {
-	
+
 	/**
 	 * transform data into binary data and check the specific index is 0 or not
 	 * 
@@ -35,9 +35,7 @@ public class OpUtil {
 	 * 
 	 * for instance : getShiftInt(0b1010110 , 3 , 2)
 	 * 
-	 * 0b 1 0 1 0 1 1 0 
-	 * from     ^ here 
-	 * to     ^ to here
+	 * 0b 1 0 1 0 1 1 0 from ^ here to ^ to here
 	 * 
 	 * result 0b10 = 2
 	 */
@@ -50,7 +48,7 @@ public class OpUtil {
 	 */
 	public static String parseRegister(int no) {
 
-		if (no < 13)
+		if (no < 13 && no > 0)
 			return "R" + no;
 
 		switch (no) {

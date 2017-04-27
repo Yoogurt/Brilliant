@@ -5,7 +5,7 @@ import java.io.RandomAccessFile;
 
 import com.marik.vm.OS;
 
-public class Util {
+public class ByteUtil {
 
 	public static String byte2Hex(byte data) {
 
@@ -233,11 +233,11 @@ public class Util {
 	}
 
 	public static String decHexSizeFormat32(byte[] size, boolean isLittleEndian) {
-		return Util.bytes2Int32(size, isLittleEndian) + "(0x" + Util.bytes2Hex(size) + ")" + "B";
+		return ByteUtil.bytes2Int32(size, isLittleEndian) + "(0x" + ByteUtil.bytes2Hex(size) + ")" + "B";
 	}
 
 	public static String hexDecSizeFormat32(byte[] size, boolean isLittleEndian) {
-		return "0x" + Util.bytes2Hex(size) + "(" + Util.bytes2Int32(size, isLittleEndian) + ")" + "B";
+		return "0x" + ByteUtil.bytes2Hex(size) + "(" + ByteUtil.bytes2Int32(size, isLittleEndian) + ")" + "B";
 	}
 
 	public static void assertAlign(long align) {

@@ -1,6 +1,6 @@
 package com.marik.test;
 
-import com.marik.util.Util;
+import com.marik.util.ByteUtil;
 import com.marik.vm.OS;
 
 @SuppressWarnings("all")

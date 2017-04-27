@@ -324,6 +324,7 @@ public class ELF_Constant {
 
 	}
 
+	@Deprecated
 	public static class SectionHeaderContent {
 
 		public static final int SHT_NULL = 0;
@@ -356,6 +357,7 @@ public class ELF_Constant {
 		public static final int SHF_MASKPROC = 0xf0000000;
 	}
 
+	@Deprecated
 	public static class SectionName {
 		public static final String BSS = ".bss";
 		public static final String COMMENT = ".comment";

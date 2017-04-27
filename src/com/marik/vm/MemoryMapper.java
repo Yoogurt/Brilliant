@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import com.marik.util.Util;
+import com.marik.util.ByteUtil;
 
 class MemoryMapper {
 
@@ -216,7 +216,7 @@ class MemoryMapper {
 	public static void main(String[] args) {
 
 		mmap(0, 52, (byte) 0, new File("C:\\Users\\monitor\\Desktop\\test"), 0);
-		System.out.println(Util.bytes2Hex(OS.mMemory, 0, 52));
+		System.out.println(ByteUtil.bytes2Hex(OS.mMemory, 0, 52));
 
 	}
 

@@ -3,7 +3,7 @@ package com.marik.vm;
 import java.io.PrintStream;
 import java.io.RandomAccessFile;
 
-import com.marik.util.Util;
+import com.marik.util.ByteUtil;
 
 public class OS {
 
@@ -80,7 +80,7 @@ public class OS {
 			out.print("    ");
 		
 		for (int i = startIndex ; i < endIndex ;i++ ) {
-			out.print(Util.byte2Hex(mMemory[i]) + " ");
+			out.print(ByteUtil.byte2Hex(mMemory[i]) + " ");
 			if (++line % 16 == 0) {
 				out.println();
 				out.printf("%5x : ", line);

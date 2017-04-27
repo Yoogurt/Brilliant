@@ -49,9 +49,9 @@ import java.util.List;
 import com.marik.elf.ELF_ProgramHeader.ELF_Phdr;
 import com.marik.implement.CastSupport;
 import com.marik.util.Log;
-import com.marik.util.Util;
+import com.marik.util.ByteUtil;
 
-public final class ELF_Dynamic {
+final class ELF_Dynamic {
 
 	final static class Elf_Dyn {
 		public byte[] d_val;
@@ -59,11 +59,11 @@ public final class ELF_Dynamic {
 	}
 
 	final static class Elf_Sym extends CastSupport {
-		byte[] st_name; /* index into string table 4B */
+		byte[] st_name;  /* index into string table 4B */
 		byte[] st_value; /* 4B */
-		byte[] st_size; /* 4B */
-		byte st_info; /* 1B */
-		byte st_other; /* 1B */
+		byte[] st_size;  /* 4B */
+		byte st_info;    /* 1B */
+		byte st_other;   /* 1B */
 		byte[] st_shndx; /* 2B */
 
 		public static final Elf_Sym reinterpret_cast(byte[] data, int startIndex) {
@@ -146,14 +146,15 @@ public final class ELF_Dynamic {
 
 	private void loadDynamicSegment32(RandomAccessFile raf) throws IOException {
 
-		if (Util.bytes2Int32(mSelf.p_type) != PT_DYNAMIC)
-			throw new IllegalArgumentException("Attempt to decode Dynamic Segment with a not PT_DYNAMIC ProgramHeader");
+		if (ByteUtil.bytes2Int32(mSelf.p_type) != PT_DYNAMIC)
+			throw new IllegalArgumentException(
+					"Attempt to decode Dynamic Segment with a not PT_DYNAMIC Program Header");
 
-		int dynamicCount = Util.bytes2Int32(mSelf.p_filesz) / 8;
+		int dynamicCount = ByteUtil.bytes2Int32(mSelf.p_filesz) / 8;
 
 		long prePosition = raf.getFilePointer();
 
-		raf.seek(Util.bytes2Int64(mSelf.p_offset));
+		raf.seek(ByteUtil.bytes2Int64(mSelf.p_offset));
 
 		for (int i = 0; i < dynamicCount; i++) {
 
@@ -190,11 +191,11 @@ public final class ELF_Dynamic {
 
 	private boolean parseDynamicEntry(Elf_Dyn dynamic, RandomAccessFile raf) throws IOException {
 
-		switch (Util.bytes2Int32(dynamic.d_un)) {
+		switch (ByteUtil.bytes2Int32(dynamic.d_un)) {
 		case DT_NULL:
 			return false;
 		case DT_NEEDED: // elf necessary library
-			String name = getStrTabIndexString(Util.bytes2Int32(dynamic.d_val), raf);
+			String name = getStrTabIndexString(ByteUtil.bytes2Int32(dynamic.d_val), raf);
 			storeNeededDynamicLibraryName(name);
 			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "Need Dynamic Library : " + name);
@@ -206,27 +207,27 @@ public final class ELF_Dynamic {
 			break;
 		case DT_PLTGOT:
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_PLTGOT at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_PLTGOT at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_HASH:
 			readDT_HASH(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_HASH at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_HASH at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_STRTAB:
 			readDT_STRTAB(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_STRTAB at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_STRTAB at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_SYMTAB:
 			readDT_SYMTAB(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_SYMTAB at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_SYMTAB at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_RELA:
 			readDT_RELA(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_RELA at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_RELA at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_RELASZ:
 			mRelaSz = getVal(dynamic.d_val);
@@ -235,7 +236,7 @@ public final class ELF_Dynamic {
 			break;
 		case DT_RELAENT:
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_RELAENT at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_RELAENT at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_STRSZ:
 			Log.e("   " + LogConstant.DIVISION_LINE);
@@ -249,31 +250,31 @@ public final class ELF_Dynamic {
 		case DT_INIT:
 			readDT_INIT(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_INIT at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_INIT at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_FINI:
 			readDT_FINI(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_FINI at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_FINI at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_SONAME:
-			mDynamicLibraryName = getStrTabIndexString(Util.bytes2Int32(dynamic.d_val), raf);
+			mDynamicLibraryName = getStrTabIndexString(ByteUtil.bytes2Int32(dynamic.d_val), raf);
 			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "My Dynamic Library : " + mDynamicLibraryName);
 			break;
 		case DT_RPATH:
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_RPATH at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_RPATH at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_SYMBOLIC:
 			readDT_SYMBOLIC(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_SYMBOLIC at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_SYMBOLIC at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_REL:
 			readDT_REL(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_REL at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_REL at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_RELSZ:
 			mRelSz = (int) getVal(dynamic.d_val);
@@ -288,39 +289,39 @@ public final class ELF_Dynamic {
 		case DT_PLTREL:
 			verifyPltRel(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_PLTREL at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_PLTREL at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_DEBUG:
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_DEBUG at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_DEBUG at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_TEXTREL:
 			readDT_TEXTREL(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_TEXTREL at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_TEXTREL at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_JMPREL:
 			readDT_JMPREL(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_JMPREL at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_JMPREL at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_LOPROC:
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_LOPROC at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_LOPROC at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_HIPROC:
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_HIPROC at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_HIPROC at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_INIT_ARRAY:
 			readDT_INIT_ARRAY(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_INIT_ARRAY at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_INIT_ARRAY at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_FINI_ARRAY:
 			readDT_FINI_ARRAY(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_FINI_ARRAY at " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_FINI_ARRAY at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_RELCOUNT:
 			Log.e("   " + LogConstant.DIVISION_LINE);
@@ -347,12 +348,12 @@ public final class ELF_Dynamic {
 		case DT_GNU_HASH:
 			readDT_GNU_HASH(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_GNU_HASH : " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_GNU_HASH : " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_ANDROID_REL:
 			readDT_ANDROID_REL(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_ANDROID_REL : " + Util.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_ANDROID_REL : " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_ANDROID_RELSZ:
 			Log.e("   " + LogConstant.DIVISION_LINE);
@@ -360,14 +361,14 @@ public final class ELF_Dynamic {
 			break;
 		default:
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "Unknown DT type " + Util.bytes2Hex(dynamic.d_un));
+			Log.e("   " + "Unknown DT type " + ByteUtil.bytes2Hex(dynamic.d_un));
 			break;
 		}
 		return true;
 	}
 
 	private void readDT_PLTRELSZ(Elf_Dyn dynamic) {
-		if (mJmpRel == 0) 
+		if (mJmpRel == 0)
 			mJmpRelSz = getVal(dynamic.d_val);
 		else
 			throw new IllegalStateException("DT_PLTRELSZ appear over once");
@@ -419,74 +420,74 @@ public final class ELF_Dynamic {
 	}
 
 	private void assertSYMENT(Elf_Dyn dynamic) {
-		if (Util.bytes2Int32(dynamic.d_val) != 0x10) // Elf_Sym takes 0x10B
+		if (ByteUtil.bytes2Int32(dynamic.d_val) != 0x10) // Elf_Sym takes 0x10B
 			throw new AssertionError("assert fail , SYMENT != 0x10");
 	}
 
 	private void assertRELENT(Elf_Dyn dynamic) {
-		if (Util.bytes2Int32(dynamic.d_val) != 0x8) // Elf_Sym takes 0x10B
+		if (ByteUtil.bytes2Int32(dynamic.d_val) != 0x8) // Elf_Sym takes 0x10B
 			throw new AssertionError("assert fail , SYMENT != 0x10");
 	}
 
 	private void readDT_HASH(Elf_Dyn dynamic) {
 		if (mHash == 0)
-			mHash = Util.bytes2Int32(dynamic.d_val);
+			mHash = ByteUtil.bytes2Int32(dynamic.d_val);
 		else
 			throw new IllegalStateException("DT_HASH appear over once");
 	}
 
 	private void readDT_INIT_ARRAY(Elf_Dyn dynamic) {
 		if (mInitArray == 0)
-			mInitArray = Util.bytes2Int32(dynamic.d_val);
+			mInitArray = ByteUtil.bytes2Int32(dynamic.d_val);
 		else
 			throw new IllegalStateException("mInitArray appear over once");
 	}
 
 	private void readDT_INIT(Elf_Dyn dynamic) {
 		if (mInitFunc == 0)
-			mInitFunc = Util.bytes2Int32(dynamic.d_val);
+			mInitFunc = ByteUtil.bytes2Int32(dynamic.d_val);
 		else
 			throw new IllegalStateException("DT_INIT appear over once");
 	}
 
 	private void readDT_SYMTAB(Elf_Dyn dynamic) {
 		if (mSymTabIndex == 0)
-			mSymTabIndex = Util.bytes2Int32(dynamic.d_val);
+			mSymTabIndex = ByteUtil.bytes2Int32(dynamic.d_val);
 		else
 			throw new IllegalStateException("DT_SYMTAB appear over once");
 	}
 
 	private void readDT_STRTAB(Elf_Dyn dynamic) {
 		if (mStrTabIndex == 0)
-			mStrTabIndex = Util.bytes2Int32(dynamic.d_val);
+			mStrTabIndex = ByteUtil.bytes2Int32(dynamic.d_val);
 		else
 			throw new IllegalStateException("DT_STRTAB appear over once");
 	}
 
 	private void readDT_FINI(Elf_Dyn dynamic) {
 		if (mFiniFunc == 0)
-			mFiniFunc = Util.bytes2Int32(dynamic.d_val);
+			mFiniFunc = ByteUtil.bytes2Int32(dynamic.d_val);
 		else
 			throw new IllegalStateException("DT_FINI appear over once");
 	}
 
 	private void readDT_FINI_ARRAY(Elf_Dyn dynamic) {
 		if (mFiniArray == 0)
-			mFiniArray = Util.bytes2Int32(dynamic.d_val);
+			mFiniArray = ByteUtil.bytes2Int32(dynamic.d_val);
 		else
 			throw new IllegalStateException("DT_FINI_ARRAY appear over once");
 	}
 
 	private void readDT_FINI_ARRAYSZ(Elf_Dyn dynamic) {
 		if (mFiniArraySz == 0)
-			mFiniArraySz = Util.bytes2Int32(dynamic.d_val);
+			mFiniArraySz = ByteUtil.bytes2Int32(dynamic.d_val);
 		else
 			throw new IllegalStateException("DT_FINI_ARRAYSZ appear over once");
 	}
 
 	private void readDT_INIT_ARRAYSZ(Elf_Dyn dynamic) {
 		if (mInitArraySz == 0)
-			mInitArraySz = Util.bytes2Int32(dynamic.d_val);
+			mInitArraySz = ByteUtil.bytes2Int32(dynamic.d_val);
 		else
 			throw new IllegalStateException("DT_INIT_ARRAYSZ appear over once");
 	}
@@ -499,7 +500,7 @@ public final class ELF_Dynamic {
 
 		raf.seek(index + mStrTabIndex);
 
-		String name = Util.getStringFromBytes(raf);
+		String name = ByteUtil.getStringFromBytes(raf);
 
 		raf.seek(prePosition);
 
@@ -517,7 +518,7 @@ public final class ELF_Dynamic {
 		raf.read(st_name);
 
 		try {
-			return getStrTabIndexString(Util.bytes2Int32(st_name), raf);
+			return getStrTabIndexString(ByteUtil.bytes2Int32(st_name), raf);
 		} catch (Exception e) {
 			throw new IllegalStateException();
 		} finally {
@@ -586,7 +587,7 @@ public final class ELF_Dynamic {
 	}
 
 	private int getVal(byte[] data) {
-		return Util.bytes2Int32(data);
+		return ByteUtil.bytes2Int32(data);
 	}
 
 	private void loadRelocateSection(RandomAccessFile raf) throws IOException {
@@ -596,8 +597,8 @@ public final class ELF_Dynamic {
 			mRelocateSections.add(new ELF_Relocate(raf, mJmpRel, mJmpRelSz, this, false));
 		if (mRela != 0)
 			mRelocateSections.add(new ELF_Relocate(raf, mRela, mRelaSz, this, true));
-		
-		if(mRelocateSections.size() == 0)
+
+		if (mRelocateSections.size() == 0)
 			Log.e("\n no relocation Section Detected !\n");
 	}
 }

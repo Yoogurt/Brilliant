@@ -6,12 +6,12 @@ import com.marik.arm.OpCode.arm.instructionSet.factory.ConditionParseFactory;
 import com.marik.arm.OpCode.arm.instructionSet.factory.UnConditionParseFactory;
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 import com.marik.arm.OpCode.thumb16.instructionSet.Thumb16Factory;
-import com.marik.util.Util;
+import com.marik.util.ByteUtil;
 
 public class OpCode {
 
 	public static String decode(byte[] data) {
-		return decodeArm32(Util.bytes2Int32(data));
+		return decodeArm32(ByteUtil.bytes2Int32(data));
 	}
 
 	public static String decodeArm32(int data) {
@@ -31,7 +31,7 @@ public class OpCode {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(decodeThumb16(0x9005));
+		System.out.println(decodeThumb16(0xbf0e).parse(0xbf0e));
 	}
 
 }

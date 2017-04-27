@@ -1,7 +1,7 @@
 package com.marik.elf;
 
 import static com.marik.elf.ELF_Constant.DT_RelType.*;
-import static com.marik.elf.ELFDefinition.*;
+import static com.marik.elf.ELF_Definition.*;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Sword;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Addr;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Word;
@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 import com.marik.util.Log;
-import com.marik.util.Util;
+import com.marik.util.ByteUtil;
 
-public class ELF_Relocate {
+class ELF_Relocate {
 
 	public class Elf_rel {
 		public byte[] r_offset;
@@ -27,7 +27,7 @@ public class ELF_Relocate {
 	private Elf_rel[] mInternalRelocates;
 	private ELF_Dynamic mSelf;
 
-	private boolean mRela;   // are we Rela ?
+	private boolean mRela; // are we Rela ?
 
 	ELF_Relocate(RandomAccessFile raf, long offset, int size, ELF_Dynamic mSelf, boolean rela) throws IOException {
 
@@ -40,8 +40,8 @@ public class ELF_Relocate {
 			readElf_Rela(raf, offset, size);
 
 	}
-	
-	public boolean isRela(){
+
+	public boolean isRela() {
 		return mRela;
 	}
 
@@ -84,26 +84,26 @@ public class ELF_Relocate {
 		for (Elf_rel rel : mInternalRelocates) {
 
 			Log.e(LogConstant.DIVISION_LINE);
-			
+
 			byte r_info = ELF_R_TYPE(rel.r_info);
 
 			int sym = ELF_R_SYM(rel.r_info);
 
 			switch (r_info) {
 			case R_ARM_GLOB_DAT:
-				Log.e("       relocation section r_offset : " + Util.bytes2Hex(rel.r_offset)
+				Log.e("       relocation section r_offset : " + ByteUtil.bytes2Hex(rel.r_offset)
 						+ " r_info : R_ARM_GLOB_DAT " + " , sym : " + sym
 						+ (sym > 0 ? " , symbol name : " + mSelf.getSymInStrTab(sym, raf) : ""));
 				break;
 
 			case R_ARM_RELATIVE:
-				Log.e("       relocation section r_offset : " + Util.bytes2Hex(rel.r_offset)
+				Log.e("       relocation section r_offset : " + ByteUtil.bytes2Hex(rel.r_offset)
 						+ " r_info : R_ARM_RELATIVE" + " , sym : " + sym
 						+ (sym > 0 ? " , symbol name : " + mSelf.getSymInStrTab(sym, raf) : ""));
 				break;
 
 			case R_ARM_JUMP_SLOT:
-				Log.e("       relocation section r_offset : " + Util.bytes2Hex(rel.r_offset)
+				Log.e("       relocation section r_offset : " + ByteUtil.bytes2Hex(rel.r_offset)
 						+ " r_info : R_ARM_JUMP_SLOT" + " , sym : " + sym
 						+ (sym > 0 ? " , symbol name : " + mSelf.getSymInStrTab(sym, raf) : ""));
 				break;

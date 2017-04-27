@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.RandomAccessFile;
 
 import com.marik.arm.OpCode.OpCode;
-import com.marik.util.Util;
+import com.marik.util.ByteUtil;
 
 public class Optest {
 	public static void main(String[] args) throws Exception {

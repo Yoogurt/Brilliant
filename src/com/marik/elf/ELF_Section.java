@@ -4,9 +4,15 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 import com.marik.elf.ELF_SectionHeader.ELF_Shdr;
-import com.marik.util.Util;
+import com.marik.util.ByteUtil;
+
+/**
+ * @author Yoogurt
+ * SectionHeaders are useless when we parse a dynamic library or executable 
+ * Debug Only
+ */
 @Deprecated
-public class ELF_Section {
+class ELF_Section {
 
 	protected ELF_Shdr mHeader;
 
@@ -14,15 +20,15 @@ public class ELF_Section {
 
 	private RandomAccessFile raf;
 
-	 ELF_Section(RandomAccessFile raf, ELF_Header header, ELF_Shdr mHeader) throws IOException {
+	ELF_Section(RandomAccessFile raf, ELF_Header header, ELF_Shdr mHeader) throws IOException {
 		this.raf = raf;
 		this.mHeader = mHeader;
-		s_data = new byte[Util.bytes2Int32(mHeader.sh_size)];
+		s_data = new byte[ByteUtil.bytes2Int32(mHeader.sh_size)];
 		loadDataFromStream();
 	}
 
 	private void loadDataFromStream() throws IOException {
-		raf.seek(Util.bytes2Int32(mHeader.sh_offset, mHeader.sh_offset.length));
+		raf.seek(ByteUtil.bytes2Int32(mHeader.sh_offset, mHeader.sh_offset.length));
 		raf.read(s_data);
 	}
 
@@ -36,7 +42,7 @@ public class ELF_Section {
 	}
 
 	public String getStringAtIndex(byte[] index) {
-		int index_int32 = Util.bytes2Int32(index);
+		int index_int32 = ByteUtil.bytes2Int32(index);
 		StringBuilder sb = new StringBuilder();
 
 		for (;; index_int32++)

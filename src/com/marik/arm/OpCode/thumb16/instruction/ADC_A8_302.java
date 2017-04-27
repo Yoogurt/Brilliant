@@ -31,6 +31,7 @@ public class ADC_A8_302 extends ParseSupport {
 
 	@Override
 	public void performExecuteCommand(int data) {
+		
 	}
 
 }

@@ -19,9 +19,9 @@ import java.util.List;
 
 import com.marik.implement.CastSupport;
 import com.marik.util.Log;
-import com.marik.util.Util;
+import com.marik.util.ByteUtil;
 
-public class ELF_ProgramHeader {
+class ELF_ProgramHeader {
 
 	static public class ELF_Phdr extends CastSupport {
 
@@ -82,19 +82,19 @@ public class ELF_ProgramHeader {
 		}
 
 		public long getMemoryOffset() {
-			return Util.bytes2Int64(p_vaddr);
+			return ByteUtil.bytes2Int64(p_vaddr);
 		}
 
 		public long getMemorySize() {
-			return Util.bytes2Int32(p_memsz);
+			return ByteUtil.bytes2Int32(p_memsz);
 		}
 
 		public long getProgramOffset() {
-			return Util.bytes2Int64(p_offset);
+			return ByteUtil.bytes2Int64(p_offset);
 		}
 
 		public int getProgramSize() {
-			return Util.bytes2Int32(p_filesz);
+			return ByteUtil.bytes2Int32(p_filesz);
 		}
 
 		public static ELF_Phdr reinterpret_cast(byte[] data) {
@@ -108,7 +108,6 @@ public class ELF_ProgramHeader {
 		public static int size() {
 			return 32;
 		}
-
 	}
 
 	private ELF_Header header;
@@ -157,7 +156,7 @@ public class ELF_ProgramHeader {
 
 			mInternalProgramHeader[m] = ph;
 
-			switch (Util.bytes2Int32(ph.p_type, header.isLittleEndian())) {
+			switch (ByteUtil.bytes2Int32(ph.p_type, header.isLittleEndian())) {
 			case PT_NULL:
 				Log.e("Program Header " + m + " type : PT_NULL");
 				break;
@@ -195,7 +194,7 @@ public class ELF_ProgramHeader {
 
 			default:
 				Log.e("Unknown Program Header " + m + " type : "
-						+ Util.bytes2Int32(ph.p_type, header.isLittleEndian()));
+						+ ByteUtil.bytes2Int32(ph.p_type, header.isLittleEndian()));
 				break;
 			}
 
@@ -214,8 +213,8 @@ public class ELF_ProgramHeader {
 
 		try {
 			long prePosition = raf.getFilePointer();
-			raf.seek(Util.bytes2Int64(ph.p_offset));
-			Log.e("Interpretor : " + Util.getStringFromBytes(raf));
+			raf.seek(ByteUtil.bytes2Int64(ph.p_offset));
+			Log.e("Interpretor : " + ByteUtil.getStringFromBytes(raf));
 			raf.seek(prePosition);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -241,13 +240,13 @@ public class ELF_ProgramHeader {
 
 	private void logSegmentInfo(ELF_Phdr ph) {
 
-		Log.e("Segment p_offset :  " + Util.bytes2Hex(ph.p_offset));
-		Log.e("Segment p_vaddr  : " + Util.bytes2Hex(ph.p_vaddr));
-		Log.e("Segment p_memsz : " + Util.bytes2Hex(ph.p_memsz));
+		Log.e("Segment p_offset :  " + ByteUtil.bytes2Hex(ph.p_offset));
+		Log.e("Segment p_vaddr  : " + ByteUtil.bytes2Hex(ph.p_vaddr));
+		Log.e("Segment p_memsz : " + ByteUtil.bytes2Hex(ph.p_memsz));
 
-		Log.e("Segment p_filesz : " + Util.decHexSizeFormat32(ph.p_filesz, header.isLittleEndian()));
+		Log.e("Segment p_filesz : " + ByteUtil.decHexSizeFormat32(ph.p_filesz, header.isLittleEndian()));
 		if (header.isSharedObject() || header.isExeutable())
-			Log.e("Segment will mmap directly at memory : " + Util.bytes2Hex(ph.p_paddr));
+			Log.e("Segment will mmap directly at memory : " + ByteUtil.bytes2Hex(ph.p_paddr));
 
 		// Util.assertAlign(Util.bytes2Int64(ph.p_align));
 	}
@@ -271,7 +270,7 @@ public class ELF_ProgramHeader {
 	public ELF_Phdr getProgramHeaderBySegmentPosition(int position) {
 
 		for (ELF_Phdr mT : mInternalProgramHeader) {
-			if (Util.bytes2Int32(mT.p_offset, header.isLittleEndian()) == position) {
+			if (ByteUtil.bytes2Int32(mT.p_offset, header.isLittleEndian()) == position) {
 				return mT;
 			}
 		}
@@ -282,7 +281,7 @@ public class ELF_ProgramHeader {
 	public ELF_Phdr getProgramHeaderBySegmentPosition(long position) {
 
 		for (ELF_Phdr mT : mInternalProgramHeader) {
-			if (Util.bytes2Int64(mT.p_offset) == position) {
+			if (ByteUtil.bytes2Int64(mT.p_offset) == position) {
 				return mT;
 			}
 		}

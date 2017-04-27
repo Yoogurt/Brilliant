@@ -1,8 +1,8 @@
 package com.marik.elf;
 
-import com.marik.util.Util;
+import com.marik.util.ByteUtil;
 
-public class ELFDefinition {
+class ELF_Definition {
 
 	public static int ELF_ST_BIND(int i) {
 		return i >> 4;
@@ -17,7 +17,7 @@ public class ELFDefinition {
 	}
 
 	public static byte ELF_R_TYPE(byte[] i) {
-		return (byte) Util.bytes2Int32(i);
+		return (byte) ByteUtil.bytes2Int32(i);
 	}
 
 	public static byte ELF_R_TYPE(int i) {
@@ -25,7 +25,7 @@ public class ELFDefinition {
 	}
 
 	public static int ELF_R_SYM(byte[] i) {
-		return Util.bytes2Int32(i) >> 8;
+		return ByteUtil.bytes2Int32(i) >> 8;
 	}
 
 	public static int ELF_R_SYM(int i) {
