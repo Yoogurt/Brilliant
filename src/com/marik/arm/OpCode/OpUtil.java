@@ -48,7 +48,7 @@ public class OpUtil {
 	 */
 	public static String parseRegister(int no) {
 
-		if (no < 13 && no > 0)
+		if (no < 13 && no >= 0)
 			return "R" + no;
 
 		switch (no) {

@@ -31,7 +31,8 @@ public class OpCode {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(decodeThumb16(0xbf0e).parse(0xbf0e));
+		int code = 0x4a1e;
+		System.out.println(decodeThumb16(code).parse(code));
 	}
 
 }

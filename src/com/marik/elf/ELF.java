@@ -42,7 +42,7 @@ import com.marik.vm.OS;
  * @author Yoogurt
  *
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("all")
 public class ELF {
 
 	public static final String[] ENV = { "C:\\Users\\monitor\\Desktop\\env\\" };
@@ -426,8 +426,8 @@ public class ELF {
 		if (ELF_R_TYPE(rel.r_info) == R_ARM_RELATIVE || ELF_R_TYPE(rel.r_info) == R_ARM_IRELATIVE
 				|| ELF_R_TYPE(rel.r_info) == R_ARM_ABS32 || ELF_R_TYPE(rel.r_info) == R_ARM_REL32)
 			return ByteUtil.bytes2Int32(OS.getMemory(), reloc_addr, ELF32_Addr, elf_header.isLittleEndian()); // Extract
-																											// reloc_addr(pointer)'s
-																											// value
+																												// reloc_addr(pointer)'s
+																												// value
 
 		return 0; /*
 					 * if (ELFW(R_TYPE)(rel->r_info) == R_ARM_RELATIVE ||
@@ -536,15 +536,17 @@ public class ELF {
 										 * = sym_addr;
 										 */
 
-					Log.e("name : " + sym_name + " R_GENERIC_GLB_DAT at " + ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc))
-							+ " , relocating to 0x" + Integer.toHexString(sym_address));
+					Log.e("name : " + sym_name + " R_GENERIC_GLB_DAT at "
+							+ ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc)) + " , relocating to 0x"
+							+ Integer.toHexString(sym_address));
 					break;
 				case R_ARM_JUMP_SLOT:
 
 					System.arraycopy(ByteUtil.int2bytes(sym_address), 0, OS.getMemory(), reloc, ELF32_Addr);
 
-					Log.e("name : " + sym_name + " R_GENERIC_JUMP_SLOT at " + ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc))
-							+ " , relocating to 0x" + Integer.toHexString(sym_address));
+					Log.e("name : " + sym_name + " R_GENERIC_JUMP_SLOT at "
+							+ ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc)) + " , relocating to 0x"
+							+ Integer.toHexString(sym_address));
 					break;
 
 				case R_ARM_ABS32:
@@ -651,8 +653,8 @@ public class ELF {
 		int strtab = si.strtab;
 
 		for (int n = ByteUtil.bytes2Int32(OS.getMemory(), (int) (si.bucket + (hash % si.nbucket) * uint32_t), uint32_t,
-				si.elf_header.isLittleEndian()); n != 0; n = ByteUtil.bytes2Int32(OS.getMemory(), si.chain + n * uint32_t,
-						uint32_t, si.elf_header.isLittleEndian())) {
+				si.elf_header.isLittleEndian()); n != 0; n = ByteUtil.bytes2Int32(OS.getMemory(),
+						si.chain + n * uint32_t, uint32_t, si.elf_header.isLittleEndian())) {
 
 			Elf_Sym s = Elf_Sym.reinterpret_cast(OS.getMemory(), symtab + (n * Elf_Sym.size()));
 
@@ -754,11 +756,12 @@ public class ELF {
 	}
 
 	public static void main(String[] args) throws Exception {
-		ELF elf = new ELF("C:\\Users\\monitor\\Desktop\\Decomplied File\\am.odex", false);
 
-		// OS.dumpMemory(new PrintStream(new
-		// File("C:\\Users\\monitor\\Desktop\\dump.txt")), elf.elf_base,
-		// elf.elf_size);
+		OS.debug = true;
+		
+		ELF elf = new ELF("C:/Users/monitor/Desktop/Decomplied File/500彩票/lib/armeabi/libesunlib.so", true);
+
+		//OS.dumpMemory(new PrintStream(new File("C:\\Users\\monitor\\Desktop\\dump.txt")), elf.elf_base, elf.elf_size);
 	}
 
 }

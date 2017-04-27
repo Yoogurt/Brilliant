@@ -11,8 +11,8 @@ import static com.marik.arm.OpCode.OpUtil.*;
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
 /**
- * load from memory , <Rn> = [PC + zeroExtend(imm8)]
- * */
+ * load from memory , <label> = [PC + zeroExtend(imm8:00)]
+ */
 public class LDR_A8_410 extends ParseSupport {
 
 	public static final LDR_A8_410 INSTANCE = new LDR_A8_410();
@@ -29,7 +29,8 @@ public class LDR_A8_410 extends ParseSupport {
 
 	@Override
 	protected String getRm(int data) {
-		return "label_#" + (getShiftInt(data, 0, 8)<<2);
+		return "label_#" + (getShiftInt(data, 0, 8) << 2) + " (LDR " + parseRegister(getShiftInt(data, 8, 3))
+				+ " , =[PC , #" + (getShiftInt(data, 0, 8) << 2) + "])";
 	}
 
 	@Override

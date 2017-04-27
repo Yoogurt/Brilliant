@@ -1,8 +1,12 @@
 package com.marik.util;
 
-import static java.lang.System.out;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 
 public class Log {
+
+	public static PrintStream out = System.out;
 
 	public static boolean DEBUG = true;
 
