@@ -21,6 +21,7 @@ import java.io.PrintStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,7 @@ import com.marik.vm.OS;
 @SuppressWarnings("all")
 public class ELF {
 
-	public static final String[] ENV = { "C:\\Users\\monitor\\Desktop\\env\\" };
+	public static final String[] ENV = { "C:/Users/monitor/Desktop/env/" };
 
 	public static final int LDPATH_BUFSIZE = 512;
 	public static final int LDPATH_MAX = 8;
@@ -760,6 +761,9 @@ public class ELF {
 		 * ByteUtil.bytes2Int32(OS.getMemory(), si.chain + n * uint32_t,
 		 * uint32_t, si.elf_header.isLittleEndian()))
 		 */
+
+		int i = 0;
+
 		for (int hash = 0; hash < nbucket; hash++) {
 			for (int n = ByteUtil.bytes2Int32(OS.getMemory(), (int) (bucket + hash * uint32_t), uint32_t,
 					true); n != 0; n = ByteUtil.bytes2Int32(OS.getMemory(), chain + n * uint32_t, uint32_t,
@@ -768,8 +772,10 @@ public class ELF {
 				Elf_Sym s = Elf_Sym.reinterpret_cast(OS.getMemory(), symtab + (n * Elf_Sym.size()));
 
 				String symname = ByteUtil.getStringFromMemory(strtab + ByteUtil.bytes2Int32(s.st_name));
-
+				String value = ByteUtil.bytes2Hex(s.st_value);
+				
 				int size = ByteUtil.bytes2Int32(s.st_size);
+				int shndx = ByteUtil.bytes2Int32(s.st_shndx);
 
 				String bind = null;
 				String type = null;
@@ -809,82 +815,84 @@ public class ELF {
 					type = "STT_HIPROC";
 					break;
 				}
-				System.out.printf("symbol name : %-30s  size : %-5d  BIND : %-9s  TYPE : %-10s  OTHER : %-5d\n",
-						symname, size, bind, type, other);
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				System.out.printf(
+						"symbol name : %-30s  value : %-12s  size : %-8d  BIND : %-10s  TYPE : %-10s  OTHER : %-5d  SHNDX : %-8d\n",
+						symname,value, size, bind, type, other, shndx);
+				i++;
 			}
 		}
+
+		System.out.println("total sym : " + i);
 	}
 
-//	private void dumpSymtab() {
-//		/*
-//		 * for (int n = ByteUtil.bytes2Int32(OS.getMemory(), (int) (si.bucket +
-//		 * (hash % si.nbucket) * uint32_t), uint32_t,
-//		 * si.elf_header.isLittleEndian()); n != 0; n =
-//		 * ByteUtil.bytes2Int32(OS.getMemory(), si.chain + n * uint32_t,
-//		 * uint32_t, si.elf_header.isLittleEndian()))
-//		 */
-//		for (int n = 0;; n++) {
-//
-//			Elf_Sym s = Elf_Sym.reinterpret_cast(OS.getMemory(), symtab + (n * Elf_Sym.size()));
-//			
-//			if(ByteUtil.)
-//
-//			String symname = ByteUtil.getStringFromMemory(strtab + ByteUtil.bytes2Int32(s.st_name));
-//
-//			int size = ByteUtil.bytes2Int32(s.st_size);
-//
-//			String bind = null;
-//			String type = null;
-//			int other = ByteUtil.byte2Int32(s.st_other);
-//
-//			switch (ELF_ST_BIND(s.st_info)) {
-//			case STB_LOCAL:
-//				bind = "STB_LOCAL";
-//				break;
-//			case STB_GLOBAL:
-//				bind = "STB_GLOBAL";
-//				break;
-//			case STB_WEAK:
-//				bind = "STB_WEAK";
-//				break;
-//			}
-//			switch (ELF_ST_TYPE(s.st_info)) {
-//			case STT_NOTYPE:
-//				type = "STT_NOTYPE";
-//				break;
-//			case STT_OBJECT:
-//				type = "STT_OBJECT";
-//				break;
-//			case STT_FUNC:
-//				type = "STT_FUNC";
-//				break;
-//			case STT_SECTION:
-//				type = "STT_SECTION";
-//				break;
-//			case STT_FILE:
-//				type = "STT_FILE";
-//				break;
-//			case STT_LOPROC:
-//				type = "STT_LOPROC";
-//				break;
-//			case STT_HIPROC:
-//				type = "STT_HIPROC";
-//				break;
-//			}
-//			System.out.printf("symbol name : %-30s  size : %-5d  BIND : %-9s  TYPE : %-10s  OTHER : %-5d\n", symname,
-//					size, bind, type, other);
-//			try {
-//				Thread.sleep(1000);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
+	// private void dumpSymtab() {
+	// /*
+	// * for (int n = ByteUtil.bytes2Int32(OS.getMemory(), (int) (si.bucket +
+	// * (hash % si.nbucket) * uint32_t), uint32_t,
+	// * si.elf_header.isLittleEndian()); n != 0; n =
+	// * ByteUtil.bytes2Int32(OS.getMemory(), si.chain + n * uint32_t,
+	// * uint32_t, si.elf_header.isLittleEndian()))
+	// */
+	// for (int n = 0;; n++) {
+	//
+	// Elf_Sym s = Elf_Sym.reinterpret_cast(OS.getMemory(), symtab + (n *
+	// Elf_Sym.size()));
+	//
+	// if(ByteUtil.)
+	//
+	// String symname = ByteUtil.getStringFromMemory(strtab +
+	// ByteUtil.bytes2Int32(s.st_name));
+	//
+	// int size = ByteUtil.bytes2Int32(s.st_size);
+	//
+	// String bind = null;
+	// String type = null;
+	// int other = ByteUtil.byte2Int32(s.st_other);
+	//
+	// switch (ELF_ST_BIND(s.st_info)) {
+	// case STB_LOCAL:
+	// bind = "STB_LOCAL";
+	// break;
+	// case STB_GLOBAL:
+	// bind = "STB_GLOBAL";
+	// break;
+	// case STB_WEAK:
+	// bind = "STB_WEAK";
+	// break;
+	// }
+	// switch (ELF_ST_TYPE(s.st_info)) {
+	// case STT_NOTYPE:
+	// type = "STT_NOTYPE";
+	// break;
+	// case STT_OBJECT:
+	// type = "STT_OBJECT";
+	// break;
+	// case STT_FUNC:
+	// type = "STT_FUNC";
+	// break;
+	// case STT_SECTION:
+	// type = "STT_SECTION";
+	// break;
+	// case STT_FILE:
+	// type = "STT_FILE";
+	// break;
+	// case STT_LOPROC:
+	// type = "STT_LOPROC";
+	// break;
+	// case STT_HIPROC:
+	// type = "STT_HIPROC";
+	// break;
+	// }
+	// System.out.printf("symbol name : %-30s size : %-5d BIND : %-9s TYPE :
+	// %-10s OTHER : %-5d\n", symname,
+	// size, bind, type, other);
+	// try {
+	// Thread.sleep(1000);
+	// } catch (InterruptedException e) {
+	// e.printStackTrace();
+	// }
+	// }
+	// }
 
 	private boolean isSystemCall(String name) {
 		return SYS_CALL.contains(name);
@@ -894,9 +902,8 @@ public class ELF {
 
 		OS.debug = true;
 
-		// ELF elf = new ELF("C:/Users/monitor/Desktop/Decomplied
-		// File/500彩票/lib/armeabi/libesunlib.so", true);
-		ELF elf = new ELF("C:/Users/monitor/Desktop/env/libc.so", true);
+		ELF elf = new ELF("C:/Users/monitor/Desktop/Decomplied File/500彩票/lib/armeabi/libesunlib.so", true);
+		// ELF elf = new ELF("C:/Users/monitor/Desktop/env/libc.so", true);
 		elf.dumpHashSymtab();
 
 	}

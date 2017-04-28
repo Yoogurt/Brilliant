@@ -58,7 +58,9 @@ public class OpCode {
 	public static void main(String[] args) {
 		Register.setT(1); // access thumb mode
 
-		int code = 0x4d1d;
+		int code = 0xc600;
+		System.out.println(decodeThumb16(code).parse(code));
+		 code = 0xe28f;
 		System.out.println(decodeThumb16(code).parse(code));
 	}
 
