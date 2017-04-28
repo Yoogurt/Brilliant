@@ -1,9 +1,11 @@
 package com.marik.arm.OpCode.arm.instructionSet.factory;
 
+import com.marik.arm.OpCode.ParseTemplate;
+
 public class UnConditionParseFactory {
 
-	public static String parseUncondition(int data) {
-		return "parseUncondition";
+	public static ParseTemplate parseUncondition(int data) {
+		return null;
 	}
 
 }

@@ -43,7 +43,7 @@ public class B_A8_334 extends ParseSupport {
 
 		sb.append(" {PC , #");
 
-		sb.append((signExtend(getShiftInt(data, 0, 8), 8) + 1) << 1).append("}");
+		sb.append((signExtend(getShiftInt(data, 0, 8), 8)) << 1).append("}");
 
 		return sb.toString();
 
@@ -55,7 +55,7 @@ public class B_A8_334 extends ParseSupport {
 		int imm11 = getShiftInt(data, 0, 11);
 
 		sb.append(" {PC , #");
-		return sb.append((signExtend(imm11, 11) + 1) << 1).append("}").toString();
+		return sb.append(signExtend(imm11, 11) << 1).append("}").toString();
 	}
 
 	@Override

@@ -4,8 +4,10 @@ import static com.marik.arm.OpCode.OpUtil.assert0;
 import static com.marik.arm.OpCode.OpUtil.assert1;
 import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 
+import com.marik.arm.OpCode.ParseTemplate;
+
 public class DataProcessingAndMiscellaneousInstructions_A5_190 {
-	public static String parse(int data) {
+	public static ParseTemplate parse(int data) {
 
 		int op = getShiftInt(data, 25, 1);
 		int op1 = getShiftInt(data, 20, 5);
@@ -57,35 +59,35 @@ public class DataProcessingAndMiscellaneousInstructions_A5_190 {
 		throw new IllegalArgumentException("cann't parse instruction " + Integer.toBinaryString(data));
 	}
 
-	private static String ExtraLoadOrStoreInstructionUnprivileged(int data) {
-		return "ExtraLoadOrStoreInstructionUnprivileged";
+	private static ParseTemplate ExtraLoadOrStoreInstructionUnprivileged(int data) {
+		return null;
 	}
 
-	private static String ExtraLoadOrStoreInstructions_A5_203(int data) {
-		return "ExtraLoadOrStoreInstructions_A5_203";
+	private static ParseTemplate ExtraLoadOrStoreInstructions_A5_203(int data) {
+		return null;
 	}
 
-	private static String SynachronizationPrimitives_A5_205(int data) {
-		return "SynachronizationPrimitives_A5_205";
+	private static ParseTemplate SynachronizationPrimitives_A5_205(int data) {
+		return null;
 	}
 
-	private static String MultiplyAndMultiplyAccumulate_A5_202(int data) {
-		return "MultiplyAndMultiplyAccumulate_A5_202";
+	private static ParseTemplate MultiplyAndMultiplyAccumulate_A5_202(int data) {
+		return null;
 	}
 
-	private static String HalfwordAndMultiplyAccumulate_A5_203(int data) {
-		return "HalfwordAndMultiplyAccumulate_A5_203";
+	private static ParseTemplate HalfwordAndMultiplyAccumulate_A5_203(int data) {
+		return null;
 	}
 
-	private static String MiscellaneousInstruction_A5_207(int data) {
-		return "MiscellaneousInstruction_A5_207";
+	private static ParseTemplate MiscellaneousInstruction_A5_207(int data) {
+		return null;
 	}
 
-	private static String DataProcessingRigsterShiftedRegister_A5_198(int data) {
-		return "DataProcessingRigsterShiftedRegister_A5_198";
+	private static ParseTemplate DataProcessingRigsterShiftedRegister_A5_198(int data) {
+		return null;
 	}
 
-	private static String DataProcessingRegister_A5_197(int data) {
+	private static ParseTemplate DataProcessingRegister_A5_197(int data) {
 
 		int op = getShiftInt(data, 20, 5);
 

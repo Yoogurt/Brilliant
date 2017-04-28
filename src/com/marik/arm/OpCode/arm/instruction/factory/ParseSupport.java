@@ -57,7 +57,7 @@ public abstract class ParseSupport implements ParseTemplate{
 	}
 
 	protected boolean enableCond() {
-		return false;
+		return true;
 	}
 
 	protected int getCond() {

@@ -2,6 +2,7 @@ package com.marik.arm.OpCode.arm.instructionSet.factory;
 
 import static com.marik.arm.OpCode.OpUtil.*;
 
+import com.marik.arm.OpCode.ParseTemplate;
 import com.marik.arm.OpCode.arm.instructionSet.BranchWithLinkAndBlockDataTransfer_A5_214;
 import com.marik.arm.OpCode.arm.instructionSet.CoprocessorInstructionAndSupervisorCall_A5_215;
 import com.marik.arm.OpCode.arm.instructionSet.DataProcessingAndMiscellaneousInstructions_A5_190;
@@ -10,7 +11,7 @@ import com.marik.arm.OpCode.arm.instructionSet.MediaInstruction_A5_209;
 
 public class ConditionParseFactory {
 
-	public static String parseCondition(int data) {
+	public static ParseTemplate parseCondition(int data) {
 		int op1 = getShiftInt(data, 25, 3);
 		int op = getShiftInt(data, 4, 1);
 

@@ -159,12 +159,25 @@ public class Register {
 			CPSR |= ~helper;
 	}
 
-	private static void modifyCPSRWid(int data, int position, int length) {
+	private static void modifyCPSRWid(int data, int fromIndex, int length) {
 		data &= (1 << length) - 1;// cut number down
 
-		int helper = ~(((1 << length) - 1) << position);
+		int helper = ~(((1 << length) - 1) << fromIndex);
 
 		CPSR &= helper;
-		CPSR |= data << position;
+		CPSR |= data << fromIndex;
+	}
+
+	public static class RegisterIllegalStateExeception extends IllegalStateException {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public RegisterIllegalStateExeception(String msg) {
+			super(msg);
+		}
+
 	}
 }

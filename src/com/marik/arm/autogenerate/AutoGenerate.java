@@ -19,8 +19,8 @@ public class AutoGenerate {
 
 	public static void main(String[] args) {
 		try {
-			genrateThumb16Class();
-			// genrateArmClass();
+//			genrateThumb16Class();
+			 genrateArmClass();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

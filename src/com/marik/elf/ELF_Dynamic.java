@@ -4,6 +4,7 @@ import static com.marik.elf.ELF_Constant.ELFUnit.*;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Addr;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Word;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_DEBUG;
+import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_SYMENT;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_FINI;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_FINI_ARRAY;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_FINI_ARRAYSZ;
@@ -91,14 +92,15 @@ final class ELF_Dynamic {
 		public static final int size() {
 			return 0x10;
 		}
-
 	}
 
 	private List<Elf_Dyn> mInternalDynamics = new ArrayList<>();
 
 	private int mStrTabIndex = 0;
+	
 	private int mSymTabIndex = 0;
-
+	private int mSymTabSz = 0;
+	
 	private int mInitFunc = 0;
 	private int mInitArray = 0;
 	private int mInitArraySz = 0;
@@ -359,6 +361,7 @@ final class ELF_Dynamic {
 			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_ANDROID_RELSZ : " + getVal(dynamic.d_val));
 			break;
+			
 		default:
 			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "Unknown DT type " + ByteUtil.bytes2Hex(dynamic.d_un));

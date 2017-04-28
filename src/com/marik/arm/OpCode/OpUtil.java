@@ -99,6 +99,10 @@ public class OpUtil {
 
 		return data;
 	}
+	
+	public static int align(int data, int alignment) {
+		return data / alignment * data;
+	}
 
 	public static void main(String[] args) {
 		int no = 0b11111100001;
