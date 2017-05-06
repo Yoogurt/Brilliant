@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 public class CalculateLine {
 	public static void main(String[] args) {
 
-		File file = new File("D:\\Android\\ELFDecorder\\src\\com\\marik");
+		File file = new File("src\\com\\marik");
 
 		if (!file.exists())
 			throw new RuntimeException("file not exists");
