@@ -19,12 +19,28 @@ public class MRS_B9_1990 extends ParseSupport {
 		return null;
 	}
 	@Override
-	protected String getRn(int data) {
-		return null;
+	protected int getRd(int data) {
+		return -1;
 	}
 	@Override
-	protected String getRm(int data) {
-		return null;
+	protected int getRn(int data) {
+		return -1;
+	}
+	@Override
+	protected int getRm(int data) {
+		return -1;
+	}
+	@Override
+	protected int getS(int data) {
+		return -1;
+	}
+	@Override
+	protected int getType(int data) {
+		return -1;
+	}
+	@Override
+	protected int getShift(int data) {
+		return -1;
 	}
 	@Override
 	public void performExecuteCommand(int data) {

@@ -16,15 +16,31 @@ public class LSL_A8_468 extends ParseSupport {
 
 	@Override
 	protected String getOpCode() {
-		return null;
+		return "LSL";
 	}
 	@Override
-	protected String getRn(int data) {
-		return null;
+	protected int getRd(int data) {
+		return getShiftInt(data, 12, 4);
 	}
 	@Override
-	protected String getRm(int data) {
-		return null;
+	protected int getRn(int data) {
+		return -1;
+	}
+	@Override
+	protected int getRm(int data) {
+		return getShiftInt(data, 0, 4);
+	}
+	@Override
+	protected int getS(int data) {
+		return getShiftInt(data, 20, 1);
+	}
+	@Override
+	protected int getType(int data) {
+		return -1;
+	}
+	@Override
+	protected int getShift(int data) {
+		return getShiftInt(data, 7, 5);
 	}
 	@Override
 	public void performExecuteCommand(int data) {

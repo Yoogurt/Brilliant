@@ -6,7 +6,7 @@ import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 
 import com.marik.arm.OpCode.ParseTemplate;
 
-public class DataProcessingAndMiscellaneousInstructions_A5_190 {
+public class DataProcessingAndMiscellaneousInstructions_A5_196 {
 	public static ParseTemplate parse(int data) {
 
 		int op = getShiftInt(data, 25, 1);
@@ -16,13 +16,14 @@ public class DataProcessingAndMiscellaneousInstructions_A5_190 {
 		if (assert0(op, 0)) {
 			if (!assert0(op1, 0, 3) || !assert1(op1, 4))/* op1 != 10xx0 */
 				if (assert0(op2, 0))/* xxx0 */
-					return DataProcessingRegister_A5_197(data);
+					return DataProcessingRegister_A5_197.parse(data);
 				else if (assert0(op2, 3))/* 0xx1 */
-					return DataProcessingRigsterShiftedRegister_A5_198(data);
+					return DataProcessingRigsterShiftedRegister_A5_198
+							.parse(data);
 
 			if (assert0(op1, 0, 3) && assert1(op1, 4))/* 10xx0 */
 				if (assert0(op2, 3))/* 0xxx */
-					return MiscellaneousInstruction_A5_207(data);
+					return MiscellaneousInstruction_A5_207.parse(data);
 				else if (assert0(op2, 0))/* 1xx0 */
 					return HalfwordAndMultiplyAccumulate_A5_203(data);
 
@@ -56,10 +57,12 @@ public class DataProcessingAndMiscellaneousInstructions_A5_190 {
 
 		}
 
-		throw new IllegalArgumentException("cann't parse instruction " + Integer.toBinaryString(data));
+		throw new IllegalArgumentException("cann't parse instruction "
+				+ Integer.toBinaryString(data));
 	}
 
-	private static ParseTemplate ExtraLoadOrStoreInstructionUnprivileged(int data) {
+	private static ParseTemplate ExtraLoadOrStoreInstructionUnprivileged(
+			int data) {
 		return null;
 	}
 
@@ -76,27 +79,6 @@ public class DataProcessingAndMiscellaneousInstructions_A5_190 {
 	}
 
 	private static ParseTemplate HalfwordAndMultiplyAccumulate_A5_203(int data) {
-		return null;
-	}
-
-	private static ParseTemplate MiscellaneousInstruction_A5_207(int data) {
-		return null;
-	}
-
-	private static ParseTemplate DataProcessingRigsterShiftedRegister_A5_198(int data) {
-		return null;
-	}
-
-	private static ParseTemplate DataProcessingRegister_A5_197(int data) {
-
-		int op = getShiftInt(data, 20, 5);
-
-		if (assert0(op, 1, 2, 3, 4))
-			return null;
-
-		if (assert0(op, 2, 3, 4) && assert1(op, 1))
-			return null;
-
 		return null;
 	}
 

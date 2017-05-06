@@ -6,25 +6,14 @@
 package com.marik.arm.OpCode.arm.instruction;
 
 import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
-import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
-import static com.marik.arm.OpCode.OpUtil.*;
 
+@Deprecated
 public class LDRD_A8_428 extends ParseSupport {
 
 	public static final LDRD_A8_428 INSTANCE = new LDRD_A8_428();
 
-	@Override
-	protected String getOpCode() {
-		return null;
-	}
-	@Override
-	protected String getRn(int data) {
-		return null;
-	}
-	@Override
-	protected String getRm(int data) {
-		return null;
+	public String parse(int data) {
+			throw new UnsupportedOperationException("LDRD no implements");
 	}
 	@Override
 	public void performExecuteCommand(int data) {

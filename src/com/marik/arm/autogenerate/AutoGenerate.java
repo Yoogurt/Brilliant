@@ -11,10 +11,10 @@ import java.util.List;
 
 public class AutoGenerate {
 
-	public static final String THUMB16_PATH = "D:/Android/ELFDecorder/src/com/marik/arm/OpCode/thumb16/instruction/";
+	public static final String THUMB16_PATH = "src/com/marik/arm/OpCode/thumb16/instruction/";
 	public static final String THUMB16_CFG = "src/com/marik/arm/autogenerate/Thumb16Instruction.cfg";
 
-	public static final String ARM_PATH = "D:/Android/ELFDecorder/src/com/marik/arm/OpCode/arm/instruction/";
+	public static final String ARM_PATH = "src/com/marik/arm/OpCode/arm/instruction/";
 	public static final String ARM_CFG = "src/com/marik/arm/autogenerate/ArmInstruction.cfg";
 
 	public static void main(String[] args) {
@@ -135,12 +135,28 @@ public class AutoGenerate {
 				pw.println("		return null;");
 				pw.println("	}");
 				pw.println("	@Override");
-				pw.println("	protected String getRn(int data) {");
-				pw.println("		return null;");
+				pw.println("	protected int getRd(int data) {");
+				pw.println("		return -1;");
 				pw.println("	}");
 				pw.println("	@Override");
-				pw.println("	protected String getRm(int data) {");
-				pw.println("		return null;");
+				pw.println("	protected int getRn(int data) {");
+				pw.println("		return -1;");
+				pw.println("	}");
+				pw.println("	@Override");
+				pw.println("	protected int getRm(int data) {");
+				pw.println("		return -1;");
+				pw.println("	}");
+				pw.println("	@Override");
+				pw.println("	protected int getS(int data) {");
+				pw.println("		return -1;");
+				pw.println("	}");
+				pw.println("	@Override");
+				pw.println("	protected int getType(int data) {");
+				pw.println("		return -1;");
+				pw.println("	}");
+				pw.println("	@Override");
+				pw.println("	protected int getShift(int data) {");
+				pw.println("		return -1;");
 				pw.println("	}");
 
 			} else {

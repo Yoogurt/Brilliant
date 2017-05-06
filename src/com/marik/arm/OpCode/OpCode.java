@@ -2,6 +2,7 @@ package com.marik.arm.OpCode;
 
 import static com.marik.arm.OpCode.OpUtil.*;
 
+import com.marik.arm.OpCode.arm.instructionSet.ArmFactory;
 import com.marik.arm.OpCode.arm.instructionSet.factory.ConditionParseFactory;
 import com.marik.arm.OpCode.arm.instructionSet.factory.UnConditionParseFactory;
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
@@ -17,38 +18,32 @@ public class OpCode {
 
 		switch (Register.getT()) {
 		case 0:
-			return decodeArm(command).parse(command);
+			return decodeArm(command);
 
 		case 1:
-			return decodeThumb16(command).parse(command);
+			return decodeThumb16(command);
 		default:
 			throw new RegisterIllegalStateExeception("Flag Rigister has accessed an unpredictable state");
 		}
 	}
 
 	public static String decode(int data) {
-
 		switch (Register.getT()) {
 		case 0:
-			return decodeArm(data).parse(data);
-
+			return decodeArm(data);
 		case 1:
-			return decodeThumb16(data).parse(data);
+			return decodeThumb16(data);
 		default:
 			throw new RegisterIllegalStateExeception("Flag Rigister has accessed an unpredictable state");
 		}
 	}
 
-	public static ParseTemplate decodeArm(int data) {
-
-		if (!assert1(data, 28, 29, 30, 31))
-			return ConditionParseFactory.parseCondition(data);
-		else
-			return UnConditionParseFactory.parseUncondition(data);
+	private static String decodeArm(int data) {
+		return ArmFactory.parse(data).parse(data);
 	}
 
-	public static ParseTemplate decodeThumb16(int data) {
-		return Thumb16Factory.parse(data & 0xffff);
+	public static String decodeThumb16(int data) {
+		return Thumb16Factory.parse(data).parse(data);
 	}
 
 	public static ParseTemplate decodeThumb32(int data) {
@@ -56,12 +51,9 @@ public class OpCode {
 	}
 
 	public static void main(String[] args) {
-		Register.setT(1); // access thumb mode
-
-		int code = 0xc600;
-		System.out.println(decodeThumb16(code).parse(code));
-		 code = 0xe28f;
-		System.out.println(decodeThumb16(code).parse(code));
+		Register.setT(0); // access thumb mode
+		int code = 0b11100001011011110100111100010101;
+		System.out.println(decode(code));
 	}
 
 }

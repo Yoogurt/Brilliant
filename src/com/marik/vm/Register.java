@@ -86,7 +86,7 @@ public class Register {
 	}
 
 	public static int getT() {
-		return 1 & ((CPSR & 0x00000020) >> 6);
+		return 1 & ((CPSR & 0x00000020) >> 5);
 	}
 
 	public static int getM() {

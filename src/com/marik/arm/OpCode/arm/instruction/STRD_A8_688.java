@@ -6,25 +6,14 @@
 package com.marik.arm.OpCode.arm.instruction;
 
 import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
-import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
-import static com.marik.arm.OpCode.OpUtil.*;
 
+@Deprecated
 public class STRD_A8_688 extends ParseSupport {
 
 	public static final STRD_A8_688 INSTANCE = new STRD_A8_688();
 
-	@Override
-	protected String getOpCode() {
-		return null;
-	}
-	@Override
-	protected String getRn(int data) {
-		return null;
-	}
-	@Override
-	protected String getRm(int data) {
-		return null;
+	public String parse(int data) {
+			throw new UnsupportedOperationException("STRD no implements");
 	}
 	@Override
 	public void performExecuteCommand(int data) {

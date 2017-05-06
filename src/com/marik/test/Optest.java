@@ -25,7 +25,7 @@ public class Optest {
 			String OpCodes = null;
 			try {
 				int com = ByteUtil.bytes2Int32(command);
-				OpCodes = OpCode.decodeThumb16(com).parse(com);
+				OpCodes = OpCode.decodeThumb16(com);
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.err.println("Not Thumb code");
