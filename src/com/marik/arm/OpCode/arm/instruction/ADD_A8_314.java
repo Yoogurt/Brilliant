@@ -16,7 +16,7 @@ public class ADD_A8_314 extends ParseSupport {
 	public static final ADD_A8_314 INSTANCE = new ADD_A8_314();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "ADD";
 	}
 	@Override

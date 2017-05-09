@@ -6,6 +6,7 @@
 package com.marik.arm.OpCode.arm.instruction;
 
 import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+
 import static com.marik.vm.OS.*;
 import static com.marik.vm.Register.*;
 import static com.marik.arm.OpCode.OpUtil.*;
@@ -15,33 +16,45 @@ public class MOV_A8_484 extends ParseSupport {
 	public static final MOV_A8_484 INSTANCE = new MOV_A8_484();
 
 	@Override
-	protected String getOpCode() {
-		return null;
+	protected String getOpCode(int data) {
+		return "MOV";
 	}
+
 	@Override
 	protected int getRd(int data) {
-		return -1;
+		return getShiftInt(data, 12, 4);
 	}
+
 	@Override
 	protected int getRn(int data) {
 		return -1;
 	}
+
 	@Override
 	protected int getRm(int data) {
 		return -1;
 	}
+
 	@Override
 	protected int getS(int data) {
-		return -1;
+		return getShiftInt(data, 20, 1);
 	}
+
 	@Override
 	protected int getType(int data) {
 		return -1;
 	}
+
 	@Override
 	protected int getShift(int data) {
-		return -1;
+		int mov = getShiftInt(data, 21, 7);
+		if (mov == 0b0011101) // move imm12
+			return armExpandImm(getShiftInt(data, 0, 12));
+		else
+			return (getShiftInt(data, 16, 4) << 12)  // move imm16
+					| (getShiftInt(data, 0, 12));
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

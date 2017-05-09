@@ -16,7 +16,7 @@ public class CMP_A8_374 extends ParseSupport {
 	public static final CMP_A8_374 INSTANCE = new CMP_A8_374();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "CMP";
 	}
 	@Override

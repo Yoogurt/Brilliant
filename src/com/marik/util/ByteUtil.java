@@ -280,7 +280,9 @@ public class ByteUtil {
 
 	public static void main(String[] args) {
 
-		System.out.println(bytes2Int32(int2bytes(55555)));
+		byte b = (byte) 0b10000000;
+		int a = 0b11111111111111111111111111111111;
+		System.out.println(b);
 	}
 
 }

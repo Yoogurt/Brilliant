@@ -16,7 +16,7 @@ public class CMN_A8_366 extends ParseSupport {
 	public static final CMN_A8_366 INSTANCE = new CMN_A8_366();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "CMN";
 	}
 	@Override

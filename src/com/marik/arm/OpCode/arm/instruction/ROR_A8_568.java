@@ -16,7 +16,7 @@ public class ROR_A8_568 extends ParseSupport {
 	public static final ROR_A8_568 INSTANCE = new ROR_A8_568();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "ROR";
 	}
 	@Override

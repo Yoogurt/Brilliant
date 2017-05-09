@@ -16,7 +16,7 @@ public class LSR_A8_474 extends ParseSupport {
 	public static final LSR_A8_474 INSTANCE = new LSR_A8_474();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "LSR";
 	}
 	@Override
@@ -41,7 +41,7 @@ public class LSR_A8_474 extends ParseSupport {
 	}
 	@Override
 	protected int getShift(int data) {
-		return -1;
+		return 0;
 	}
 	@Override
 	public void performExecuteCommand(int data) {

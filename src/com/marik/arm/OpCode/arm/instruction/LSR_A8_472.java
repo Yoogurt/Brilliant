@@ -16,7 +16,7 @@ public class LSR_A8_472 extends ParseSupport {
 	public static final LSR_A8_472 INSTANCE = new LSR_A8_472();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "LSR";
 	}
 	@Override

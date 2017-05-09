@@ -17,7 +17,7 @@ public class BIC_A8_342 extends ParseSupport {
 
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "BIC";
 	}
 	@Override

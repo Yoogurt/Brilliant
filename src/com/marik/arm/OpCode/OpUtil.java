@@ -103,11 +103,19 @@ public class OpUtil {
 	public static int align(int data, int alignment) {
 		return data / alignment * data;
 	}
+	
+	public static int armExpandImm(int imm12){
+		imm12 &= 0xfff;
+		
+		int rotation = imm12 >> 8; 
+		int result = imm12 & 0xff;
+		
+		return (result >> (rotation << 1)) | (result << (32 - rotation << 1));
+	}
 
 	public static void main(String[] args) {
-		int no = 0b11111100001;
-		System.out.println(Integer.toBinaryString(signExtend(no, 11)));
-		System.out.println(signExtend(no, 11));
+		int no = 0x201;
+		System.out.println(Integer.toHexString(armExpandImm(no)));
 	}
 
 }

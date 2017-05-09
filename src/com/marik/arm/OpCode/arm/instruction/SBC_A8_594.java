@@ -16,7 +16,7 @@ public class SBC_A8_594 extends ParseSupport {
 	public static final SBC_A8_594 INSTANCE = new SBC_A8_594();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "SBC";
 	}
 	@Override

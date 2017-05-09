@@ -16,7 +16,7 @@ public class RRX_A8_572 extends ParseSupport {
 	public static final RRX_A8_572 INSTANCE = new RRX_A8_572();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "RRX";
 	}
 	@Override

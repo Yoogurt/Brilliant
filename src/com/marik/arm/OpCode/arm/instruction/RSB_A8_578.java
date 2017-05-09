@@ -16,7 +16,7 @@ public class RSB_A8_578 extends ParseSupport {
 	public static final RSB_A8_578 INSTANCE = new RSB_A8_578();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "RSB";
 	}
 	@Override

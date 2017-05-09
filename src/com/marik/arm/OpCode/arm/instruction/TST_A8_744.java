@@ -6,6 +6,7 @@
 package com.marik.arm.OpCode.arm.instruction;
 
 import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+
 import static com.marik.vm.OS.*;
 import static com.marik.vm.Register.*;
 import static com.marik.arm.OpCode.OpUtil.*;
@@ -15,8 +16,8 @@ public class TST_A8_744 extends ParseSupport {
 	public static final TST_A8_744 INSTANCE = new TST_A8_744();
 
 	@Override
-	protected String getOpCode() {
-		return null;
+	protected String getOpCode(int data) {
+		return "TST";
 	}
 	@Override
 	protected int getRd(int data) {
@@ -24,7 +25,7 @@ public class TST_A8_744 extends ParseSupport {
 	}
 	@Override
 	protected int getRn(int data) {
-		return -1;
+		return getShiftInt(data, 16, 4);
 	}
 	@Override
 	protected int getRm(int data) {
@@ -40,7 +41,7 @@ public class TST_A8_744 extends ParseSupport {
 	}
 	@Override
 	protected int getShift(int data) {
-		return -1;
+		return armExpandImm(getShiftInt(data, 0, 12));
 	}
 	@Override
 	public void performExecuteCommand(int data) {

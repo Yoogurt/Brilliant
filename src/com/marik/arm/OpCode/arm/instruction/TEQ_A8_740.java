@@ -16,7 +16,7 @@ public class TEQ_A8_740 extends ParseSupport {
 	public static final TEQ_A8_740 INSTANCE = new TEQ_A8_740();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "TEQ";
 	}
 	@Override

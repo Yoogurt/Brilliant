@@ -15,7 +15,7 @@ public class AND_A8_326 extends ParseSupport {
 	public static final AND_A8_326 INSTANCE = new AND_A8_326();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "AND";
 	}
 	@Override

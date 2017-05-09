@@ -15,7 +15,7 @@ public class TST_A8_746 extends ParseSupport {
 	public static final TST_A8_746 INSTANCE = new TST_A8_746();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "TST";
 	}
 	@Override

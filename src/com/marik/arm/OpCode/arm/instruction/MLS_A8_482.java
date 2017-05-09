@@ -6,6 +6,7 @@
 package com.marik.arm.OpCode.arm.instruction;
 
 import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+
 import static com.marik.vm.OS.*;
 import static com.marik.vm.Register.*;
 import static com.marik.arm.OpCode.OpUtil.*;
@@ -13,26 +14,26 @@ import static com.marik.arm.OpCode.OpUtil.*;
 public class MLS_A8_482 extends ParseSupport {
 
 	public static final MLS_A8_482 INSTANCE = new MLS_A8_482();
-
+	
 	@Override
-	protected String getOpCode() {
-		return null;
+	protected String getOpCode(int data) {
+		return "MLS";
 	}
 	@Override
 	protected int getRd(int data) {
-		return -1;
+		return getShiftInt(data, 16, 4);
 	}
 	@Override
 	protected int getRn(int data) {
-		return -1;
+		return getShiftInt(data, 0, 4);
 	}
 	@Override
 	protected int getRm(int data) {
-		return -1;
+		return getShiftInt(data, 8, 4);
 	}
 	@Override
 	protected int getS(int data) {
-		return -1;
+		return getShiftInt(data, 20, 1);
 	}
 	@Override
 	protected int getType(int data) {
@@ -40,7 +41,11 @@ public class MLS_A8_482 extends ParseSupport {
 	}
 	@Override
 	protected int getShift(int data) {
-		return -1;
+		return getShiftInt(data, 12, 4);
+	}
+	@Override
+	protected boolean shifterRegister() {
+		return true;
 	}
 	@Override
 	public void performExecuteCommand(int data) {

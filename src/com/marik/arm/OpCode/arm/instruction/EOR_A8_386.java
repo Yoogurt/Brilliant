@@ -16,7 +16,7 @@ public class EOR_A8_386 extends ParseSupport {
 	public static final EOR_A8_386 INSTANCE = new EOR_A8_386();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "EOR";
 	}
 	@Override

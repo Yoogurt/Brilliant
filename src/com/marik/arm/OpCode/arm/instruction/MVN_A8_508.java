@@ -16,7 +16,7 @@ public class MVN_A8_508 extends ParseSupport {
 	public static final MVN_A8_508 INSTANCE = new MVN_A8_508();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "MVN";
 	}
 	@Override

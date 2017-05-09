@@ -13,8 +13,8 @@ import com.marik.util.ByteUtil;
 /**
  * @author Yoogurt
  *
- *	SectionHeaders are useless when we parse a dynamic library or executable
- *  Debug Only
+ *	SectionHeaders are useless when we parse a dynamic library or executable.
+ *  for Debug Only
  */
 @Deprecated
 class ELF_SectionHeader {

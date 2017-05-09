@@ -16,7 +16,7 @@ public class ASR_A8_332 extends ParseSupport {
 	public static final ASR_A8_332 INSTANCE = new ASR_A8_332();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "ASR";
 	}
 	@Override
@@ -41,7 +41,7 @@ public class ASR_A8_332 extends ParseSupport {
 	}
 	@Override
 	protected int getShift(int data) {
-		return -1;
+		return 0;
 	}
 	@Override
 	public void performExecuteCommand(int data) {

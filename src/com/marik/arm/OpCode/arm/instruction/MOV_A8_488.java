@@ -15,7 +15,7 @@ public class MOV_A8_488 extends ParseSupport {
 	public static final MOV_A8_488 INSTANCE = new MOV_A8_488();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "MOV";
 	}
 	@Override
@@ -40,7 +40,7 @@ public class MOV_A8_488 extends ParseSupport {
 	}
 	@Override
 	protected int getShift(int data) {
-		return -1;
+		return 0;
 	}
 	@Override
 	public void performExecuteCommand(int data) {

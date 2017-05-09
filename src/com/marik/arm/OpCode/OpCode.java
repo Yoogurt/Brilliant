@@ -23,7 +23,8 @@ public class OpCode {
 		case 1:
 			return decodeThumb16(command);
 		default:
-			throw new RegisterIllegalStateExeception("Flag Rigister has accessed an unpredictable state");
+			throw new RegisterIllegalStateExeception(
+					"Flag Rigister has accessed an unpredictable state");
 		}
 	}
 
@@ -34,7 +35,8 @@ public class OpCode {
 		case 1:
 			return decodeThumb16(data);
 		default:
-			throw new RegisterIllegalStateExeception("Flag Rigister has accessed an unpredictable state");
+			throw new RegisterIllegalStateExeception(
+					"Flag Rigister has accessed an unpredictable state");
 		}
 	}
 
@@ -51,9 +53,14 @@ public class OpCode {
 	}
 
 	public static void main(String[] args) {
-		Register.setT(0); // access thumb mode
-		int code = 0b11100001011011110100111100010101;
-		System.out.println(decode(code));
+		// access thumb mode
+		decodeArm1(0b11100100111100000010000000001111);
 	}
 
+	private static void decodeArm1(int... opcode) {
+		Register.setT(0);
+		for (int x : opcode) {
+			System.out.println(decode(x));
+		}
+	}
 }

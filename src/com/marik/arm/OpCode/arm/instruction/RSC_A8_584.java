@@ -16,7 +16,7 @@ public class RSC_A8_584 extends ParseSupport {
 	public static final RSC_A8_584 INSTANCE = new RSC_A8_584();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "RSC";
 	}
 	@Override

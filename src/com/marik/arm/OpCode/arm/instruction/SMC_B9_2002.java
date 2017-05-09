@@ -15,7 +15,7 @@ public class SMC_B9_2002 extends ParseSupport {
 	public static final SMC_B9_2002 INSTANCE = new SMC_B9_2002();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return null;
 	}
 	@Override
@@ -40,7 +40,7 @@ public class SMC_B9_2002 extends ParseSupport {
 	}
 	@Override
 	protected int getShift(int data) {
-		return -1;
+		return 0;
 	}
 	@Override
 	public void performExecuteCommand(int data) {

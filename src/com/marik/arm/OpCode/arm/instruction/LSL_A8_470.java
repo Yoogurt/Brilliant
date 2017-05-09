@@ -15,7 +15,7 @@ public class LSL_A8_470 extends ParseSupport {
 	public static final LSL_A8_470 INSTANCE = new LSL_A8_470();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "LSL";
 	}
 	@Override
@@ -40,7 +40,7 @@ public class LSL_A8_470 extends ParseSupport {
 	}
 	@Override
 	protected int getShift(int data) {
-		return -1;
+		return 0;
 	}
 	@Override
 	public void performExecuteCommand(int data) {

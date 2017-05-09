@@ -17,7 +17,7 @@ class ELF_Definition {
 	}
 
 	public static byte ELF_R_TYPE(byte[] i) {
-		return (byte) ByteUtil.bytes2Int32(i);
+		return i[0];
 	}
 
 	public static byte ELF_R_TYPE(int i) {

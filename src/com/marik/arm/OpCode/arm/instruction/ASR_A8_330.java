@@ -16,7 +16,7 @@ public class ASR_A8_330 extends ParseSupport {
 	public static final ASR_A8_330 INSTANCE = new ASR_A8_330();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "ASR";
 	}
 	@Override

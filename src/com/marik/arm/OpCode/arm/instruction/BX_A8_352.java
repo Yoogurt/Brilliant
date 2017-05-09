@@ -15,7 +15,7 @@ public class BX_A8_352 extends ParseSupport {
 	public static final BX_A8_352 INSTANCE = new BX_A8_352();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "BX";
 	}
 	@Override
@@ -40,7 +40,7 @@ public class BX_A8_352 extends ParseSupport {
 	}
 	@Override
 	protected int getShift(int data) {
-		return -1;
+		return 0;
 	}
 	@Override
 	public void performExecuteCommand(int data) {

@@ -16,7 +16,7 @@ public class SUB_A8_712 extends ParseSupport {
 	public static final SUB_A8_712 INSTANCE = new SUB_A8_712();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "SUB";
 	}
 

@@ -16,7 +16,7 @@ public class BIC_A8_344 extends ParseSupport {
 	public static final BIC_A8_344 INSTANCE = new BIC_A8_344();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "BIC";
 	}
 	@Override

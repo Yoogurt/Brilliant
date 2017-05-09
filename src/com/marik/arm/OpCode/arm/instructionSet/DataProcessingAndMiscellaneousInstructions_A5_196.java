@@ -5,6 +5,8 @@ import static com.marik.arm.OpCode.OpUtil.assert1;
 import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 
 import com.marik.arm.OpCode.ParseTemplate;
+import com.marik.arm.OpCode.arm.instruction.MOVT_A8_491;
+import com.marik.arm.OpCode.arm.instruction.MOV_A8_484;
 
 public class DataProcessingAndMiscellaneousInstructions_A5_196 {
 	public static ParseTemplate parse(int data) {
@@ -13,7 +15,7 @@ public class DataProcessingAndMiscellaneousInstructions_A5_196 {
 		int op1 = getShiftInt(data, 20, 5);
 		int op2 = getShiftInt(data, 4, 4);
 
-		if (assert0(op, 0)) {
+		if (op == 0b0) {
 			if (!assert0(op1, 0, 3) || !assert1(op1, 4))/* op1 != 10xx0 */
 				if (assert0(op2, 0))/* xxx0 */
 					return DataProcessingRegister_A5_197.parse(data);
@@ -25,61 +27,53 @@ public class DataProcessingAndMiscellaneousInstructions_A5_196 {
 				if (assert0(op2, 3))/* 0xxx */
 					return MiscellaneousInstruction_A5_207.parse(data);
 				else if (assert0(op2, 0))/* 1xx0 */
-					return HalfwordAndMultiplyAccumulate_A5_203(data);
+					return HalfwordAndMultiplyAccumulate_A5_203.parse(data);
 
 			if (assert0(op1, 4))/* 0xxx */
 				if (op2 == 0b1001)
-					return MultiplyAndMultiplyAccumulate_A5_202(data);
+					return MultiplyAndMultiplyAccumulate_A5_202.parse(data);
 
 			if (assert1(op1, 4))/* 1xxx */
 				if (op2 == 0b1001)
-					return SynachronizationPrimitives_A5_205(data);
+					return SynachronizationPrimitives_A5_205.parse(data);
 
 			if (!assert0(op1, 4) || !assert1(op1, 1))/* not 0xx1x */
 				if (op2 == 0b1011)
-					return ExtraLoadOrStoreInstructions_A5_203(data);
+					return ExtraLoadOrStoreInstructions_A5_203.parse(data);
 				else if (assert1(op2, 0, 2, 3))/* 11x1 */
-					return ExtraLoadOrStoreInstructions_A5_203(data);
+					return ExtraLoadOrStoreInstructions_A5_203.parse(data);
 
 			if (assert0(op1, 0, 4) && assert1(op1, 1))/* 0xx10 */
 				if (assert1(op2, 0, 2, 3))/* 11x1 */
-					return ExtraLoadOrStoreInstructions_A5_203(data);
+					return ExtraLoadOrStoreInstructions_A5_203.parse(data);
 
 			if (assert0(op1, 4) && assert1(op1, 1))/* 0xx1x */
 				if (op2 == 0b1011)
-					return ExtraLoadOrStoreInstructionUnprivileged(data);
+					return ExtraLoadOrStoreInstructionUnprivileged_A5_204.parse(data);
 
 			if (assert0(op1, 4) && assert1(op1, 0, 1))/* 0xx11 */
 				if (assert1(op2, 0, 2, 3))/* 11x1 */
-					return ExtraLoadOrStoreInstructionUnprivileged(data);
+					return ExtraLoadOrStoreInstructionUnprivileged_A5_204.parse(data);
 
-		} else {
-
+		}
+		
+		if(op == 0b1){
+			
+			if(!(assert0(op1 , 0,3) && assert1(op1 , 4)))
+				return DataProcessingImmediate_A5_199.parse(data);
+			
+			if(op1 == 0b10000)
+				return MOV_A8_484.INSTANCE;
+			
+			if(op1 == 0b10100)
+				return MOVT_A8_491.INSTANCE;
+			
+			if(assert0(op1 , 0,3)&& assert1(op1 , 1,4))
+				return MSRImmediate_A5_206.parse(data);
 		}
 
 		throw new IllegalArgumentException("cann't parse instruction "
 				+ Integer.toBinaryString(data));
-	}
-
-	private static ParseTemplate ExtraLoadOrStoreInstructionUnprivileged(
-			int data) {
-		return null;
-	}
-
-	private static ParseTemplate ExtraLoadOrStoreInstructions_A5_203(int data) {
-		return null;
-	}
-
-	private static ParseTemplate SynachronizationPrimitives_A5_205(int data) {
-		return null;
-	}
-
-	private static ParseTemplate MultiplyAndMultiplyAccumulate_A5_202(int data) {
-		return null;
-	}
-
-	private static ParseTemplate HalfwordAndMultiplyAccumulate_A5_203(int data) {
-		return null;
 	}
 
 }

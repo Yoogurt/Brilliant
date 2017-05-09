@@ -16,7 +16,7 @@ public abstract class ParseSupport implements ParseTemplate {
 		if (jump != null)
 			return jump;
 
-		StringBuilder sb = new StringBuilder(getOpCode());
+		StringBuilder sb = new StringBuilder(getOpCode(data));
 
 		int cond = getCond(data);
 		if (cond != -1)
@@ -36,36 +36,54 @@ public abstract class ParseSupport implements ParseTemplate {
 		if (Rn != -1) {
 			if (Rd != -1)
 				sb.append(" , ");
+			
+			if(isRnMemory())
+				sb.append("[");
 			sb.append(parseRegister(Rn));
+			if(isRnMemory())
+				sb.append("]");
 		}
 
 		if (Rm != -1) {
 			if (Rd != -1 || Rn != -1)
 				sb.append(" , ");
-			sb.append(parseRegister(Rm));
-
-			int imm5 = getShift(data);
-			int type = getType(data);
-
-			if (imm5 > 0) {
-				if (type >= 0) {
-					sb.append("{");
-					sb.append(TypeFactory.parse(type));
-					if (!shifterRegister())
-						sb.append(" , #").append(imm5).append("}");
-					else if (shifterRegisterList())
-						sb.append(parseRigisterBit(imm5, -1)).append("}");
-					else
-						sb.append(" , ").append(parseRegister(imm5))
-								.append("}");
-				} else
-					sb.append(" , #").append(imm5);
-			}
+			sb.append(parseRegister(Rm)).append(" ");
 		}
+
+		int imm5 = getShift(data);
+		int type = getType(data);
+
+		if (imm5 != 0) {
+			if (type >= 0) {
+				sb.append(TypeFactory.parse(type));
+				parseShift(sb, imm5, true);
+			} else
+				parseShift(sb, imm5, false);
+		}
+		String comment = getCommnet(data);
+
+		if (comment != null)
+			sb.append(comment);
+		
 		return sb.toString();
 	}
 
-	protected String getOpCode() {
+	private void parseShift(StringBuilder sb, int imm5, boolean type) {
+		if (type)
+			sb.append(" ");
+		else
+			sb.append(" , ");
+		if (shifterRegister())
+			sb.append(parseRegister(imm5));
+		else if (shifterRegisterList())
+			sb.append("{").append(parseRigisterBit(imm5, -1)).append("}");
+		else if (shifterMenory())
+			sb.append("[").append(parseRegister(imm5)).append("]");
+		else
+			sb.append("#").append(imm5);
+	}
+
+	protected String getOpCode(int data) {
 		return null;
 	}
 
@@ -91,7 +109,8 @@ public abstract class ParseSupport implements ParseTemplate {
 
 	protected String error(int data) {
 		throw new IllegalArgumentException("Unable to decode instruction "
-				+ Integer.toBinaryString(data) +" at "+ getClass().getSimpleName().split("_")[0]);
+				+ Integer.toBinaryString(data) + " at "
+				+ getClass().getSimpleName().split("_")[0]);
 	}
 
 	protected int getS(int data) {
@@ -103,7 +122,7 @@ public abstract class ParseSupport implements ParseTemplate {
 	}
 
 	protected int getShift(int data) {
-		return -1;
+		return 0;
 	}
 
 	protected boolean shifterRegister() {
@@ -114,5 +133,17 @@ public abstract class ParseSupport implements ParseTemplate {
 		return false;
 	}
 
+	protected boolean shifterMenory() {
+		return false;
+	}
+	
+	protected boolean isRnMemory(){
+		return false;
+	}
+
+	protected String getCommnet(int data) {
+		return null;
+	}
+	
 	public abstract void performExecuteCommand(int data);
 }

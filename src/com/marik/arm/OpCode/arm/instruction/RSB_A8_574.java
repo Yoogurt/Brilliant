@@ -15,16 +15,16 @@ public class RSB_A8_574 extends ParseSupport {
 	public static final RSB_A8_574 INSTANCE = new RSB_A8_574();
 
 	@Override
-	protected String getOpCode() {
-		return null;
+	protected String getOpCode(int data) {
+		return "RSB";
 	}
 	@Override
 	protected int getRd(int data) {
-		return -1;
+		return getShiftInt(data, 12, 4);
 	}
 	@Override
 	protected int getRn(int data) {
-		return -1;
+		return getShiftInt(data, 16, 4);
 	}
 	@Override
 	protected int getRm(int data) {
@@ -32,7 +32,7 @@ public class RSB_A8_574 extends ParseSupport {
 	}
 	@Override
 	protected int getS(int data) {
-		return -1;
+		return getShiftInt(data, 20, 1);
 	}
 	@Override
 	protected int getType(int data) {
@@ -40,7 +40,7 @@ public class RSB_A8_574 extends ParseSupport {
 	}
 	@Override
 	protected int getShift(int data) {
-		return -1;
+		return armExpandImm(getShiftInt(data, 0, 12));
 	}
 	@Override
 	public void performExecuteCommand(int data) {

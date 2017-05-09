@@ -15,7 +15,7 @@ public class ADC_A8_304 extends ParseSupport {
 	public static final ADC_A8_304 INSTANCE = new ADC_A8_304();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "ADC";
 	}
 	@Override

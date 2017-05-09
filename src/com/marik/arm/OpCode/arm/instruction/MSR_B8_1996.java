@@ -15,7 +15,7 @@ public class MSR_B8_1996 extends ParseSupport {
 	public static final MSR_B8_1996 INSTANCE = new MSR_B8_1996();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return null;
 	}
 	@Override
@@ -40,7 +40,7 @@ public class MSR_B8_1996 extends ParseSupport {
 	}
 	@Override
 	protected int getShift(int data) {
-		return -1;
+		return 0;
 	}
 	@Override
 	public void performExecuteCommand(int data) {

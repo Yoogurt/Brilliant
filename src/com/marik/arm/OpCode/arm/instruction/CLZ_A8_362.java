@@ -15,7 +15,7 @@ public class CLZ_A8_362 extends ParseSupport {
 	public static final CLZ_A8_362 INSTANCE = new CLZ_A8_362();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return "CLZ";
 	}
 	@Override
@@ -40,7 +40,7 @@ public class CLZ_A8_362 extends ParseSupport {
 	}
 	@Override
 	protected int getShift(int data) {
-		return -1;
+		return 0;
 	}
 	@Override
 	public void performExecuteCommand(int data) {

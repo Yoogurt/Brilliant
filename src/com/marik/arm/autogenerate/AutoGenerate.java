@@ -131,7 +131,7 @@ public class AutoGenerate {
 			if (!no_implements) {
 
 				pw.println("	@Override");
-				pw.println("	protected String getOpCode() {");
+				pw.println("	protected String getOpCode(int data) {");
 				pw.println("		return null;");
 				pw.println("	}");
 				pw.println("	@Override");
@@ -156,7 +156,7 @@ public class AutoGenerate {
 				pw.println("	}");
 				pw.println("	@Override");
 				pw.println("	protected int getShift(int data) {");
-				pw.println("		return -1;");
+				pw.println("		return 0;");
 				pw.println("	}");
 
 			} else {

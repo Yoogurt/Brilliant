@@ -15,7 +15,7 @@ public class HVC_B9_1984 extends ParseSupport {
 	public static final HVC_B9_1984 INSTANCE = new HVC_B9_1984();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return null;
 	}
 	@Override

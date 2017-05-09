@@ -15,7 +15,7 @@ public class MRS_B9_1990 extends ParseSupport {
 	public static final MRS_B9_1990 INSTANCE = new MRS_B9_1990();
 
 	@Override
-	protected String getOpCode() {
+	protected String getOpCode(int data) {
 		return null;
 	}
 	@Override
@@ -40,7 +40,7 @@ public class MRS_B9_1990 extends ParseSupport {
 	}
 	@Override
 	protected int getShift(int data) {
-		return -1;
+		return 0;
 	}
 	@Override
 	public void performExecuteCommand(int data) {
