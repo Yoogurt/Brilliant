@@ -14,7 +14,7 @@ import com.marik.arm.OpCode.thumb16.instruction.STM_A8_664;
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
 public class Thumb16Factory {
-	public static ParseTemplate parse(int data) {
+	public static ParseSupport parse(int data) {
 
 		int OpCode = getShiftInt(data, 10, 6);
 

@@ -5,11 +5,9 @@
 -------------------------------*/
 package com.marik.arm.OpCode.arm.instruction;
 
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 
-import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
-import static com.marik.arm.OpCode.OpUtil.*;
+import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 
 public class ADC_A8_302 extends ParseSupport {
 

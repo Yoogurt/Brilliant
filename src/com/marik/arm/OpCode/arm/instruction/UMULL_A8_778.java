@@ -13,8 +13,9 @@ public class UMULL_A8_778 extends ParseSupport {
 	public static final UMULL_A8_778 INSTANCE = new UMULL_A8_778();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("UMULL no implements");
+		throw new UnsupportedOperationException("UMULL no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

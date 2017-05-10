@@ -5,9 +5,9 @@
 -------------------------------*/
 package com.marik.arm.OpCode.thumb16.instruction;
 
-import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
-import static com.marik.arm.OpCode.OpUtil.*;
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
+import static com.marik.arm.OpCode.OpUtil.parseRegister;
+
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
 public class ADD_A8_306 extends ParseSupport {
@@ -32,19 +32,21 @@ public class ADD_A8_306 extends ParseSupport {
 		int Rd = getShiftInt(data, 0, 3);
 		int Rn = getShiftInt(data, 3, 3);
 		int imm3 = getShiftInt(data, 6, 3);
-		
-		if(imm3 != 0){
-	
-		StringBuilder sb = new StringBuilder("ADDS ");
-		sb.append(parseRegister(Rd)).append(" , ").append(parseRegister(Rn)).append(" , #").append(imm3);
-		return sb.toString();
-		
-		}else{
-			
-			StringBuilder sb = new StringBuilder("MOVS ");
-			sb.append(parseRegister(Rd)).append(" , ").append(parseRegister(Rn));
+
+		if (imm3 != 0) {
+
+			StringBuilder sb = new StringBuilder("ADDS ");
+			sb.append(parseRegister(Rd)).append(" , ")
+					.append(parseRegister(Rn)).append(" , #").append(imm3);
 			return sb.toString();
-			
+
+		} else {
+
+			StringBuilder sb = new StringBuilder("MOVS ");
+			sb.append(parseRegister(Rd)).append(" , ")
+					.append(parseRegister(Rn));
+			return sb.toString();
+
 		}
 	}
 

@@ -168,7 +168,8 @@ public class Register {
 		CPSR |= data << fromIndex;
 	}
 
-	public static class RegisterIllegalStateExeception extends IllegalStateException {
+	public static class RegisterIllegalStateExeception extends
+			IllegalStateException {
 
 		/**
 		 * 

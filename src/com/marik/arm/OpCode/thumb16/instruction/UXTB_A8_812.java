@@ -15,6 +15,7 @@ public class UXTB_A8_812 extends ParseSupport {
 	public String parse(int data) {
 		throw new UnsupportedOperationException("UXTB no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

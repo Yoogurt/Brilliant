@@ -13,8 +13,9 @@ public class UMLAL_A8_776 extends ParseSupport {
 	public static final UMLAL_A8_776 INSTANCE = new UMLAL_A8_776();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("UMLAL no implements");
+		throw new UnsupportedOperationException("UMLAL no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

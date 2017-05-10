@@ -442,21 +442,19 @@ public class ELF_Constant {
 		public static final int R_ARM_THM_PC8 = 11;
 		public static final int R_ARM_AMP_VCALL9 = 12;
 		public static final int R_ARM_SWI24 = 13; /*
-													 * Obsolete static
-													 * relocation.
-													 */
+												 * Obsolete static relocation.
+												 */
 		public static final int R_ARM_TLS_DESC = 13; /* Dynamic relocation. */
 		public static final int R_ARM_THM_SWI8 = 14;
 		public static final int R_ARM_XPC25 = 15;
 		public static final int R_ARM_THM_XPC22 = 16;
 		public static final int R_ARM_TLS_DTPMOD32 = 17; /*
-															 * ID of module
-															 * containing symbol
-															 */
+														 * ID of module
+														 * containing symbol
+														 */
 		public static final int R_ARM_TLS_DTPOFF32 = 18; /*
-															 * Offset in TLS
-															 * block
-															 */
+														 * Offset in TLS block
+														 */
 		public static final int R_ARM_TLS_TPOFF32 = 19; /*
 														 * Offset in static TLS
 														 * block
@@ -465,14 +463,13 @@ public class ELF_Constant {
 		public static final int R_ARM_GLOB_DAT = 21; /* Create GOT entry */
 		public static final int R_ARM_JUMP_SLOT = 22; /* Create PLT entry */
 		public static final int R_ARM_RELATIVE = 23; /*
-														 * Adjust by program
-														 * base
-														 */
+													 * Adjust by program base
+													 */
 		public static final int R_ARM_GOTOFF = 24; /* 32 bit offset to GOT */
 		public static final int R_ARM_GOTPC = 25; /*
-													 * 32 bit PC relative offset
-													 * to GOT
-													 */
+												 * 32 bit PC relative offset to
+												 * GOT
+												 */
 		public static final int R_ARM_GOT32 = 26; /* 32 bit GOT entry */
 		public static final int R_ARM_PLT32 = 27; /* 32 bit PLT address */
 		public static final int R_ARM_ALU_PCREL_7_0 = 32;
@@ -488,18 +485,16 @@ public class ELF_Constant {
 		public static final int R_ARM_GNU_VTENTRY = 100;
 		public static final int R_ARM_GNU_VTINHERIT = 101;
 		public static final int R_ARM_THM_PC11 = 102; /*
-														 * thumb unconditional
-														 * branch
-														 */
+													 * thumb unconditional
+													 * branch
+													 */
 		public static final int R_ARM_THM_PC9 = 103; /*
-														 * thumb conditional
-														 * branch
-														 */
+													 * thumb conditional branch
+													 */
 		public static final int R_ARM_TLS_GD32 = 104; /*
-														 * PC-rel 32 bit for
-														 * global dynamic thread
-														 * local data
-														 */
+													 * PC-rel 32 bit for global
+													 * dynamic thread local data
+													 */
 		public static final int R_ARM_TLS_LDM32 = 105; /*
 														 * PC-rel 32 bit for
 														 * local dynamic thread
@@ -510,15 +505,14 @@ public class ELF_Constant {
 														 * relative to TLS block
 														 */
 		public static final int R_ARM_TLS_IE32 = 107; /*
-														 * PC-rel 32 bit for GOT
-														 * entry of static TLS
-														 * block offset
-														 */
+													 * PC-rel 32 bit for GOT
+													 * entry of static TLS block
+													 * offset
+													 */
 		public static final int R_ARM_TLS_LE32 = 108; /*
-														 * 32 bit offset
-														 * relative to static
-														 * TLS block
-														 */
+													 * 32 bit offset relative to
+													 * static TLS block
+													 */
 		public static final int R_ARM_THM_TLS_DESCSEQ = 129;
 		public static final int R_ARM_IRELATIVE = 160;
 		public static final int R_ARM_RXPC25 = 249;

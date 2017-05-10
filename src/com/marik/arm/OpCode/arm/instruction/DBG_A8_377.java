@@ -13,8 +13,9 @@ public class DBG_A8_377 extends ParseSupport {
 	public static final DBG_A8_377 INSTANCE = new DBG_A8_377();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("DBG no implements");
+		throw new UnsupportedOperationException("DBG no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

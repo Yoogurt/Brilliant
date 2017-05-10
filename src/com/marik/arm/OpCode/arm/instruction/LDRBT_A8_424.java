@@ -5,13 +5,12 @@
 -------------------------------*/
 package com.marik.arm.OpCode.arm.instruction;
 
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
+import static com.marik.arm.OpCode.OpUtil.parseRegister;
+
 import com.marik.arm.OpCode.CondFactory;
 import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 import com.marik.arm.OpCode.arm.instructionSet.factory.TypeFactory;
-
-import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
-import static com.marik.arm.OpCode.OpUtil.*;
 
 public class LDRBT_A8_424 extends ParseSupport {
 
@@ -26,31 +25,31 @@ public class LDRBT_A8_424 extends ParseSupport {
 	}
 
 	private String EncodingA2(int data) {
-		
+
 		StringBuilder sb = new StringBuilder("LDRBT");
 		sb.append(CondFactory.parse(getCond(data)));
 		sb.append(" ");
-		
+
 		int Rt = getShiftInt(data, 12, 4);
 		int Rn = getShiftInt(data, 16, 4);
 		int imm5 = getShiftInt(data, 7, 5);
 		int type = getShiftInt(data, 5, 2);
 		int Rm = getShiftInt(data, 0, 4);
-		boolean add= getShiftInt(data, 23, 1) == 1;
-		
+		boolean add = getShiftInt(data, 23, 1) == 1;
+
 		sb.append(parseRegister(Rt));
 		sb.append(" , [");
 		sb.append(parseRegister(Rn));
 		sb.append("] , ");
-		
-		if(!add)
+
+		if (!add)
 			sb.append("-");
 		sb.append(parseRegister(Rm));
 		sb.append(" , ");
 		sb.append(TypeFactory.parse(type));
 		sb.append(" #");
 		sb.append(imm5);
-		
+
 		return sb.toString();
 	}
 
@@ -75,6 +74,7 @@ public class LDRBT_A8_424 extends ParseSupport {
 		sb.append(imm12);
 		return sb.toString();
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

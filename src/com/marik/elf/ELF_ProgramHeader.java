@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.marik.implement.CastSupport;
-import com.marik.util.Log;
 import com.marik.util.ByteUtil;
+import com.marik.util.Log;
 
 class ELF_ProgramHeader {
 
@@ -118,7 +118,8 @@ class ELF_ProgramHeader {
 
 	private ELF_Phdr mDynamicSegment;
 
-	public ELF_ProgramHeader(RandomAccessFile is, ELF_Header header, boolean check) throws Exception {
+	public ELF_ProgramHeader(RandomAccessFile is, ELF_Header header,
+			boolean check) throws Exception {
 
 		Log.e(LogConstant.DIVISION_LINE);
 		Log.e(LogConstant.ELF_PROGRAM_TABLE);
@@ -193,8 +194,11 @@ class ELF_ProgramHeader {
 				break;
 
 			default:
-				Log.e("Unknown Program Header " + m + " type : "
-						+ ByteUtil.bytes2Int32(ph.p_type, header.isLittleEndian()));
+				Log.e("Unknown Program Header "
+						+ m
+						+ " type : "
+						+ ByteUtil.bytes2Int32(ph.p_type,
+								header.isLittleEndian()));
 				break;
 			}
 
@@ -225,7 +229,8 @@ class ELF_ProgramHeader {
 		return mDynamicSegment;
 	}
 
-	private void read32ProgramHeaderInternal(ELF_Phdr ph, RandomAccessFile is) throws IOException {
+	private void read32ProgramHeaderInternal(ELF_Phdr ph, RandomAccessFile is)
+			throws IOException {
 
 		is.read(ph.p_type);
 		is.read(ph.p_offset);
@@ -244,9 +249,12 @@ class ELF_ProgramHeader {
 		Log.e("Segment p_vaddr  : " + ByteUtil.bytes2Hex(ph.p_vaddr));
 		Log.e("Segment p_memsz : " + ByteUtil.bytes2Hex(ph.p_memsz));
 
-		Log.e("Segment p_filesz : " + ByteUtil.decHexSizeFormat32(ph.p_filesz, header.isLittleEndian()));
+		Log.e("Segment p_filesz : "
+				+ ByteUtil.decHexSizeFormat32(ph.p_filesz,
+						header.isLittleEndian()));
 		if (header.isSharedObject() || header.isExeutable())
-			Log.e("Segment will mmap directly at memory : " + ByteUtil.bytes2Hex(ph.p_paddr));
+			Log.e("Segment will mmap directly at memory : "
+					+ ByteUtil.bytes2Hex(ph.p_paddr));
 
 		// Util.assertAlign(Util.bytes2Int64(ph.p_align));
 	}

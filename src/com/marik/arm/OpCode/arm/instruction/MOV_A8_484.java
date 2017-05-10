@@ -5,11 +5,10 @@
 -------------------------------*/
 package com.marik.arm.OpCode.arm.instruction;
 
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import static com.marik.arm.OpCode.OpUtil.armExpandImm;
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 
-import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
-import static com.marik.arm.OpCode.OpUtil.*;
+import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 
 public class MOV_A8_484 extends ParseSupport {
 
@@ -51,7 +50,7 @@ public class MOV_A8_484 extends ParseSupport {
 		if (mov == 0b0011101) // move imm12
 			return armExpandImm(getShiftInt(data, 0, 12));
 		else
-			return (getShiftInt(data, 16, 4) << 12)  // move imm16
+			return (getShiftInt(data, 16, 4) << 12) // move imm16
 					| (getShiftInt(data, 0, 12));
 	}
 

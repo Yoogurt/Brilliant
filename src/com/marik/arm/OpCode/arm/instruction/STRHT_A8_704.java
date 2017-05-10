@@ -13,8 +13,9 @@ public class STRHT_A8_704 extends ParseSupport {
 	public static final STRHT_A8_704 INSTANCE = new STRHT_A8_704();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("STRHT no implements");
+		throw new UnsupportedOperationException("STRHT no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

@@ -5,9 +5,9 @@
 -------------------------------*/
 package com.marik.arm.OpCode.thumb16.instruction;
 
-import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
-import static com.marik.arm.OpCode.OpUtil.*;
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
+import static com.marik.arm.OpCode.OpUtil.parseRegister;
+
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
 public class STR_A8_672 extends ParseSupport {
@@ -47,7 +47,8 @@ public class STR_A8_672 extends ParseSupport {
 		sb.append(parseRegister(getShiftInt(data, 0, 3))).append(" , [");
 
 		if (imm > 0)
-			sb.append(parseRegister(getShiftInt(data, 3, 3)) + " , #" + (imm << 2));
+			sb.append(parseRegister(getShiftInt(data, 3, 3)) + " , #"
+					+ (imm << 2));
 		else
 			sb.append(parseRegister(getShiftInt(data, 3, 3)));
 

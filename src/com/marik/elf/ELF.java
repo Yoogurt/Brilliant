@@ -1,27 +1,39 @@
 package com.marik.elf;
 
-import static com.marik.elf.ELF_Definition.ELF_R_SYM;
-import static com.marik.elf.ELF_Constant.DT_RelType.*;
-import static com.marik.elf.ELF_Constant.ST_TYPE.*;
-import static com.marik.elf.ELF_Definition.ELF_R_TYPE;
-import static com.marik.elf.ELF_Definition.ELF_ST_BIND;
-import static com.marik.elf.ELF_Definition.ELF_ST_TYPE;
+import static com.marik.elf.ELF_Constant.DT_RelType.R_ARM_ABS32;
+import static com.marik.elf.ELF_Constant.DT_RelType.R_ARM_COPY;
+import static com.marik.elf.ELF_Constant.DT_RelType.R_ARM_GLOB_DAT;
+import static com.marik.elf.ELF_Constant.DT_RelType.R_ARM_IRELATIVE;
+import static com.marik.elf.ELF_Constant.DT_RelType.R_ARM_JUMP_SLOT;
+import static com.marik.elf.ELF_Constant.DT_RelType.R_ARM_REL32;
+import static com.marik.elf.ELF_Constant.DT_RelType.R_ARM_RELATIVE;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Addr;
 import static com.marik.elf.ELF_Constant.ELFUnit.uint32_t;
 import static com.marik.elf.ELF_Constant.SHN_Info.SHN_UNDEF;
 import static com.marik.elf.ELF_Constant.STB_Info.STB_GLOBAL;
 import static com.marik.elf.ELF_Constant.STB_Info.STB_LOCAL;
 import static com.marik.elf.ELF_Constant.STB_Info.STB_WEAK;
-
-import static com.marik.vm.OS.*;
+import static com.marik.elf.ELF_Constant.ST_TYPE.STT_FILE;
+import static com.marik.elf.ELF_Constant.ST_TYPE.STT_FUNC;
+import static com.marik.elf.ELF_Constant.ST_TYPE.STT_HIPROC;
+import static com.marik.elf.ELF_Constant.ST_TYPE.STT_LOPROC;
+import static com.marik.elf.ELF_Constant.ST_TYPE.STT_NOTYPE;
+import static com.marik.elf.ELF_Constant.ST_TYPE.STT_OBJECT;
+import static com.marik.elf.ELF_Constant.ST_TYPE.STT_SECTION;
+import static com.marik.elf.ELF_Definition.ELF_R_SYM;
+import static com.marik.elf.ELF_Definition.ELF_R_TYPE;
+import static com.marik.elf.ELF_Definition.ELF_ST_BIND;
+import static com.marik.elf.ELF_Definition.ELF_ST_TYPE;
+import static com.marik.vm.OS.MAP_FIXED;
+import static com.marik.vm.OS.PAGE_END;
+import static com.marik.vm.OS.PAGE_START;
+import static com.marik.vm.OS.getMemory;
+import static com.marik.vm.OS.mmap;
+import static com.marik.vm.OS.unmmap;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,13 +42,11 @@ import java.util.TreeSet;
 
 import javax.activation.UnsupportedDataTypeException;
 
-import org.w3c.dom.ls.LSInput;
-
 import com.marik.elf.ELF_Dynamic.Elf_Sym;
 import com.marik.elf.ELF_ProgramHeader.ELF_Phdr;
 import com.marik.elf.ELF_Relocate.Elf_rel;
-import com.marik.util.Log;
 import com.marik.util.ByteUtil;
+import com.marik.util.Log;
 import com.marik.vm.OS;
 
 /**
@@ -896,9 +906,9 @@ public class ELF {
 								symname, value, size, bind, type, other, shndx);
 				i++;
 			}
-			
+
 			Log.e("--------------------------hash change ------------------------------");
-			
+
 		}
 
 		System.out.println("total sym : " + i);
@@ -982,8 +992,7 @@ public class ELF {
 		OS.debug = true;
 
 		ELF elf = new ELF(
-				"C:/Users/Administrator/Desktop/DeComplied_Apk/libDS.so",
-				true);
+				"C:/Users/Administrator/Desktop/DeComplied_Apk/libDS.so", true);
 		// ELF elf = new ELF("C:/Users/monitor/Desktop/env/libc.so", true);
 		elf.dumpHashSymtab();
 

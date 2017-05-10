@@ -7,9 +7,8 @@ import com.marik.elf.ELF_SectionHeader.ELF_Shdr;
 import com.marik.util.ByteUtil;
 
 /**
- * @author Yoogurt
- * SectionHeaders are useless when we parse a dynamic library or executable 
- * Debug Only
+ * @author Yoogurt SectionHeaders are useless when we parse a dynamic library or
+ *         executable Debug Only
  */
 @Deprecated
 class ELF_Section {
@@ -20,7 +19,8 @@ class ELF_Section {
 
 	private RandomAccessFile raf;
 
-	ELF_Section(RandomAccessFile raf, ELF_Header header, ELF_Shdr mHeader) throws IOException {
+	ELF_Section(RandomAccessFile raf, ELF_Header header, ELF_Shdr mHeader)
+			throws IOException {
 		this.raf = raf;
 		this.mHeader = mHeader;
 		s_data = new byte[ByteUtil.bytes2Int32(mHeader.sh_size)];
@@ -28,7 +28,8 @@ class ELF_Section {
 	}
 
 	private void loadDataFromStream() throws IOException {
-		raf.seek(ByteUtil.bytes2Int32(mHeader.sh_offset, mHeader.sh_offset.length));
+		raf.seek(ByteUtil.bytes2Int32(mHeader.sh_offset,
+				mHeader.sh_offset.length));
 		raf.read(s_data);
 	}
 

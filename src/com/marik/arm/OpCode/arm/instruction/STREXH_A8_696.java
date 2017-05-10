@@ -13,8 +13,9 @@ public class STREXH_A8_696 extends ParseSupport {
 	public static final STREXH_A8_696 INSTANCE = new STREXH_A8_696();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("STREXH no implements");
+		throw new UnsupportedOperationException("STREXH no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

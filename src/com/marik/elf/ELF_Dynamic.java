@@ -1,17 +1,17 @@
 package com.marik.elf;
 
-import static com.marik.elf.ELF_Constant.ELFUnit.*;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Addr;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Half;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Word;
+import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_ANDROID_REL;
+import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_ANDROID_RELSZ;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_DEBUG;
-import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_SYMENT;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_FINI;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_FINI_ARRAY;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_FINI_ARRAYSZ;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_FLAGS;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_FLAGS_1;
-import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_ANDROID_REL;
-import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_ANDROID_RELSZ;
+import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_GNU_HASH;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_HASH;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_HIPROC;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_INIT;
@@ -22,7 +22,6 @@ import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_LOPROC;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_NEEDED;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_NULL;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_PLTGOT;
-import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_GNU_HASH;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_PLTREL;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_PLTRELSZ;
 import static com.marik.elf.ELF_Constant.PT_Dynamic.DT_REL;
@@ -49,8 +48,8 @@ import java.util.List;
 
 import com.marik.elf.ELF_ProgramHeader.ELF_Phdr;
 import com.marik.implement.CastSupport;
-import com.marik.util.Log;
 import com.marik.util.ByteUtil;
+import com.marik.util.Log;
 
 final class ELF_Dynamic {
 
@@ -60,11 +59,11 @@ final class ELF_Dynamic {
 	}
 
 	final static class Elf_Sym extends CastSupport {
-		byte[] st_name;  /* index into string table 4B */
+		byte[] st_name; /* index into string table 4B */
 		byte[] st_value; /* 4B */
-		byte[] st_size;  /* 4B */
-		byte st_info;    /* 1B */
-		byte st_other;   /* 1B */
+		byte[] st_size; /* 4B */
+		byte st_info; /* 1B */
+		byte st_other; /* 1B */
 		byte[] st_shndx; /* 2B */
 
 		public static final Elf_Sym reinterpret_cast(byte[] data, int startIndex) {
@@ -76,11 +75,16 @@ final class ELF_Dynamic {
 			thz.st_shndx = new byte[ELF32_Half];
 
 			System.arraycopy(data, startIndex, thz.st_name, 0, ELF32_Word);
-			System.arraycopy(data, startIndex + ELF32_Word, thz.st_value, 0, ELF32_Addr);
-			System.arraycopy(data, startIndex + ELF32_Word + ELF32_Addr, thz.st_size, 0, ELF32_Word);
-			thz.st_info = data[startIndex + ELF32_Word + ELF32_Addr + ELF32_Word];
-			thz.st_other = data[startIndex + ELF32_Word + ELF32_Addr + ELF32_Word + 1];
-			System.arraycopy(data, startIndex + ELF32_Word + ELF32_Addr + ELF32_Word + 2, thz.st_shndx, 0, ELF32_Half);
+			System.arraycopy(data, startIndex + ELF32_Word, thz.st_value, 0,
+					ELF32_Addr);
+			System.arraycopy(data, startIndex + ELF32_Word + ELF32_Addr,
+					thz.st_size, 0, ELF32_Word);
+			thz.st_info = data[startIndex + ELF32_Word + ELF32_Addr
+					+ ELF32_Word];
+			thz.st_other = data[startIndex + ELF32_Word + ELF32_Addr
+					+ ELF32_Word + 1];
+			System.arraycopy(data, startIndex + ELF32_Word + ELF32_Addr
+					+ ELF32_Word + 2, thz.st_shndx, 0, ELF32_Half);
 
 			return thz;
 		}
@@ -97,10 +101,9 @@ final class ELF_Dynamic {
 	private List<Elf_Dyn> mInternalDynamics = new ArrayList<>();
 
 	private int mStrTabIndex = 0;
-	
+
 	private int mSymTabIndex = 0;
-	private int mSymTabSz = 0;
-	
+
 	private int mInitFunc = 0;
 	private int mInitArray = 0;
 	private int mInitArraySz = 0;
@@ -191,13 +194,15 @@ final class ELF_Dynamic {
 		return newDynamic;
 	}
 
-	private boolean parseDynamicEntry(Elf_Dyn dynamic, RandomAccessFile raf) throws IOException {
+	private boolean parseDynamicEntry(Elf_Dyn dynamic, RandomAccessFile raf)
+			throws IOException {
 
 		switch (ByteUtil.bytes2Int32(dynamic.d_un)) {
 		case DT_NULL:
 			return false;
 		case DT_NEEDED: // elf necessary library
-			String name = getStrTabIndexString(ByteUtil.bytes2Int32(dynamic.d_val), raf);
+			String name = getStrTabIndexString(
+					ByteUtil.bytes2Int32(dynamic.d_val), raf);
 			storeNeededDynamicLibraryName(name);
 			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "Need Dynamic Library : " + name);
@@ -260,7 +265,8 @@ final class ELF_Dynamic {
 			Log.e("   " + "DT_FINI at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_SONAME:
-			mDynamicLibraryName = getStrTabIndexString(ByteUtil.bytes2Int32(dynamic.d_val), raf);
+			mDynamicLibraryName = getStrTabIndexString(
+					ByteUtil.bytes2Int32(dynamic.d_val), raf);
 			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "My Dynamic Library : " + mDynamicLibraryName);
 			break;
@@ -318,16 +324,19 @@ final class ELF_Dynamic {
 		case DT_INIT_ARRAY:
 			readDT_INIT_ARRAY(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_INIT_ARRAY at " + ByteUtil.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_INIT_ARRAY at "
+					+ ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_FINI_ARRAY:
 			readDT_FINI_ARRAY(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_FINI_ARRAY at " + ByteUtil.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_FINI_ARRAY at "
+					+ ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_RELCOUNT:
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_RELCOUNT : " + +getVal(dynamic.d_val) + " (ignore)");
+			Log.e("   " + "DT_RELCOUNT : " + +getVal(dynamic.d_val)
+					+ " (ignore)");
 			break;
 		case DT_FINI_ARRAYSZ:
 			readDT_FINI_ARRAYSZ(dynamic);
@@ -355,13 +364,14 @@ final class ELF_Dynamic {
 		case DT_ANDROID_REL:
 			readDT_ANDROID_REL(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_ANDROID_REL : " + ByteUtil.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_ANDROID_REL : "
+					+ ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
 		case DT_ANDROID_RELSZ:
 			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_ANDROID_RELSZ : " + getVal(dynamic.d_val));
 			break;
-			
+
 		default:
 			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "Unknown DT type " + ByteUtil.bytes2Hex(dynamic.d_un));
@@ -415,7 +425,8 @@ final class ELF_Dynamic {
 	}
 
 	private void readDT_ANDROID_REL(Elf_Dyn dynamic) {
-		throw new UnsupportedOperationException("DT_ANDROID_REL is no supported");
+		throw new UnsupportedOperationException(
+				"DT_ANDROID_REL is no supported");
 	}
 
 	private void readDT_GNU_HASH(Elf_Dyn dynamic) {
@@ -495,7 +506,8 @@ final class ELF_Dynamic {
 			throw new IllegalStateException("DT_INIT_ARRAYSZ appear over once");
 	}
 
-	private String getStrTabIndexString(int index, RandomAccessFile raf) throws IOException {
+	private String getStrTabIndexString(int index, RandomAccessFile raf)
+			throws IOException {
 		if (mStrTabIndex == 0)
 			throw new IllegalStateException("Unable to find Library Name");
 
@@ -595,11 +607,14 @@ final class ELF_Dynamic {
 
 	private void loadRelocateSection(RandomAccessFile raf) throws IOException {
 		if (mRel != 0)
-			mRelocateSections.add(new ELF_Relocate(raf, mRel, mRelSz, this, false));
+			mRelocateSections.add(new ELF_Relocate(raf, mRel, mRelSz, this,
+					false));
 		if (mJmpRel != 0) // we don't check size
-			mRelocateSections.add(new ELF_Relocate(raf, mJmpRel, mJmpRelSz, this, false));
+			mRelocateSections.add(new ELF_Relocate(raf, mJmpRel, mJmpRelSz,
+					this, false));
 		if (mRela != 0)
-			mRelocateSections.add(new ELF_Relocate(raf, mRela, mRelaSz, this, true));
+			mRelocateSections.add(new ELF_Relocate(raf, mRela, mRelaSz, this,
+					true));
 
 		if (mRelocateSections.size() == 0)
 			Log.e("\n no relocation Section Detected !\n");

@@ -9,14 +9,16 @@ import com.marik.util.ByteUtil;
 class MemoryMapper {
 
 	@Deprecated
-	public static int mmap(int start, int length, int prot, int flags, int fd, long offset) {
+	public static int mmap(int start, int length, int prot, int flags, int fd,
+			long offset) {
 		throw new UnsupportedOperationException("Not implements");
 	}
 
 	/**
 	 * we mmap a file into byte[]
 	 */
-	public static int mmap(int start, int length, byte flag, File fd, long offset) {
+	public static int mmap(int start, int length, byte flag, File fd,
+			long offset) {
 		RandomAccessFile raf = null;
 		try {
 			raf = new RandomAccessFile(fd, "r");
@@ -52,11 +54,13 @@ class MemoryMapper {
 	/**
 	 * we mmap a file into byte[]
 	 */
-	public static int mmap(int start, int length, byte flag, RandomAccessFile raf, long offset) {
+	public static int mmap(int start, int length, byte flag,
+			RandomAccessFile raf, long offset) {
 
-		if(OS.debug)
-		System.out.println("mmap(0x" + Integer.toHexString(start) + ",0x" + Integer.toHexString(length) + "," + flag
-				+ ",...," + offset + ")");
+		if (OS.debug)
+			System.out.println("mmap(0x" + Integer.toHexString(start) + ",0x"
+					+ Integer.toHexString(length) + "," + flag + ",...,"
+					+ offset + ")");
 
 		if (OS.PAGE_OFFSET(start) > 0 && (flag & OS.MAP_FIXED) != 0)
 			return -1;
@@ -68,7 +72,8 @@ class MemoryMapper {
 
 	}
 
-	private static int mmapFix(int start, int length, byte flag, RandomAccessFile raf, long offset) {
+	private static int mmapFix(int start, int length, byte flag,
+			RandomAccessFile raf, long offset) {
 
 		if (length < 0)
 			throw new IllegalArgumentException("length < 0");
@@ -77,10 +82,11 @@ class MemoryMapper {
 
 		int startIndex = (int) (start >> OS.PAGE_SHIFT);
 		int endIndex = (int) ((OS.PAGE_END(length) >> OS.PAGE_SHIFT) + startIndex);
-		if(OS.debug){
-		System.out.println("start " + start + " length " + length);
-		System.out.println("startIndex " + startIndex + " endIndex " + endIndex);
-	}
+		if (OS.debug) {
+			System.out.println("start " + start + " length " + length);
+			System.out.println("startIndex " + startIndex + " endIndex "
+					+ endIndex);
+		}
 		for (int i = startIndex; i < endIndex; i++)
 			if (i >= OS.mFlag.length) {
 				incMemory((int) OS.PAGE_END(length));
@@ -128,10 +134,12 @@ class MemoryMapper {
 				blockCount = 0;
 			}
 		}
-		return blockCount == needBlockCount ? (lastSearch << OS.PAGE_SHIFT) : -1;
+		return blockCount == needBlockCount ? (lastSearch << OS.PAGE_SHIFT)
+				: -1;
 	}
 
-	private static int mmapNotFix(int length, byte flag, RandomAccessFile raf, long offset) {
+	private static int mmapNotFix(int length, byte flag, RandomAccessFile raf,
+			long offset) {
 
 		int startAddr = mmapGetFreeAddress(length);
 
@@ -183,8 +191,8 @@ class MemoryMapper {
 	}
 
 	private static void incMemory(int size) {
-		if(OS.debug)
-		System.out.println("inc Space : " + size);
+		if (OS.debug)
+			System.out.println("inc Space : " + size);
 
 		if (OS.PAGE_OFFSET(size) > 0)
 			throw new IllegalArgumentException();

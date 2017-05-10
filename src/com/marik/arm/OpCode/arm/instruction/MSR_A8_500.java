@@ -7,10 +7,6 @@ package com.marik.arm.OpCode.arm.instruction;
 
 import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 
-import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
-import static com.marik.arm.OpCode.OpUtil.*;
-
 @Deprecated
 public class MSR_A8_500 extends ParseSupport {
 
@@ -21,6 +17,7 @@ public class MSR_A8_500 extends ParseSupport {
 		error(data);
 		return null;
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

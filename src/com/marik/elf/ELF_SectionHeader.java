@@ -1,20 +1,39 @@
 package com.marik.elf;
 
-import static com.marik.elf.LogConstant.*;
-import static com.marik.elf.ELF_Constant.ELFUnit.*;
-import static com.marik.elf.ELF_Constant.SectionHeaderContent.*;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Addr;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Off;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Word;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF64_Addr;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF64_Off;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF64_Word;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF64_Xword;
+import static com.marik.elf.ELF_Constant.SectionHeaderContent.SHT_DYMSYM;
+import static com.marik.elf.ELF_Constant.SectionHeaderContent.SHT_DYNAMIC;
+import static com.marik.elf.ELF_Constant.SectionHeaderContent.SHT_HASH;
+import static com.marik.elf.ELF_Constant.SectionHeaderContent.SHT_NOBITS;
+import static com.marik.elf.ELF_Constant.SectionHeaderContent.SHT_NOTE;
+import static com.marik.elf.ELF_Constant.SectionHeaderContent.SHT_NULL;
+import static com.marik.elf.ELF_Constant.SectionHeaderContent.SHT_NUM;
+import static com.marik.elf.ELF_Constant.SectionHeaderContent.SHT_PROGBITS;
+import static com.marik.elf.ELF_Constant.SectionHeaderContent.SHT_REL;
+import static com.marik.elf.ELF_Constant.SectionHeaderContent.SHT_RELA;
+import static com.marik.elf.ELF_Constant.SectionHeaderContent.SHT_SHLIB;
+import static com.marik.elf.ELF_Constant.SectionHeaderContent.SHT_STRTAB;
+import static com.marik.elf.ELF_Constant.SectionHeaderContent.SHT_SYMTAB;
+import static com.marik.elf.LogConstant.DIVISION_LINE;
+import static com.marik.elf.LogConstant.ELF_SECTION_TABLE;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import com.marik.util.Log;
 import com.marik.util.ByteUtil;
+import com.marik.util.Log;
 
 /**
  * @author Yoogurt
  *
- *	SectionHeaders are useless when we parse a dynamic library or executable.
- *  for Debug Only
+ *         SectionHeaders are useless when we parse a dynamic library or
+ *         executable. for Debug Only
  */
 @Deprecated
 class ELF_SectionHeader {
@@ -111,7 +130,8 @@ class ELF_SectionHeader {
 	private ELF_Shdr[] mInternalSectionHeaders;
 	private int mStringSectionHeaderIndex;
 
-	ELF_SectionHeader(RandomAccessFile raf, ELF_Header header) throws IOException {
+	ELF_SectionHeader(RandomAccessFile raf, ELF_Header header)
+			throws IOException {
 
 		Log.e(ELF_SECTION_TABLE);
 
@@ -210,77 +230,97 @@ class ELF_SectionHeader {
 				break;
 
 			case SHT_PROGBITS:/* 1 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_PROGBITS " + ", at " + ByteUtil.bytes2Hex(mS.sh_offset)
+				Log.e("Section : " + mS.getName() + " , type : SHT_PROGBITS "
+						+ ", at " + ByteUtil.bytes2Hex(mS.sh_offset)
 						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_SYMTAB:/* 2 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_SYMTAB , at " + ByteUtil.bytes2Hex(mS.sh_offset)
-						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName()
+						+ " , type : SHT_SYMTAB , at "
+						+ ByteUtil.bytes2Hex(mS.sh_offset) + " , size : "
+						+ ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_STRTAB:/* 3 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_STRTAB , at " + ByteUtil.bytes2Hex(mS.sh_offset)
-						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName()
+						+ " , type : SHT_STRTAB , at "
+						+ ByteUtil.bytes2Hex(mS.sh_offset) + " , size : "
+						+ ByteUtil.bytes2Int32(mS.sh_size));
 
 				if (mInternalSectionHeaders[mStringSectionHeaderIndex] == mS)
 					Log.e("This is a Section contains other Section's Name");
 				break;
 
 			case SHT_RELA:/* 4 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_RELA , at " + ByteUtil.bytes2Hex(mS.sh_offset)
-						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName() + " , type : SHT_RELA , at "
+						+ ByteUtil.bytes2Hex(mS.sh_offset) + " , size : "
+						+ ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_HASH:/* 5 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_HASH , at " + ByteUtil.bytes2Hex(mS.sh_offset)
-						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName() + " , type : SHT_HASH , at "
+						+ ByteUtil.bytes2Hex(mS.sh_offset) + " , size : "
+						+ ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_DYNAMIC:/* 6 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_DYNAMIC , at " + ByteUtil.bytes2Hex(mS.sh_offset)
-						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName()
+						+ " , type : SHT_DYNAMIC , at "
+						+ ByteUtil.bytes2Hex(mS.sh_offset) + " , size : "
+						+ ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_NOTE:/* 7 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_NOTE , at " + ByteUtil.bytes2Hex(mS.sh_offset)
-						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName() + " , type : SHT_NOTE , at "
+						+ ByteUtil.bytes2Hex(mS.sh_offset) + " , size : "
+						+ ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_REL:/* 9 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_REL , at " + ByteUtil.bytes2Hex(mS.sh_offset)
-						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName() + " , type : SHT_REL , at "
+						+ ByteUtil.bytes2Hex(mS.sh_offset) + " , size : "
+						+ ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_SHLIB:/* 10 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_SHLIB , at " + ByteUtil.bytes2Hex(mS.sh_offset)
-						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName() + " , type : SHT_SHLIB , at "
+						+ ByteUtil.bytes2Hex(mS.sh_offset) + " , size : "
+						+ ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_DYMSYM:/* 11 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_DYMSYM , at " + ByteUtil.bytes2Hex(mS.sh_offset)
-						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName()
+						+ " , type : SHT_DYMSYM , at "
+						+ ByteUtil.bytes2Hex(mS.sh_offset) + " , size : "
+						+ ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_NUM:/* 12 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_NUM , at " + ByteUtil.bytes2Hex(mS.sh_offset)
-						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName() + " , type : SHT_NUM , at "
+						+ ByteUtil.bytes2Hex(mS.sh_offset) + " , size : "
+						+ ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 
 			case SHT_NOBITS:/* 8 */
-				Log.e("Section : " + mS.getName() + " , type : SHT_NOBITS , at " + ByteUtil.bytes2Hex(mS.sh_offset)
-						+ " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName()
+						+ " , type : SHT_NOBITS , at "
+						+ ByteUtil.bytes2Hex(mS.sh_offset) + " , size : "
+						+ ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 			default:
-				Log.e("Section : " + mS.getName() + " , type : Unknown Section Header Type ! at "
-						+ ByteUtil.bytes2Hex(mS.sh_offset) + " , size : " + ByteUtil.bytes2Int32(mS.sh_size));
+				Log.e("Section : " + mS.getName()
+						+ " , type : Unknown Section Header Type ! at "
+						+ ByteUtil.bytes2Hex(mS.sh_offset) + " , size : "
+						+ ByteUtil.bytes2Int32(mS.sh_size));
 				break;
 			}
 		}
 
 	}
 
-	private void readSectionHeaderStructure(RandomAccessFile raf, ELF_Shdr mS) throws IOException {
+	private void readSectionHeaderStructure(RandomAccessFile raf, ELF_Shdr mS)
+			throws IOException {
 
 		raf.read(mS.sh_name);
 		raf.read(mS.sh_type);
@@ -335,7 +375,8 @@ class ELF_SectionHeader {
 			mS.setName(mStringSection.section.getStringAtIndex(mS.sh_name));
 	}
 
-	private void locateSectionHeaderOffset(RandomAccessFile raf) throws IOException {
+	private void locateSectionHeaderOffset(RandomAccessFile raf)
+			throws IOException {
 		long mSectionOffset = header.getSectionHeaderTableOffset();
 		raf.seek(mSectionOffset);
 	}

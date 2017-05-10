@@ -1,8 +1,9 @@
 package com.marik.arm.OpCode.arm.instructionSet;
 
-import javax.swing.text.StyleContext.SmallAttributeSet;
+import static com.marik.arm.OpCode.OpUtil.assert0;
+import static com.marik.arm.OpCode.OpUtil.assert1;
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 
-import com.marik.arm.OpCode.ParseTemplate;
 import com.marik.arm.OpCode.arm.instruction.MLA_A8_480;
 import com.marik.arm.OpCode.arm.instruction.MLS_A8_482;
 import com.marik.arm.OpCode.arm.instruction.MUL_A8_502;
@@ -11,11 +12,11 @@ import com.marik.arm.OpCode.arm.instruction.SMULL_A8_646;
 import com.marik.arm.OpCode.arm.instruction.UMAAL_A8_774;
 import com.marik.arm.OpCode.arm.instruction.UMLAL_A8_776;
 import com.marik.arm.OpCode.arm.instruction.UMULL_A8_778;
+import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 
-import static com.marik.arm.OpCode.OpUtil.*;
-
+@SuppressWarnings("deprecation")
 public class MultiplyAndMultiplyAccumulate_A5_202 {
-	public static ParseTemplate parse(int data) {
+	public static ParseSupport parse(int data) {
 
 		int op = getShiftInt(data, 20, 4);
 

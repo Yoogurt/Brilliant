@@ -5,9 +5,9 @@
 -------------------------------*/
 package com.marik.arm.OpCode.thumb16.instruction;
 
-import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
-import static com.marik.arm.OpCode.OpUtil.*;
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
+import static com.marik.arm.OpCode.OpUtil.parseRegister;
+
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
 public class LSR_A8_474 extends ParseSupport {
@@ -18,6 +18,7 @@ public class LSR_A8_474 extends ParseSupport {
 	protected String getOpCode() {
 		return "LSRS";
 	}
+
 	@Override
 	protected String getRn(int data) {
 		return parseRegister(getShiftInt(data, 0, 3));
@@ -27,6 +28,7 @@ public class LSR_A8_474 extends ParseSupport {
 	protected String getRm(int data) {
 		return parseRegister(getShiftInt(data, 3, 3));
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

@@ -4,12 +4,12 @@ import static com.marik.arm.OpCode.OpUtil.assert0;
 import static com.marik.arm.OpCode.OpUtil.assert1;
 import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 
-import com.marik.arm.OpCode.ParseTemplate;
 import com.marik.arm.OpCode.arm.instruction.MOVT_A8_491;
 import com.marik.arm.OpCode.arm.instruction.MOV_A8_484;
+import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 
 public class DataProcessingAndMiscellaneousInstructions_A5_196 {
-	public static ParseTemplate parse(int data) {
+	public static ParseSupport parse(int data) {
 
 		int op = getShiftInt(data, 25, 1);
 		int op1 = getShiftInt(data, 20, 5);

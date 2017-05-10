@@ -1,7 +1,5 @@
 package com.marik.util;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
 public class Log {

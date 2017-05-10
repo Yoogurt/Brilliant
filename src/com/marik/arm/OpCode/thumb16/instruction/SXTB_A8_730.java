@@ -13,8 +13,9 @@ public class SXTB_A8_730 extends ParseSupport {
 	public static final SXTB_A8_730 INSTANCE = new SXTB_A8_730();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("SXTB no implements");
+		throw new UnsupportedOperationException("SXTB no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

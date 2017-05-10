@@ -1,6 +1,9 @@
 package com.marik.arm.OpCode.arm.instructionSet;
 
-import com.marik.arm.OpCode.ParseTemplate;
+import static com.marik.arm.OpCode.OpUtil.assert0;
+import static com.marik.arm.OpCode.OpUtil.assert1;
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
+
 import com.marik.arm.OpCode.arm.instruction.LDRD_A8_426;
 import com.marik.arm.OpCode.arm.instruction.LDRD_A8_428;
 import com.marik.arm.OpCode.arm.instruction.LDRD_A8_430;
@@ -17,11 +20,11 @@ import com.marik.arm.OpCode.arm.instruction.STRD_A8_686;
 import com.marik.arm.OpCode.arm.instruction.STRD_A8_688;
 import com.marik.arm.OpCode.arm.instruction.STRH_A8_700;
 import com.marik.arm.OpCode.arm.instruction.STRH_A8_702;
+import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 
-import static com.marik.arm.OpCode.OpUtil.*;
-
+@SuppressWarnings("deprecation")
 public class ExtraLoadOrStoreInstructions_A5_203 {
-	public static ParseTemplate parse(int data) {
+	public static ParseSupport parse(int data) {
 
 		int op2 = getShiftInt(data, 5, 2);
 		int op1 = getShiftInt(data, 20, 5);

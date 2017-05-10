@@ -13,8 +13,9 @@ public class LDRD_A8_428 extends ParseSupport {
 	public static final LDRD_A8_428 INSTANCE = new LDRD_A8_428();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("LDRD no implements");
+		throw new UnsupportedOperationException("LDRD no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

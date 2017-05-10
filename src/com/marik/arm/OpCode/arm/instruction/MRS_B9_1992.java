@@ -7,10 +7,6 @@ package com.marik.arm.OpCode.arm.instruction;
 
 import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 
-import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
-import static com.marik.arm.OpCode.OpUtil.*;
-
 @Deprecated
 public class MRS_B9_1992 extends ParseSupport {
 

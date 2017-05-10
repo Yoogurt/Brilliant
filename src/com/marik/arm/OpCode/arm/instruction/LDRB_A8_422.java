@@ -5,13 +5,12 @@
 -------------------------------*/
 package com.marik.arm.OpCode.arm.instruction;
 
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
+import static com.marik.arm.OpCode.OpUtil.parseRegister;
+
 import com.marik.arm.OpCode.CondFactory;
 import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 import com.marik.arm.OpCode.arm.instructionSet.factory.TypeFactory;
-
-import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
-import static com.marik.arm.OpCode.OpUtil.*;
 
 public class LDRB_A8_422 extends ParseSupport {
 
@@ -58,6 +57,7 @@ public class LDRB_A8_422 extends ParseSupport {
 
 		return sb.toString();
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

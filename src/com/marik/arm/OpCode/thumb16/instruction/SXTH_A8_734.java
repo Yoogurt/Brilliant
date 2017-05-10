@@ -15,6 +15,7 @@ public class SXTH_A8_734 extends ParseSupport {
 	public String parse(int data) {
 		throw new UnsupportedOperationException("SXTH no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

@@ -36,12 +36,16 @@ public abstract class ParseSupport implements ParseTemplate {
 		if (Rn != -1) {
 			if (Rd != -1)
 				sb.append(" , ");
-			
-			if(isRnMemory())
+
+			if (isRnMemory())
 				sb.append("[");
 			sb.append(parseRegister(Rn));
-			if(isRnMemory())
+			if (isRnMemory())
 				sb.append("]");
+
+			if (isRnwback(data)) {
+				sb.append("!");
+			}
 		}
 
 		if (Rm != -1) {
@@ -56,31 +60,34 @@ public abstract class ParseSupport implements ParseTemplate {
 		if (imm5 != 0) {
 			if (type >= 0) {
 				sb.append(TypeFactory.parse(type));
-				parseShift(sb, imm5, true);
+				parseShift(sb, imm5, true , Rd == -1 && Rn == -1 && Rm == -1 && type == -1);
 			} else
-				parseShift(sb, imm5, false);
+				parseShift(sb, imm5, false , Rd == -1 && Rn == -1 && Rm == -1 && type == -1);
 		}
 		String comment = getCommnet(data);
 
 		if (comment != null)
 			sb.append(comment);
-		
+
 		return sb.toString();
 	}
 
-	private void parseShift(StringBuilder sb, int imm5, boolean type) {
+	private void parseShift(StringBuilder sb, int imm5, boolean type,
+			boolean dot) {
 		if (type)
 			sb.append(" ");
-		else
-			sb.append(" , ");
-		if (shifterRegister())
-			sb.append(parseRegister(imm5));
-		else if (shifterRegisterList())
-			sb.append("{").append(parseRigisterBit(imm5, -1)).append("}");
-		else if (shifterMenory())
-			sb.append("[").append(parseRegister(imm5)).append("]");
-		else
-			sb.append("#").append(imm5);
+		else {
+			if (!dot)
+				sb.append(" , ");
+			if (shifterRegister())
+				sb.append(parseRegister(imm5));
+			else if (shifterRegisterList())
+				sb.append("{").append(parseRegisterList(imm5, -1)).append("}");
+			else if (shifterMenory())
+				sb.append("[").append(parseRegister(imm5)).append("]");
+			else
+				sb.append("#").append(imm5);
+		}
 	}
 
 	protected String getOpCode(int data) {
@@ -114,7 +121,7 @@ public abstract class ParseSupport implements ParseTemplate {
 	}
 
 	protected int getS(int data) {
-		return 1;
+		return -1;
 	}
 
 	protected int getType(int data) {
@@ -136,14 +143,18 @@ public abstract class ParseSupport implements ParseTemplate {
 	protected boolean shifterMenory() {
 		return false;
 	}
-	
-	protected boolean isRnMemory(){
+
+	protected boolean isRnMemory() {
 		return false;
 	}
 
 	protected String getCommnet(int data) {
 		return null;
 	}
-	
+
+	protected boolean isRnwback(int data) {
+		return false;
+	}
+
 	public abstract void performExecuteCommand(int data);
 }

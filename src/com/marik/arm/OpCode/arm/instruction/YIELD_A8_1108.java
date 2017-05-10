@@ -13,8 +13,9 @@ public class YIELD_A8_1108 extends ParseSupport {
 	public static final YIELD_A8_1108 INSTANCE = new YIELD_A8_1108();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("YIELD no implements");
+		throw new UnsupportedOperationException("YIELD no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

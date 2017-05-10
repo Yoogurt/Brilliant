@@ -13,8 +13,9 @@ public class STRD_A8_686 extends ParseSupport {
 	public static final STRD_A8_686 INSTANCE = new STRD_A8_686();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("STRD no implements");
+		throw new UnsupportedOperationException("STRD no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

@@ -13,8 +13,9 @@ public class STREX_A8_690 extends ParseSupport {
 	public static final STREX_A8_690 INSTANCE = new STREX_A8_690();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("STREX no implements");
+		throw new UnsupportedOperationException("STREX no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

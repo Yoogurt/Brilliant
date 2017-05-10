@@ -4,7 +4,6 @@ import static com.marik.arm.OpCode.OpUtil.assert0;
 import static com.marik.arm.OpCode.OpUtil.assert1;
 import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 
-import com.marik.arm.OpCode.ParseTemplate;
 import com.marik.arm.OpCode.arm.instruction.LDRBT_A8_424;
 import com.marik.arm.OpCode.arm.instruction.LDRB_A8_418;
 import com.marik.arm.OpCode.arm.instruction.LDRB_A8_420;
@@ -19,9 +18,10 @@ import com.marik.arm.OpCode.arm.instruction.STRB_A8_682;
 import com.marik.arm.OpCode.arm.instruction.STRT_A8_706;
 import com.marik.arm.OpCode.arm.instruction.STR_A8_674;
 import com.marik.arm.OpCode.arm.instruction.STR_A8_676;
+import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 
 public class LoadAndStore_A5_208 {
-	public static ParseTemplate parse(int data) {
+	public static ParseSupport parse(int data) {
 
 		int A = getShiftInt(data, 25, 1);
 		int op1 = getShiftInt(data, 20, 5);

@@ -1,11 +1,6 @@
 package com.marik.arm.OpCode;
 
-import static com.marik.arm.OpCode.OpUtil.*;
-
 import com.marik.arm.OpCode.arm.instructionSet.ArmFactory;
-import com.marik.arm.OpCode.arm.instructionSet.factory.ConditionParseFactory;
-import com.marik.arm.OpCode.arm.instructionSet.factory.UnConditionParseFactory;
-import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 import com.marik.arm.OpCode.thumb16.instructionSet.Thumb16Factory;
 import com.marik.util.ByteUtil;
 import com.marik.vm.Register;
@@ -54,7 +49,7 @@ public class OpCode {
 
 	public static void main(String[] args) {
 		// access thumb mode
-		decodeArm1(0b11100100111100000010000000001111);
+		decodeArm1(0b1);
 	}
 
 	private static void decodeArm1(int... opcode) {

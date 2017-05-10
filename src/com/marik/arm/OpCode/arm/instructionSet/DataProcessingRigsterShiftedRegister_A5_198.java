@@ -4,7 +4,6 @@ import static com.marik.arm.OpCode.OpUtil.assert0;
 import static com.marik.arm.OpCode.OpUtil.assert1;
 import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 
-import com.marik.arm.OpCode.ParseTemplate;
 import com.marik.arm.OpCode.arm.instruction.ADC_A8_304;
 import com.marik.arm.OpCode.arm.instruction.ADD_A8_314;
 import com.marik.arm.OpCode.arm.instruction.AND_A8_328;
@@ -24,9 +23,10 @@ import com.marik.arm.OpCode.arm.instruction.SBC_A8_596;
 import com.marik.arm.OpCode.arm.instruction.SUB_A8_714;
 import com.marik.arm.OpCode.arm.instruction.TEQ_A8_742;
 import com.marik.arm.OpCode.arm.instruction.TST_A8_748;
+import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 
 public class DataProcessingRigsterShiftedRegister_A5_198 {
-	public static ParseTemplate parse(int data) {
+	public static ParseSupport parse(int data) {
 		
 		int op1 = getShiftInt(data, 20, 5);
 		int op2 = getShiftInt(data, 5, 2);

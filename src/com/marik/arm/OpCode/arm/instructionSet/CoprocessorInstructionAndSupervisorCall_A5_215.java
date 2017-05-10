@@ -1,9 +1,9 @@
 package com.marik.arm.OpCode.arm.instructionSet;
 
-import com.marik.arm.OpCode.ParseTemplate;
+import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 
 public class CoprocessorInstructionAndSupervisorCall_A5_215 {
-	public static ParseTemplate parse(int instruction) {
+	public static ParseSupport parse(int instruction) {
 		return null;
 	}
 }

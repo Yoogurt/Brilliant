@@ -13,8 +13,9 @@ public class LDREXB_A8_434 extends ParseSupport {
 	public static final LDREXB_A8_434 INSTANCE = new LDREXB_A8_434();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("LDREXB no implements");
+		throw new UnsupportedOperationException("LDREXB no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

@@ -13,8 +13,9 @@ public class SMLAL_A8_624 extends ParseSupport {
 	public static final SMLAL_A8_624 INSTANCE = new SMLAL_A8_624();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("SMLAL no implements");
+		throw new UnsupportedOperationException("SMLAL no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

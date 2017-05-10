@@ -2,6 +2,23 @@ package com.marik.arm.OpCode;
 
 public class OpUtil {
 
+	public static final int R0 = 0x0;
+	public static final int R1 = 0x1;
+	public static final int R2 = 0x2;
+	public static final int R3 = 0x3;
+	public static final int R4 = 0x4;
+	public static final int R5 = 0x5;
+	public static final int R6 = 0x6;
+	public static final int R7 = 0x7;
+	public static final int R8 = 0x8;
+	public static final int R9 = 0x9;
+	public static final int R10 = 0xA;
+	public static final int R11 = 0xB;
+	public static final int R12 = 0xC;
+	public static final int SP = 0xD;
+	public static final int LR = 0xE;
+	public static final int PC = 0xF;
+
 	/**
 	 * transform data into binary data and check the specific index is 0 or not
 	 * 
@@ -59,7 +76,8 @@ public class OpUtil {
 		case 15:
 			return "PC";
 		default:
-			throw new IllegalArgumentException("Unable to decode register " + no);
+			throw new IllegalArgumentException("Unable to decode register "
+					+ no);
 		}
 	}
 
@@ -69,7 +87,7 @@ public class OpUtil {
 	 * 
 	 * for instance : 0b 1 0 1 0 1 0 mean R5 R3 R1
 	 */
-	public static String parseRigisterBit(int data, int discard) {
+	public static String parseRegisterList(int data, int discard) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -99,17 +117,17 @@ public class OpUtil {
 
 		return data;
 	}
-	
+
 	public static int align(int data, int alignment) {
 		return data / alignment * data;
 	}
-	
-	public static int armExpandImm(int imm12){
+
+	public static int armExpandImm(int imm12) {
 		imm12 &= 0xfff;
-		
-		int rotation = imm12 >> 8; 
+
+		int rotation = imm12 >> 8;
 		int result = imm12 & 0xff;
-		
+
 		return (result >> (rotation << 1)) | (result << (32 - rotation << 1));
 	}
 

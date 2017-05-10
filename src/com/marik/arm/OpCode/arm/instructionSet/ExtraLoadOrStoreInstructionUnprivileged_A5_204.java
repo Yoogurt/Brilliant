@@ -1,15 +1,16 @@
 package com.marik.arm.OpCode.arm.instructionSet;
 
-import com.marik.arm.OpCode.ParseTemplate;
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
+
 import com.marik.arm.OpCode.arm.instruction.LDRHT_A8_448;
 import com.marik.arm.OpCode.arm.instruction.LDRSBT_A8_456;
 import com.marik.arm.OpCode.arm.instruction.LDRSHT_A8_464;
 import com.marik.arm.OpCode.arm.instruction.STRHT_A8_704;
+import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 
-import static com.marik.arm.OpCode.OpUtil.*;
-
+@SuppressWarnings("deprecation")
 public class ExtraLoadOrStoreInstructionUnprivileged_A5_204 {
-	public static ParseTemplate parse(int data) {
+	public static ParseSupport parse(int data) {
 
 		int op2 = getShiftInt(data, 5, 2);
 		int op = getShiftInt(data, 20, 1);
@@ -26,9 +27,9 @@ public class ExtraLoadOrStoreInstructionUnprivileged_A5_204 {
 			if (op == 0b1)
 				return LDRSBT_A8_456.INSTANCE;
 			break;
-			
+
 		case 0b11:
-			if(op == 0b1)
+			if (op == 0b1)
 				return LDRSHT_A8_464.INSTANCE;
 		}
 

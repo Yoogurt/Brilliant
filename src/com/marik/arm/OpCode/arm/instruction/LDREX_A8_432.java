@@ -13,8 +13,9 @@ public class LDREX_A8_432 extends ParseSupport {
 	public static final LDREX_A8_432 INSTANCE = new LDREX_A8_432();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("LDREX no implements");
+		throw new UnsupportedOperationException("LDREX no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

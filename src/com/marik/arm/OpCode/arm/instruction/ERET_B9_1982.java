@@ -13,8 +13,9 @@ public class ERET_B9_1982 extends ParseSupport {
 	public static final ERET_B9_1982 INSTANCE = new ERET_B9_1982();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("ERET no implements");
+		throw new UnsupportedOperationException("ERET no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

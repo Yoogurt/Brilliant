@@ -5,16 +5,10 @@
 -------------------------------*/
 package com.marik.arm.OpCode.arm.instruction;
 
-import com.marik.arm.OpCode.CondFactory;
 import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 
-import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
-import static com.marik.arm.OpCode.OpUtil.*;
-
 /**
- * @author Yoogurt
- * This class is an other implements of {@link LDR_A8_408}
+ * @author Yoogurt This class is an other implements of {@link LDR_A8_408}
  */
 public class LDR_A8_410 extends ParseSupport {
 

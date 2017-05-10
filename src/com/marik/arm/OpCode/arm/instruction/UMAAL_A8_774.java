@@ -13,8 +13,9 @@ public class UMAAL_A8_774 extends ParseSupport {
 	public static final UMAAL_A8_774 INSTANCE = new UMAAL_A8_774();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("UMAAL no implements");
+		throw new UnsupportedOperationException("UMAAL no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

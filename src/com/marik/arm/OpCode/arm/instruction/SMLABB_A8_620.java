@@ -13,8 +13,9 @@ public class SMLABB_A8_620 extends ParseSupport {
 	public static final SMLABB_A8_620 INSTANCE = new SMLABB_A8_620();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("SMLABB no implements");
+		throw new UnsupportedOperationException("SMLABB no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

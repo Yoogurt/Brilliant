@@ -5,13 +5,12 @@
 -------------------------------*/
 package com.marik.arm.OpCode.arm.instruction;
 
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
+import static com.marik.arm.OpCode.OpUtil.parseRegister;
+
 import com.marik.arm.OpCode.CondFactory;
 import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 import com.marik.arm.OpCode.arm.instructionSet.factory.TypeFactory;
-
-import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
-import static com.marik.arm.OpCode.OpUtil.*;
 
 public class LDRB_A8_418 extends ParseSupport {
 
@@ -26,38 +25,40 @@ public class LDRB_A8_418 extends ParseSupport {
 		int Rt = getShiftInt(data, 12, 4);
 		int Rn = getShiftInt(data, 16, 4);
 		int Rm = getShiftInt(data, 0, 4);
-		
+
 		int imm5 = getShiftInt(data, 7, 5);
 		int type = getShiftInt(data, 5, 2);
-		
+
 		boolean index = getShiftInt(data, 24, 1) == 1;
 		boolean add = getShiftInt(data, 23, 1) == 1;
-		boolean wback =getShiftInt(data, 21, 1) == 1;
+		boolean wback = getShiftInt(data, 21, 1) == 1;
 
 		sb.append(parseRegister(Rt)).append(" , [");
 		sb.append(parseRegister(Rn));
-		
-		if(!index)
+
+		if (!index)
 			sb.append("] , ");
-		else sb.append(" , ");
-		
-		if(!add)
+		else
+			sb.append(" , ");
+
+		if (!add)
 			sb.append("-");
-		
+
 		sb.append(parseRegister(Rm));
 		sb.append(" , ");
 		sb.append(TypeFactory.parse(type));
 		sb.append(" #");
 		sb.append(imm5);
-		
-		if(index)
+
+		if (index)
 			sb.append("]");
-		
-		if(wback)
+
+		if (wback)
 			sb.append("!");
 
 		return sb.toString();
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

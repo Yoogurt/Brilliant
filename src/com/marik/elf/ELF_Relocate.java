@@ -1,16 +1,19 @@
 package com.marik.elf;
 
-import static com.marik.elf.ELF_Constant.DT_RelType.*;
-import static com.marik.elf.ELF_Definition.*;
-import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Sword;
+import static com.marik.elf.ELF_Constant.DT_RelType.R_ARM_GLOB_DAT;
+import static com.marik.elf.ELF_Constant.DT_RelType.R_ARM_JUMP_SLOT;
+import static com.marik.elf.ELF_Constant.DT_RelType.R_ARM_RELATIVE;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Addr;
+import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Sword;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Word;
+import static com.marik.elf.ELF_Definition.ELF_R_SYM;
+import static com.marik.elf.ELF_Definition.ELF_R_TYPE;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import com.marik.util.Log;
 import com.marik.util.ByteUtil;
+import com.marik.util.Log;
 
 class ELF_Relocate {
 
@@ -29,7 +32,8 @@ class ELF_Relocate {
 
 	private boolean mRela; // are we Rela ?
 
-	ELF_Relocate(RandomAccessFile raf, long offset, int size, ELF_Dynamic mSelf, boolean rela) throws IOException {
+	ELF_Relocate(RandomAccessFile raf, long offset, int size,
+			ELF_Dynamic mSelf, boolean rela) throws IOException {
 
 		this.mSelf = mSelf;
 		mRela = rela;
@@ -45,7 +49,8 @@ class ELF_Relocate {
 		return mRela;
 	}
 
-	private void readElf_Rela(RandomAccessFile raf, long offset, int size) throws IOException {
+	private void readElf_Rela(RandomAccessFile raf, long offset, int size)
+			throws IOException {
 		long prePosition = raf.getFilePointer();
 
 		raf.seek(offset);
@@ -62,7 +67,8 @@ class ELF_Relocate {
 		raf.seek(prePosition);
 	}
 
-	private void readElf_Rel(RandomAccessFile raf, long offset, int size) throws IOException {
+	private void readElf_Rel(RandomAccessFile raf, long offset, int size)
+			throws IOException {
 		long prePosition = raf.getFilePointer();
 
 		raf.seek(offset);
@@ -91,21 +97,33 @@ class ELF_Relocate {
 
 			switch (r_info) {
 			case R_ARM_GLOB_DAT:
-				Log.e("       relocation section r_offset : " + ByteUtil.bytes2Hex(rel.r_offset)
-						+ " r_info : R_ARM_GLOB_DAT " + " , sym : " + sym
-						+ (sym > 0 ? " , symbol name : " + mSelf.getSymInStrTab(sym, raf) : ""));
+				Log.e("       relocation section r_offset : "
+						+ ByteUtil.bytes2Hex(rel.r_offset)
+						+ " r_info : R_ARM_GLOB_DAT "
+						+ " , sym : "
+						+ sym
+						+ (sym > 0 ? " , symbol name : "
+								+ mSelf.getSymInStrTab(sym, raf) : ""));
 				break;
 
 			case R_ARM_RELATIVE:
-				Log.e("       relocation section r_offset : " + ByteUtil.bytes2Hex(rel.r_offset)
-						+ " r_info : R_ARM_RELATIVE" + " , sym : " + sym
-						+ (sym > 0 ? " , symbol name : " + mSelf.getSymInStrTab(sym, raf) : ""));
+				Log.e("       relocation section r_offset : "
+						+ ByteUtil.bytes2Hex(rel.r_offset)
+						+ " r_info : R_ARM_RELATIVE"
+						+ " , sym : "
+						+ sym
+						+ (sym > 0 ? " , symbol name : "
+								+ mSelf.getSymInStrTab(sym, raf) : ""));
 				break;
 
 			case R_ARM_JUMP_SLOT:
-				Log.e("       relocation section r_offset : " + ByteUtil.bytes2Hex(rel.r_offset)
-						+ " r_info : R_ARM_JUMP_SLOT" + " , sym : " + sym
-						+ (sym > 0 ? " , symbol name : " + mSelf.getSymInStrTab(sym, raf) : ""));
+				Log.e("       relocation section r_offset : "
+						+ ByteUtil.bytes2Hex(rel.r_offset)
+						+ " r_info : R_ARM_JUMP_SLOT"
+						+ " , sym : "
+						+ sym
+						+ (sym > 0 ? " , symbol name : "
+								+ mSelf.getSymInStrTab(sym, raf) : ""));
 				break;
 
 			default:
@@ -123,7 +141,8 @@ class ELF_Relocate {
 		return mInternalRelocates;
 	}
 
-	private Elf_rel generateElfRelocate32(RandomAccessFile raf) throws IOException {
+	private Elf_rel generateElfRelocate32(RandomAccessFile raf)
+			throws IOException {
 
 		Elf_rel relocate = new Elf_rel();
 		relocate.r_offset = new byte[ELF32_Addr];
@@ -135,7 +154,8 @@ class ELF_Relocate {
 		return relocate;
 	}
 
-	private Elf_rela generateElfRelocateA32(RandomAccessFile raf) throws IOException {
+	private Elf_rela generateElfRelocateA32(RandomAccessFile raf)
+			throws IOException {
 
 		Elf_rela relocate = new Elf_rela();
 		relocate.r_offset = new byte[ELF32_Addr];

@@ -13,8 +13,9 @@ public class SMULWB_A8_648 extends ParseSupport {
 	public static final SMULWB_A8_648 INSTANCE = new SMULWB_A8_648();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("SMULWB no implements");
+		throw new UnsupportedOperationException("SMULWB no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

@@ -1,6 +1,9 @@
 package com.marik.arm.OpCode.arm.instructionSet;
 
-import com.marik.arm.OpCode.ParseTemplate;
+import static com.marik.arm.OpCode.OpUtil.assert0;
+import static com.marik.arm.OpCode.OpUtil.assert1;
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
+
 import com.marik.arm.OpCode.arm.instruction.ADC_A8_300;
 import com.marik.arm.OpCode.arm.instruction.ADD_A8_308;
 import com.marik.arm.OpCode.arm.instruction.ADR_A8_322;
@@ -18,11 +21,10 @@ import com.marik.arm.OpCode.arm.instruction.SBC_A8_592;
 import com.marik.arm.OpCode.arm.instruction.SUB_A8_710;
 import com.marik.arm.OpCode.arm.instruction.TEQ_A8_738;
 import com.marik.arm.OpCode.arm.instruction.TST_A8_744;
-
-import static com.marik.arm.OpCode.OpUtil.*;
+import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 
 public class DataProcessingImmediate_A5_199 {
-	public static ParseTemplate parse(int data) {
+	public static ParseSupport parse(int data) {
 
 		int op = getShiftInt(data, 20, 5);
 		int Rn = getShiftInt(data, 16, 4);

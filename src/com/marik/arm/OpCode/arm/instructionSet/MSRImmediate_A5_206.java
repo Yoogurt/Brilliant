@@ -1,6 +1,9 @@
 package com.marik.arm.OpCode.arm.instructionSet;
 
-import com.marik.arm.OpCode.ParseTemplate;
+import static com.marik.arm.OpCode.OpUtil.assert0;
+import static com.marik.arm.OpCode.OpUtil.assert1;
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
+
 import com.marik.arm.OpCode.arm.instruction.DBG_A8_377;
 import com.marik.arm.OpCode.arm.instruction.MSR_A8_498;
 import com.marik.arm.OpCode.arm.instruction.MSR_B8_1996;
@@ -9,11 +12,11 @@ import com.marik.arm.OpCode.arm.instruction.SEV_A8_606;
 import com.marik.arm.OpCode.arm.instruction.WFE_A8_1104;
 import com.marik.arm.OpCode.arm.instruction.WFI_A8_1106;
 import com.marik.arm.OpCode.arm.instruction.YIELD_A8_1108;
+import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 
-import static com.marik.arm.OpCode.OpUtil.*;
-
+@SuppressWarnings("deprecation")
 public class MSRImmediate_A5_206 {
-	public static ParseTemplate parse(int data) {
+	public static ParseSupport parse(int data) {
 
 		int op = getShiftInt(data, 22, 1);
 		int op1 = getShiftInt(data, 16, 4);

@@ -1,6 +1,8 @@
 package com.marik.arm.OpCode.arm.instructionSet;
 
-import com.marik.arm.OpCode.ParseTemplate;
+import static com.marik.arm.OpCode.OpUtil.assert0;
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
+
 import com.marik.arm.OpCode.arm.instruction.LDREXB_A8_434;
 import com.marik.arm.OpCode.arm.instruction.LDREXD_A8_436;
 import com.marik.arm.OpCode.arm.instruction.LDREXH_A8_438;
@@ -10,11 +12,11 @@ import com.marik.arm.OpCode.arm.instruction.STREXD_A8_694;
 import com.marik.arm.OpCode.arm.instruction.STREXH_A8_696;
 import com.marik.arm.OpCode.arm.instruction.STREX_A8_690;
 import com.marik.arm.OpCode.arm.instruction.SWP_A8_722;
+import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 
-import static com.marik.arm.OpCode.OpUtil.*;
-
+@SuppressWarnings("deprecation")
 public class SynachronizationPrimitives_A5_205 {
-	public static ParseTemplate parse(int data) {
+	public static ParseSupport parse(int data) {
 
 		int op = getShiftInt(data, 20, 4);
 
@@ -39,10 +41,10 @@ public class SynachronizationPrimitives_A5_205 {
 
 		case 0b1101:
 			return LDREXB_A8_434.INSTANCE;
-			
+
 		case 0b1110:
 			return STREXH_A8_696.INSTANCE;
-			
+
 		case 0b1111:
 			return LDREXH_A8_438.INSTANCE;
 		}

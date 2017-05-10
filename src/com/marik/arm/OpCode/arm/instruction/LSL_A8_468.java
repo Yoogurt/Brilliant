@@ -5,10 +5,9 @@
 -------------------------------*/
 package com.marik.arm.OpCode.arm.instruction;
 
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
+
 import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
-import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
-import static com.marik.arm.OpCode.OpUtil.*;
 
 public class LSL_A8_468 extends ParseSupport {
 
@@ -18,30 +17,37 @@ public class LSL_A8_468 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "LSL";
 	}
+
 	@Override
 	protected int getRd(int data) {
 		return getShiftInt(data, 12, 4);
 	}
+
 	@Override
 	protected int getRn(int data) {
 		return -1;
 	}
+
 	@Override
 	protected int getRm(int data) {
 		return getShiftInt(data, 0, 4);
 	}
+
 	@Override
 	protected int getS(int data) {
 		return getShiftInt(data, 20, 1);
 	}
+
 	@Override
 	protected int getType(int data) {
 		return -1;
 	}
+
 	@Override
 	protected int getShift(int data) {
 		return getShiftInt(data, 7, 5);
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

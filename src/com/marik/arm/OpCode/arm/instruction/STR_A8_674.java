@@ -5,12 +5,11 @@
 -------------------------------*/
 package com.marik.arm.OpCode.arm.instruction;
 
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
+import static com.marik.arm.OpCode.OpUtil.parseRegister;
+
 import com.marik.arm.OpCode.CondFactory;
 import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
-
-import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
-import static com.marik.arm.OpCode.OpUtil.*;
 
 public class STR_A8_674 extends ParseSupport {
 
@@ -27,24 +26,25 @@ public class STR_A8_674 extends ParseSupport {
 		int imm12 = getShiftInt(data, 0, 12);
 		boolean index = getShiftInt(data, 24, 1) == 1;
 		boolean add = getShiftInt(data, 23, 1) == 1;
-		boolean wback =getShiftInt(data, 21, 1) == 1;
+		boolean wback = getShiftInt(data, 21, 1) == 1;
 
 		sb.append(parseRegister(Rt)).append(" , [");
 		sb.append(parseRegister(Rn));
-		
-		if(!index)
+
+		if (!index)
 			sb.append("] , #");
-		else sb.append(" , #");
-		
-		if(!add)
+		else
+			sb.append(" , #");
+
+		if (!add)
 			sb.append("-");
-		
+
 		sb.append(imm12);
-		
-		if(index)
+
+		if (index)
 			sb.append("]");
-		
-		if(wback)
+
+		if (wback)
 			sb.append("!");
 
 		return sb.toString();

@@ -4,18 +4,14 @@ import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Addr;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Half;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Off;
 import static com.marik.elf.ELF_Constant.ELFUnit.ELF32_Word;
-import static com.marik.elf.ELF_Constant.ELFUnit.ELF64_Addr;
-import static com.marik.elf.ELF_Constant.ELFUnit.ELF64_Half;
-import static com.marik.elf.ELF_Constant.ELFUnit.ELF64_Off;
-import static com.marik.elf.ELF_Constant.ELFUnit.ELF64_Word;
 import static com.marik.elf.ELF_Constant.HeaderContent.EI_CALSS;
 import static com.marik.elf.ELF_Constant.HeaderContent.EI_DATA;
 import static com.marik.elf.ELF_Constant.HeaderContent.EI_NIDENT;
-import static com.marik.elf.ELF_Constant.HeaderContent.EI_VERSION;
 import static com.marik.elf.ELF_Constant.HeaderContent.ELFCLASS32;
 import static com.marik.elf.ELF_Constant.HeaderContent.ELFCLASS64;
 import static com.marik.elf.ELF_Constant.HeaderContent.ELFDATA2LSB;
 import static com.marik.elf.ELF_Constant.HeaderContent.ELFDATA2MSB;
+import static com.marik.elf.ELF_Constant.HeaderContent.ELFMagicCode;
 import static com.marik.elf.ELF_Constant.HeaderContent.EM_386;
 import static com.marik.elf.ELF_Constant.HeaderContent.EM_AARCH64;
 import static com.marik.elf.ELF_Constant.HeaderContent.EM_ARM;
@@ -29,13 +25,11 @@ import static com.marik.elf.ELF_Constant.HeaderContent.ET_LOPROC;
 import static com.marik.elf.ELF_Constant.HeaderContent.ET_NONE;
 import static com.marik.elf.ELF_Constant.HeaderContent.ET_REL;
 import static com.marik.elf.ELF_Constant.HeaderContent.EV_CURRENT;
-import static com.marik.elf.ELF_Constant.HeaderContent.ELFMagicCode;
 
 import java.io.RandomAccessFile;
 
-import com.marik.util.BytesBuilder;
-import com.marik.util.Log;
 import com.marik.util.ByteUtil;
+import com.marik.util.Log;
 
 /**
  * @author Yoogurt
@@ -168,8 +162,8 @@ class ELF_Header {
 		is.read(e_ident);
 
 		if (!ByteUtil.equals(ELFMagicCode, 0, e_ident, 0, // assert Magic
-														// Code correct
-														// or not
+															// Code correct
+															// or not
 				ELFMagicCode.length))
 			throw new ELFDecodeException("Not a ELF File");
 	}
@@ -182,10 +176,12 @@ class ELF_Header {
 
 		case ELFCLASS64:
 			Log.i("for 64 bit machine");
-			throw new UnsupportedOperationException("64 bit elf are not supported to decode");
+			throw new UnsupportedOperationException(
+					"64 bit elf are not supported to decode");
 
 		default:
-			throw new ELFDecodeException("ELF illegal class file , EI_CLASS = " + ByteUtil.byte2Hex(e_ident[EI_CALSS]));
+			throw new ELFDecodeException("ELF illegal class file , EI_CLASS = "
+					+ ByteUtil.byte2Hex(e_ident[EI_CALSS]));
 		}
 
 		switch (e_ident[EI_DATA]) {
@@ -207,7 +203,8 @@ class ELF_Header {
 			throw new ELFDecodeException("Unknown ELF Version");
 
 		if (ByteUtil.bytes2Int32(e_machine) != EM_ARM)
-			throw new ELFDecodeException("elf has unexpected e_machine : " + ByteUtil.bytes2Hex(e_machine));
+			throw new ELFDecodeException("elf has unexpected e_machine : "
+					+ ByteUtil.bytes2Hex(e_machine));
 	}
 
 	public void readELFHeader() throws ELFDecodeException {
@@ -235,7 +232,8 @@ class ELF_Header {
 			Log.i("Specify Architecture ELF");
 			break;
 		default:
-			throw new ELFDecodeException("Unknown ELF Type While reading ELF Header");
+			throw new ELFDecodeException(
+					"Unknown ELF Type While reading ELF Header");
 		}
 
 		switch (ByteUtil.bytes2Int32(e_machine, isLittleEndian())) {
@@ -255,7 +253,8 @@ class ELF_Header {
 			Log.e("for Intel x86(64 bit processor)");
 			break;
 		default:
-			throw new ELFDecodeException("Unsupport processor Architecture for this ELF !");
+			throw new ELFDecodeException(
+					"Unsupport processor Architecture for this ELF !");
 		}
 
 		if (ByteUtil.bytes2Int32(e_version, isLittleEndian()) != EV_CURRENT)
@@ -267,21 +266,27 @@ class ELF_Header {
 
 		Log.e("Program Header Table Offset : " + ByteUtil.bytes2Hex(e_phoff)
 				+ (isLittleEndian() ? " Little Endian" : " Big Endian"));
-		Log.e("Program Header Table per enitity's size : " + ByteUtil.bytes2Int32(e_phentsize, isLittleEndian()) + " B");
-		Log.e("Program Header Table total enitities : " + ByteUtil.bytes2Int32(e_phnum, isLittleEndian()));
+		Log.e("Program Header Table per enitity's size : "
+				+ ByteUtil.bytes2Int32(e_phentsize, isLittleEndian()) + " B");
+		Log.e("Program Header Table total enitities : "
+				+ ByteUtil.bytes2Int32(e_phnum, isLittleEndian()));
 
 		Log.e();
 
 		Log.e("Section Header Table Offset : " + ByteUtil.bytes2Hex(e_shoff)
 				+ (isLittleEndian() ? " Little Endian" : " Big Endian"));
-		Log.e("Section Header Table per enitity's size : " + ByteUtil.bytes2Int32(e_shentsize, isLittleEndian()) + " B");
-		Log.e("Section Header Table total enitities : " + ByteUtil.bytes2Int32(e_shnum, isLittleEndian()));
-		Log.e("Section Header Table's \"String Table\" Index : " + ByteUtil.bytes2Hex(e_shstrndex));
+		Log.e("Section Header Table per enitity's size : "
+				+ ByteUtil.bytes2Int32(e_shentsize, isLittleEndian()) + " B");
+		Log.e("Section Header Table total enitities : "
+				+ ByteUtil.bytes2Int32(e_shnum, isLittleEndian()));
+		Log.e("Section Header Table's \"String Table\" Index : "
+				+ ByteUtil.bytes2Hex(e_shstrndex));
 
 		Log.e();
 
 		Log.e("ELF Header Flags : " + ByteUtil.bytes2Hex(e_flags));
-		Log.e("ELF Header totally size : " + ByteUtil.bytes2Int32(e_ehsize, isLittleEndian()) + " B");
+		Log.e("ELF Header totally size : "
+				+ ByteUtil.bytes2Int32(e_ehsize, isLittleEndian()) + " B");
 
 	}
 
@@ -348,12 +353,22 @@ class ELF_Header {
 
 	@Override
 	public String toString() {
-		return String.format(
-				"[e_ident = %s\n e_type = %s\n e_machine = %s\n e_version = %s\n e_entry = %s\n e_phoff = %s\n e_shoff = %s\n e_flags = %s\n e_ehsize = %s\n e_phentsize = %s\n e_phnum = %s\n e_shentsize = %s\n e_shnum = %s\n e_shstrndex = %s]",
-				ByteUtil.bytes2Hex(e_ident), ByteUtil.bytes2Hex(e_type), ByteUtil.bytes2Hex(e_machine), ByteUtil.bytes2Hex(e_version),
-				ByteUtil.bytes2Hex(e_entry), ByteUtil.bytes2Hex(e_phoff), ByteUtil.bytes2Hex(e_shoff), ByteUtil.bytes2Hex(e_flags),
-				ByteUtil.bytes2Hex(e_ehsize), ByteUtil.bytes2Hex(e_phentsize), ByteUtil.bytes2Hex(e_phnum),
-				ByteUtil.bytes2Hex(e_shentsize), ByteUtil.bytes2Hex(e_shnum), ByteUtil.bytes2Hex(e_shstrndex));
+		return String
+				.format("[e_ident = %s\n e_type = %s\n e_machine = %s\n e_version = %s\n e_entry = %s\n e_phoff = %s\n e_shoff = %s\n e_flags = %s\n e_ehsize = %s\n e_phentsize = %s\n e_phnum = %s\n e_shentsize = %s\n e_shnum = %s\n e_shstrndex = %s]",
+						ByteUtil.bytes2Hex(e_ident),
+						ByteUtil.bytes2Hex(e_type),
+						ByteUtil.bytes2Hex(e_machine),
+						ByteUtil.bytes2Hex(e_version),
+						ByteUtil.bytes2Hex(e_entry),
+						ByteUtil.bytes2Hex(e_phoff),
+						ByteUtil.bytes2Hex(e_shoff),
+						ByteUtil.bytes2Hex(e_flags),
+						ByteUtil.bytes2Hex(e_ehsize),
+						ByteUtil.bytes2Hex(e_phentsize),
+						ByteUtil.bytes2Hex(e_phnum),
+						ByteUtil.bytes2Hex(e_shentsize),
+						ByteUtil.bytes2Hex(e_shnum),
+						ByteUtil.bytes2Hex(e_shstrndex));
 	}
 
 }

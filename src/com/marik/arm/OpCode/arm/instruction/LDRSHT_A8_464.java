@@ -13,8 +13,9 @@ public class LDRSHT_A8_464 extends ParseSupport {
 	public static final LDRSHT_A8_464 INSTANCE = new LDRSHT_A8_464();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("LDRSHT no implements");
+		throw new UnsupportedOperationException("LDRSHT no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

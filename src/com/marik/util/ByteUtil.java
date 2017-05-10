@@ -277,12 +277,4 @@ public class ByteUtil {
 
 		return sb.toString();
 	}
-
-	public static void main(String[] args) {
-
-		byte b = (byte) 0b10000000;
-		int a = 0b11111111111111111111111111111111;
-		System.out.println(b);
-	}
-
 }

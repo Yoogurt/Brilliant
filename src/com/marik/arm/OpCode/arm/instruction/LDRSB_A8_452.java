@@ -13,8 +13,9 @@ public class LDRSB_A8_452 extends ParseSupport {
 	public static final LDRSB_A8_452 INSTANCE = new LDRSB_A8_452();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("LDRSB no implements");
+		throw new UnsupportedOperationException("LDRSB no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

@@ -5,43 +5,50 @@
 -------------------------------*/
 package com.marik.arm.OpCode.arm.instruction;
 
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import static com.marik.arm.OpCode.OpUtil.armExpandImm;
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 
-import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
-import static com.marik.arm.OpCode.OpUtil.*;
+import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
 
 public class TEQ_A8_738 extends ParseSupport {
 
 	public static final TEQ_A8_738 INSTANCE = new TEQ_A8_738();
+
 	@Override
 	protected String getOpCode(int data) {
 		return "TEQ";
 	}
+
 	@Override
 	protected int getRd(int data) {
 		return -1;
 	}
+
 	@Override
 	protected int getRn(int data) {
 		return getShiftInt(data, 16, 4);
 	}
+
 	@Override
 	protected int getRm(int data) {
 		return -1;
 	}
+
 	@Override
 	protected int getS(int data) {
 		return -1;
 	}
+
 	@Override
 	protected int getType(int data) {
 		return -1;
 	}
+
 	@Override
 	protected int getShift(int data) {
 		return armExpandImm(getShiftInt(data, 0, 12));
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

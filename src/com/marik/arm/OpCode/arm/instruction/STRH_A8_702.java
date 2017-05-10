@@ -13,8 +13,9 @@ public class STRH_A8_702 extends ParseSupport {
 	public static final STRH_A8_702 INSTANCE = new STRH_A8_702();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("STRH no implements");
+		throw new UnsupportedOperationException("STRH no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

@@ -5,9 +5,9 @@
 -------------------------------*/
 package com.marik.arm.OpCode.thumb16.instruction;
 
-import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
-import static com.marik.arm.OpCode.OpUtil.*;
+import static com.marik.arm.OpCode.OpUtil.getShiftInt;
+import static com.marik.arm.OpCode.OpUtil.parseRegister;
+
 import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;
 
 public class BLX_A8_350 extends ParseSupport {
@@ -28,6 +28,7 @@ public class BLX_A8_350 extends ParseSupport {
 	protected String getRm(int data) {
 		return null;
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}
