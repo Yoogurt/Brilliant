@@ -20,7 +20,7 @@ import com.marik.arm.OpCode.arm.instruction.STRD_A8_686;
 import com.marik.arm.OpCode.arm.instruction.STRD_A8_688;
 import com.marik.arm.OpCode.arm.instruction.STRH_A8_700;
 import com.marik.arm.OpCode.arm.instruction.STRH_A8_702;
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 
 @SuppressWarnings("deprecation")
 public class ExtraLoadOrStoreInstructions_A5_203 {

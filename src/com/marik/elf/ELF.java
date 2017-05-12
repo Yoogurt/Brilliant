@@ -85,16 +85,11 @@ public class ELF {
 	 */
 	private static final Map<String, ELF> gso = new LinkedHashMap<>();
 
-	/**
-	 * Global Offset Table
-	 */
-	private static final Map<String, Integer> GOT = new LinkedHashMap<>();
-
 	private static final ELF[] gLdPreloads = new ELF[LDPRELOAD_MAX + 1];
 
 	private static final ELF somain;
 
-	/* preload */
+	/* main executable file , in android usually is app_process , ignore */
 	static {
 		somain = null;
 	}
@@ -211,7 +206,7 @@ public class ELF {
 			return 0;
 
 		if (elf == null) {
-			/* linear search here */
+			/* linear search here , do nothing*/
 		} else {
 
 			Elf_Sym sym = soinfo_elf_lookup(elf, elf_hash(functionName),
@@ -353,7 +348,7 @@ public class ELF {
 
 			m.seg_file_end = m.seg_start + ByteUtil.bytes2Int64(ph.p_filesz);
 
-			// 文件偏移
+			// file offset
 			m.file_start = ByteUtil.bytes2Int64(ph.p_offset);
 			m.file_end = m.file_start + ByteUtil.bytes2Int64(ph.p_filesz);
 
@@ -377,7 +372,7 @@ public class ELF {
 
 	public void link_image() {
 
-		/* extract useful informations */
+		/* extract some useful informations */
 		nbucket = ByteUtil.bytes2Int32(OS.getMemory(), elf_dynamic.getDT_HASH()
 				+ elf_base + uint32_t * 0, uint32_t,
 				elf_header.isLittleEndian()); // value
@@ -706,7 +701,7 @@ public class ELF {
 			h ^= g;
 			h ^= g >> 24;
 		}
-
+		
 		return h;
 	}
 
@@ -992,7 +987,7 @@ public class ELF {
 		OS.debug = true;
 
 		ELF elf = new ELF(
-				"C:/Users/Administrator/Desktop/DeComplied_Apk/libDS.so", true);
+				"C:/Users/Administrator/Desktop/libdvm.so", false);
 		// ELF elf = new ELF("C:/Users/monitor/Desktop/env/libc.so", true);
 		elf.dumpHashSymtab();
 

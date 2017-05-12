@@ -5,7 +5,8 @@
 -------------------------------*/
 package com.marik.arm.OpCode.arm.instruction;
 
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
+
 
 @Deprecated
 public class MRC_A8_492 extends ParseSupport {

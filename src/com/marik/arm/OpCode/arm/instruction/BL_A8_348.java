@@ -9,7 +9,7 @@ import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 import static com.marik.arm.OpCode.OpUtil.signExtend;
 
 import com.marik.arm.OpCode.CondFactory;
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 
 public class BL_A8_348 extends ParseSupport {
 
@@ -39,6 +39,12 @@ public class BL_A8_348 extends ParseSupport {
 
 	private String EncodingA2(int data) {
 		StringBuilder sb = new StringBuilder("BLX");
+
+		int H = getShiftInt(data, 24, 1);
+		int imm24 = getShiftInt(data, 0, 24);
+		sb.append(" #");
+
+		sb.append((imm24 << 2) | (H << 1) | 0);
 
 		return sb.toString();
 	}

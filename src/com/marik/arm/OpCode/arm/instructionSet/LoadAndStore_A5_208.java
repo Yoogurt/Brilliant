@@ -18,7 +18,7 @@ import com.marik.arm.OpCode.arm.instruction.STRB_A8_682;
 import com.marik.arm.OpCode.arm.instruction.STRT_A8_706;
 import com.marik.arm.OpCode.arm.instruction.STR_A8_674;
 import com.marik.arm.OpCode.arm.instruction.STR_A8_676;
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 
 public class LoadAndStore_A5_208 {
 	public static ParseSupport parse(int data) {

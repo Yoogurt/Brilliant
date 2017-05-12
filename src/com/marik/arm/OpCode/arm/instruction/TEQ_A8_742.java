@@ -7,7 +7,7 @@ package com.marik.arm.OpCode.arm.instruction;
 
 import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 
 public class TEQ_A8_742 extends ParseSupport {
 

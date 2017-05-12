@@ -6,7 +6,7 @@ import com.marik.arm.OpCode.arm.instruction.LDRHT_A8_448;
 import com.marik.arm.OpCode.arm.instruction.LDRSBT_A8_456;
 import com.marik.arm.OpCode.arm.instruction.LDRSHT_A8_464;
 import com.marik.arm.OpCode.arm.instruction.STRHT_A8_704;
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 
 @SuppressWarnings("deprecation")
 public class ExtraLoadOrStoreInstructionUnprivileged_A5_204 {

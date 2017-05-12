@@ -25,7 +25,7 @@ import com.marik.arm.OpCode.arm.instruction.SBC_A8_594;
 import com.marik.arm.OpCode.arm.instruction.SUB_A8_712;
 import com.marik.arm.OpCode.arm.instruction.TEQ_A8_740;
 import com.marik.arm.OpCode.arm.instruction.TST_A8_746;
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 
 public class DataProcessingRegister_A5_197 {
 

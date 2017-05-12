@@ -5,7 +5,8 @@
 -------------------------------*/
 package com.marik.arm.OpCode.arm.instruction;
 
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
+
 
 @Deprecated
 public class WFE_A8_1104 extends ParseSupport {

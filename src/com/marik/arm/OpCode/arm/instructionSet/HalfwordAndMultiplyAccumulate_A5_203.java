@@ -7,7 +7,7 @@ import com.marik.arm.OpCode.arm.instruction.SMLALBB_A8_626;
 import com.marik.arm.OpCode.arm.instruction.SMLAWB_A8_630;
 import com.marik.arm.OpCode.arm.instruction.SMULBB_A8_644;
 import com.marik.arm.OpCode.arm.instruction.SMULWB_A8_648;
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 
 @SuppressWarnings("deprecation")
 public class HalfwordAndMultiplyAccumulate_A5_203 {

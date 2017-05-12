@@ -2,7 +2,7 @@ package com.marik.arm.OpCode.arm.instructionSet;
 
 import static com.marik.arm.OpCode.OpUtil.assert1;
 
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 import com.marik.arm.OpCode.arm.instructionSet.factory.ConditionParseFactory;
 import com.marik.arm.OpCode.arm.instructionSet.factory.UnConditionParseFactory;
 

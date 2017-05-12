@@ -1,46 +1,51 @@
 package com.marik.arm.OpCode;
 
 import com.marik.arm.OpCode.arm.instructionSet.ArmFactory;
-import com.marik.arm.OpCode.thumb16.instructionSet.Thumb16Factory;
-import com.marik.util.ByteUtil;
+import com.marik.arm.OpCode.thumb.ThumbFactory;
 import com.marik.vm.Register;
 import com.marik.vm.Register.RegisterIllegalStateExeception;
 
 public class OpCode {
 
-	public static String decode(byte[] data) {
-		int command = ByteUtil.bytes2Int32(data);
-
+	public static void decode(int[] data) {
 		switch (Register.getT()) {
 		case 0:
-			return decodeArm(command);
-
+			decodeArm(data);
+			break;
 		case 1:
-			return decodeThumb16(command);
+			decodeThumb(data);
+			break;
 		default:
 			throw new RegisterIllegalStateExeception(
 					"Flag Rigister has accessed an unpredictable state");
 		}
 	}
 
-	public static String decode(int data) {
-		switch (Register.getT()) {
-		case 0:
-			return decodeArm(data);
-		case 1:
-			return decodeThumb16(data);
-		default:
-			throw new RegisterIllegalStateExeception(
-					"Flag Rigister has accessed an unpredictable state");
+	private static void decodeArm(int[] data) {
+		for (int i : data)
+			System.out.println(ArmFactory.parse(i).parse(i));
+	}
+
+	public static void decodeThumb(int[] data) {
+
+		int length = data.length;
+		for (int i = 0; i < length; i++) {
+
+			ParseTemplate opcode = ThumbFactory.parse(data[i], true);
+
+			if (opcode != null)
+				System.out.println(opcode.parse(data[i]));
+			else {
+				int command = data[i] << 16 | data[++i];
+				opcode = ThumbFactory.parse(command, false);
+				if (opcode != null)
+					System.out.println(opcode.parse(command));
+				else
+					throw new IllegalArgumentException(
+							"Unable to decode instruction "
+									+ Integer.toBinaryString(command));
+			}
 		}
-	}
-
-	private static String decodeArm(int data) {
-		return ArmFactory.parse(data).parse(data);
-	}
-
-	public static String decodeThumb16(int data) {
-		return Thumb16Factory.parse(data).parse(data);
 	}
 
 	public static ParseTemplate decodeThumb32(int data) {
@@ -49,13 +54,16 @@ public class OpCode {
 
 	public static void main(String[] args) {
 		// access thumb mode
-		decodeArm1(0b1);
+		decodeArm1(0xea00002a);
 	}
 
 	private static void decodeArm1(int... opcode) {
 		Register.setT(0);
-		for (int x : opcode) {
-			System.out.println(decode(x));
-		}
+		decode(opcode);
+	}
+	
+	private static void decodeThumb1(int... opcode) {
+		Register.setT(1);
+		decode(opcode);
 	}
 }

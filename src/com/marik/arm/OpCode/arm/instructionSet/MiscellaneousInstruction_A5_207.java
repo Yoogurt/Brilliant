@@ -17,7 +17,7 @@ import com.marik.arm.OpCode.arm.instruction.MSR_A8_500;
 import com.marik.arm.OpCode.arm.instruction.MSR_B9_1994;
 import com.marik.arm.OpCode.arm.instruction.MSR_B9_1998;
 import com.marik.arm.OpCode.arm.instruction.SMC_B9_2002;
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 
 @SuppressWarnings("deprecation")
 public class MiscellaneousInstruction_A5_207 {

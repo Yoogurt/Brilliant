@@ -5,7 +5,8 @@
 -------------------------------*/
 package com.marik.arm.OpCode.arm.instruction;
 
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
+
 
 public class SMC_B9_2002 extends ParseSupport {
 

@@ -12,7 +12,7 @@ import com.marik.arm.OpCode.arm.instruction.STREXD_A8_694;
 import com.marik.arm.OpCode.arm.instruction.STREXH_A8_696;
 import com.marik.arm.OpCode.arm.instruction.STREX_A8_690;
 import com.marik.arm.OpCode.arm.instruction.SWP_A8_722;
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 
 @SuppressWarnings("deprecation")
 public class SynachronizationPrimitives_A5_205 {

@@ -6,7 +6,7 @@ import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 
 import com.marik.arm.OpCode.arm.instruction.MOVT_A8_491;
 import com.marik.arm.OpCode.arm.instruction.MOV_A8_484;
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 
 public class DataProcessingAndMiscellaneousInstructions_A5_196 {
 	public static ParseSupport parse(int data) {

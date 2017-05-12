@@ -12,7 +12,7 @@ import com.marik.arm.OpCode.arm.instruction.SEV_A8_606;
 import com.marik.arm.OpCode.arm.instruction.WFE_A8_1104;
 import com.marik.arm.OpCode.arm.instruction.WFI_A8_1106;
 import com.marik.arm.OpCode.arm.instruction.YIELD_A8_1108;
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 
 @SuppressWarnings("deprecation")
 public class MSRImmediate_A5_206 {

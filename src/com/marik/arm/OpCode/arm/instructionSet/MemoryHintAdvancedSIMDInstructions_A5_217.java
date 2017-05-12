@@ -1,6 +1,6 @@
 package com.marik.arm.OpCode.arm.instructionSet;
 
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 
 public class MemoryHintAdvancedSIMDInstructions_A5_217 {
 	public static ParseSupport parse(int data) {

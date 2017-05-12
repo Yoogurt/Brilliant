@@ -11,22 +11,26 @@ import java.util.List;
 
 public class AutoGenerate {
 
-	public static final String THUMB16_PATH = "src/com/marik/arm/OpCode/thumb16/instruction/";
+	public static final String THUMB16_PATH = "src/com/marik/arm/OpCode/thumb/instruction16/";
 	public static final String THUMB16_CFG = "src/com/marik/arm/autogenerate/Thumb16Instruction.cfg";
+
+	public static final String THUMB32_PATH = "src/com/marik/arm/OpCode/thumb/instruction32/";
+	public static final String THUMB32_CFG = "src/com/marik/arm/autogenerate/Thumb32Instruction.cfg";
 
 	public static final String ARM_PATH = "src/com/marik/arm/OpCode/arm/instruction/";
 	public static final String ARM_CFG = "src/com/marik/arm/autogenerate/ArmInstruction.cfg";
 
 	public static void main(String[] args) {
 		try {
-//			genrateThumb16Class();
-			 genrateArmClass();
+			// generateThumb16Class();
+			generateThumb32Class();
+			// generateArmClass();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private static void genrateArmClass() throws Exception {
+	private static void generateArmClass() throws Exception {
 
 		List<String> ARM_CLASS_NAME = parseNeededClass(ARM_CFG);
 
@@ -50,7 +54,7 @@ public class AutoGenerate {
 		}
 	}
 
-	private static void genrateThumb16Class() throws Exception {
+	private static void generateThumb16Class() throws Exception {
 
 		List<String> THUMB16_CLASS_NAME = parseNeededClass(THUMB16_CFG);
 
@@ -62,14 +66,40 @@ public class AutoGenerate {
 
 				file = new File(THUMB16_PATH + fileName + ".java");
 				if (!file.exists())
-					generateNewFileThumb(file, fileName, true);
+					generateNewFileThumb16(file, fileName, true);
 				else
 					System.err.println(fileName + " exist , skipping");
 			} else {
 
 				file = new File(THUMB16_PATH + fileName + ".java");
 				if (!file.exists())
-					generateNewFileArm(file, fileName, false);
+					generateNewFileThumb16(file, fileName, false);
+				else
+					System.err.println(fileName + " exist , skipping");
+			}
+		}
+	}
+
+	private static void generateThumb32Class() throws Exception {
+
+		List<String> THUMB32_CLASS_NAME = parseNeededClass(THUMB32_CFG);
+
+		for (String fileName : THUMB32_CLASS_NAME) {
+
+			File file;
+			if (fileName.endsWith("*")) {
+				fileName = fileName.substring(0, fileName.length() - 1);
+
+				file = new File(THUMB32_PATH + fileName + ".java");
+				if (!file.exists())
+					generateNewFileThumb32(file, fileName, true);
+				else
+					System.err.println(fileName + " exist , skipping");
+			} else {
+
+				file = new File(THUMB32_PATH + fileName + ".java");
+				if (!file.exists())
+					generateNewFileThumb32(file, fileName, false);
 				else
 					System.err.println(fileName + " exist , skipping");
 			}
@@ -83,7 +113,8 @@ public class AutoGenerate {
 
 			List<String> clz = new ArrayList<>();
 
-			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					new FileInputStream(file)));
 
 			String className;
 			while ((className = br.readLine()) != null)
@@ -96,7 +127,8 @@ public class AutoGenerate {
 		return null;
 	}
 
-	private static void generateNewFileArm(File file, String className, boolean no_implements) {
+	private static void generateNewFileArm(File file, String className,
+			boolean no_implements) {
 
 		try {
 			file.createNewFile();
@@ -110,7 +142,7 @@ public class AutoGenerate {
 
 			pw.println("package com.marik.arm.OpCode.arm.instruction;");
 			pw.println();
-			pw.println("import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;");
+			pw.println("import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;");
 
 			if (!no_implements) {
 				pw.println("import static com.marik.vm.OS.*;");
@@ -125,15 +157,17 @@ public class AutoGenerate {
 
 			pw.println("public class " + className + " extends ParseSupport {");
 			pw.println();
-			pw.println("	public static final " + className + " INSTANCE = new " + className + "();");
+			pw.println("	public static final " + className + " INSTANCE = new "
+					+ className + "();");
 			pw.println();
+
+			pw.println("	@Override");
+			pw.println("	protected String getOpCode(int data) {");
+			pw.println("		return \"" + className.split("_")[0] + "\";");
+			pw.println("	}");
 
 			if (!no_implements) {
 
-				pw.println("	@Override");
-				pw.println("	protected String getOpCode(int data) {");
-				pw.println("		return null;");
-				pw.println("	}");
 				pw.println("	@Override");
 				pw.println("	protected int getRd(int data) {");
 				pw.println("		return -1;");
@@ -159,13 +193,6 @@ public class AutoGenerate {
 				pw.println("		return 0;");
 				pw.println("	}");
 
-			} else {
-
-				pw.println("	public String parse(int data) {");
-				pw.println("			throw new UnsupportedOperationException(\"" + className.split("_")[0]
-						+ " no implements\");");
-				pw.println("	}");
-
 			}
 
 			pw.println("	@Override");
@@ -185,7 +212,8 @@ public class AutoGenerate {
 
 	}
 
-	private static void generateNewFileThumb(File file, String className, boolean no_implements) {
+	private static void generateNewFileThumb16(File file, String className,
+			boolean no_implements) {
 
 		try {
 			file.createNewFile();
@@ -197,9 +225,9 @@ public class AutoGenerate {
 			pw.println("        License GPL/GNU");
 			pw.println("-------------------------------*/");
 
-			pw.println("package com.marik.arm.OpCode.thumb16.instruction;");
+			pw.println("package com.marik.arm.OpCode.thumb.instruction16;");
 			pw.println();
-			pw.println("import com.marik.arm.OpCode.thumb16.instruction.factory.ParseSupport;");
+			pw.println("import com.marik.arm.OpCode.thumb.instruction16.support.ParseSupport;");
 
 			if (!no_implements) {
 				pw.println("import static com.marik.vm.OS.*;");
@@ -207,21 +235,23 @@ public class AutoGenerate {
 				pw.println("import static com.marik.arm.OpCode.OpUtil.*;");
 			}
 			pw.println();
-			
+
 			if (no_implements)
 				pw.println("@Deprecated");
 
 			pw.println("public class " + className + " extends ParseSupport {");
 			pw.println();
-			pw.println("	public static final " + className + " INSTANCE = new " + className + "();");
+			pw.println("	public static final " + className + " INSTANCE = new "
+					+ className + "();");
 			pw.println();
+
+			pw.println("	@Override");
+			pw.println("	protected String getOpCode(int data) {");
+			pw.println("		return \"" + className.split("_")[0] + "\";");
+			pw.println("	}");
 
 			if (!no_implements) {
 
-				pw.println("	@Override");
-				pw.println("	protected String getOpCode() {");
-				pw.println("		return null;");
-				pw.println("	}");
 				pw.println("	@Override");
 				pw.println("	protected String getRn(int data) {");
 				pw.println("		return null;");
@@ -230,12 +260,87 @@ public class AutoGenerate {
 				pw.println("	protected String getRm(int data) {");
 				pw.println("		return null;");
 				pw.println("	}");
+			}
 
-			} else {
+			pw.println("	@Override");
+			pw.println("	public void performExecuteCommand(int data) {");
+			pw.println("	}");
 
-				pw.println("	public String parse(int data) {");
-				pw.println("			throw new UnsupportedOperationException(\"" + className.split("_")[0]
-						+ " no implements\");");
+			pw.println();
+			pw.print("}");
+
+			pw.flush();
+			pw.close();
+
+			System.out.println(className + " generated successfully");
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static void generateNewFileThumb32(File file, String className,
+			boolean no_implements) {
+
+		try {
+			file.createNewFile();
+
+			PrintWriter pw = new PrintWriter(file);
+			pw.println("/*-------------------------------");
+			pw.println(" Auto Generated By AutoGenetate.java");
+			pw.println("     Don't remove or modify");
+			pw.println("        License GPL/GNU");
+			pw.println("-------------------------------*/");
+
+			pw.println("package com.marik.arm.OpCode.thumb.instruction32;");
+			pw.println();
+			pw.println("import com.marik.arm.OpCode.thumb.instruction32.support.ParseSupport;");
+
+			if (!no_implements) {
+				pw.println("import static com.marik.vm.OS.*;");
+				pw.println("import static com.marik.vm.Register.*;");
+				pw.println("import static com.marik.arm.OpCode.OpUtil.*;");
+			}
+			pw.println();
+
+			if (no_implements)
+				pw.println("@Deprecated");
+
+			pw.println("public class " + className + " extends ParseSupport {");
+			pw.println();
+			pw.println("	public static final " + className + " INSTANCE = new "
+					+ className + "();");
+			pw.println();
+
+			pw.println("	@Override");
+			pw.println("	protected String getOpCode(int data) {");
+			pw.println("		return \"" + className.split("_")[0] + ".W\";");
+			pw.println("	}");
+
+			if (!no_implements) {
+
+				pw.println("	@Override");
+				pw.println("	protected int getRd(int data) {");
+				pw.println("		return -1;");
+				pw.println("	}");
+				pw.println("	@Override");
+				pw.println("	protected int getRn(int data) {");
+				pw.println("		return -1;");
+				pw.println("	}");
+				pw.println("	@Override");
+				pw.println("	protected int getRm(int data) {");
+				pw.println("		return -1;");
+				pw.println("	}");
+				pw.println("	@Override");
+				pw.println("	protected int getS(int data) {");
+				pw.println("		return -1;");
+				pw.println("	}");
+				pw.println("	@Override");
+				pw.println("	protected int getType(int data) {");
+				pw.println("		return -1;");
+				pw.println("	}");
+				pw.println("	@Override");
+				pw.println("	protected int getShift(int data) {");
+				pw.println("		return 0;");
 				pw.println("	}");
 
 			}

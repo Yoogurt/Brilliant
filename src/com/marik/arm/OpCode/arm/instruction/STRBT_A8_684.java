@@ -9,7 +9,7 @@ import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 import static com.marik.arm.OpCode.OpUtil.parseRegister;
 
 import com.marik.arm.OpCode.CondFactory;
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 import com.marik.arm.OpCode.arm.instructionSet.factory.TypeFactory;
 
 public class STRBT_A8_684 extends ParseSupport {

@@ -19,7 +19,7 @@ import com.marik.arm.OpCode.arm.instruction.STMDB_A8_668;
 import com.marik.arm.OpCode.arm.instruction.STMIB_A8_670;
 import com.marik.arm.OpCode.arm.instruction.STM_A8_664;
 import com.marik.arm.OpCode.arm.instruction.STM_B9_2008;
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 
 @SuppressWarnings("deprecation")
 public class BranchWithLinkAndBlockDataTransfer_A5_214 {

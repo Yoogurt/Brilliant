@@ -1,6 +1,6 @@
 package com.marik.arm.OpCode.arm.instructionSet;
 
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 
 public class StauratingAdditionAndSubtraction_A5_202 {
 	

@@ -3,7 +3,7 @@ package com.marik.arm.OpCode.arm.instructionSet.factory;
 import static com.marik.arm.OpCode.OpUtil.*;
 
 import com.marik.arm.OpCode.ParseTemplate;
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 import com.marik.arm.OpCode.arm.instructionSet.BranchWithLinkAndBlockDataTransfer_A5_214;
 import com.marik.arm.OpCode.arm.instructionSet.CoprocessorInstructionAndSupervisorCall_A5_215;
 import com.marik.arm.OpCode.arm.instructionSet.DataProcessingAndMiscellaneousInstructions_A5_196;

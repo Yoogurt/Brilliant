@@ -23,7 +23,7 @@ import com.marik.arm.OpCode.arm.instruction.SBC_A8_596;
 import com.marik.arm.OpCode.arm.instruction.SUB_A8_714;
 import com.marik.arm.OpCode.arm.instruction.TEQ_A8_742;
 import com.marik.arm.OpCode.arm.instruction.TST_A8_748;
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 
 public class DataProcessingRigsterShiftedRegister_A5_198 {
 	public static ParseSupport parse(int data) {

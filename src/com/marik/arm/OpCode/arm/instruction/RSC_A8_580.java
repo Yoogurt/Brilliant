@@ -8,7 +8,7 @@ package com.marik.arm.OpCode.arm.instruction;
 import static com.marik.arm.OpCode.OpUtil.armExpandImm;
 import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 
 public class RSC_A8_580 extends ParseSupport {
 

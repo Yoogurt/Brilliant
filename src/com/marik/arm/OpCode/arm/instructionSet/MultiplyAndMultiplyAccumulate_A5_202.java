@@ -12,7 +12,7 @@ import com.marik.arm.OpCode.arm.instruction.SMULL_A8_646;
 import com.marik.arm.OpCode.arm.instruction.UMAAL_A8_774;
 import com.marik.arm.OpCode.arm.instruction.UMLAL_A8_776;
 import com.marik.arm.OpCode.arm.instruction.UMULL_A8_778;
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 
 @SuppressWarnings("deprecation")
 public class MultiplyAndMultiplyAccumulate_A5_202 {

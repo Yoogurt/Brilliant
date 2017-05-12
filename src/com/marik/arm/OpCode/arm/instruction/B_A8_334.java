@@ -8,7 +8,7 @@ package com.marik.arm.OpCode.arm.instruction;
 import static com.marik.arm.OpCode.OpUtil.getShiftInt;
 import static com.marik.arm.OpCode.OpUtil.signExtend;
 
-import com.marik.arm.OpCode.arm.instruction.factory.ParseSupport;
+import com.marik.arm.OpCode.arm.instruction.support.ParseSupport;
 
 public class B_A8_334 extends ParseSupport {
 
