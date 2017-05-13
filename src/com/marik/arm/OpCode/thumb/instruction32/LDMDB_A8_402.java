@@ -8,7 +8,6 @@ package com.marik.arm.OpCode.thumb.instruction32;
 import com.marik.arm.OpCode.thumb.instruction32.support.ParseSupport;
 
 import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
 import static com.marik.arm.OpCode.OpUtil.*;
 
 public class LDMDB_A8_402 extends ParseSupport {
@@ -17,31 +16,30 @@ public class LDMDB_A8_402 extends ParseSupport {
 
 	@Override
 	protected String getOpCode(int data) {
-		return "LDMDB.W";
+		int Rn = getShiftInt(data, 16, 4);
+		if (Rn == SP)
+			return "LDMEA";
+		return "LDMDB";
 	}
-	@Override
-	protected int getRd(int data) {
-		return -1;
-	}
+
 	@Override
 	protected int getRn(int data) {
-		return -1;
+		return getShiftInt(data, 16, 4);
 	}
-	@Override
-	protected int getRm(int data) {
-		return -1;
-	}
-	@Override
-	protected int getS(int data) {
-		return -1;
-	}
-	@Override
-	protected int getType(int data) {
-		return -1;
-	}
+
 	@Override
 	protected int getShift(int data) {
-		return 0;
+		return getShiftInt(data, 0, 16);
+	}
+	
+	@Override
+	protected boolean shifterRegisterList() {
+		return true;
+	}
+
+	@Override
+	protected boolean isRnwback(int data) {
+		return getShiftInt(data, 21, 1) == 0b1;
 	}
 	@Override
 	public void performExecuteCommand(int data) {

@@ -117,7 +117,7 @@ public class OpUtil {
 
 		return data;
 	}
-
+	
 	public static int align(int data, int alignment) {
 		return data / alignment * data;
 	}
@@ -125,15 +125,35 @@ public class OpUtil {
 	public static int armExpandImm(int imm12) {
 		imm12 &= 0xfff;
 
-		int rotation = imm12 >> 8;
+		int rotation = imm12 >>> 8;
 		int result = imm12 & 0xff;
 
-		return (result >> (rotation << 1)) | (result << (32 - rotation << 1));
+		return (result >>> (rotation << 1)) | (result << (32 - rotation << 1));
+	}
+
+	public static int thumbExpandImm(int imm12) {
+		imm12 &= 0xfff;
+		int high5 = imm12 >> 7;
+		
+		if (high5 == 0b00000 || high5 == 0b00001)
+			return imm12 & 0xff;
+		if (high5 == 0b00010 || high5 == 0b00011)
+			return ((imm12 & 0xff) << 16) | (imm12 & 0xff);
+		if (high5 == 0b00100 || high5 == 0b00101)
+			return ((imm12 & 0xff) << 24) | ((imm12 & 0xff) << 8);
+		if (high5 == 0b00110 || high5 == 0b00111)
+			return ((imm12 & 0xff) << 24) | ((imm12 & 0xff) << 16)
+					| ((imm12 & 0xff) << 8) | (imm12 & 0xff);
+
+		int base = 0b01000;
+		imm12 = (imm12 & 0xff | 0x80) << 24;
+		return imm12 >>> (high5 - base);
 	}
 
 	public static void main(String[] args) {
-		int no = 0x201;
-		System.out.println(Integer.toHexString(armExpandImm(no)));
+		int no = 0b111111111111;
+		System.out.println(Integer.toBinaryString(thumbExpandImm(no)));
+		System.out.println(Integer.toHexString(thumbExpandImm(no)));
 	}
 
 }

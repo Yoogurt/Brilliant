@@ -36,6 +36,12 @@ public class OpCode {
 			if (opcode != null)
 				System.out.println(opcode.parse(data[i]));
 			else {
+
+				if (i + 1 >= length)
+					throw new IllegalArgumentException(
+							"Unable to decode instruction "
+									+ Integer.toBinaryString(data[i]));
+
 				int command = data[i] << 16 | data[++i];
 				opcode = ThumbFactory.parse(command, false);
 				if (opcode != null)
@@ -54,14 +60,19 @@ public class OpCode {
 
 	public static void main(String[] args) {
 		// access thumb mode
-		decodeArm1(0xea00002a);
+		// decodeArm1(0xea00002a);
+		int comm1 = 0b1111001010101111;
+		int comm2 = 0b0000000000000100;
+		decodeThumb1(comm1, comm2);
+		System.out.println("0x" + Integer.toHexString(comm1) + "  0x"
+				+ Integer.toHexString(comm2));
 	}
 
 	private static void decodeArm1(int... opcode) {
 		Register.setT(0);
 		decode(opcode);
 	}
-	
+
 	private static void decodeThumb1(int... opcode) {
 		Register.setT(1);
 		decode(opcode);

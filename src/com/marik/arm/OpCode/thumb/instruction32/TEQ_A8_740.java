@@ -15,34 +15,44 @@ public class TEQ_A8_740 extends ParseSupport {
 
 	public static final TEQ_A8_740 INSTANCE = new TEQ_A8_740();
 
+
 	@Override
 	protected String getOpCode(int data) {
-		return "TEQ.W";
+		return "TEQ";
 	}
+
 	@Override
 	protected int getRd(int data) {
-		return -1;
+		return getShiftInt(data, 8, 4);
 	}
+
 	@Override
 	protected int getRn(int data) {
-		return -1;
+		return getShiftInt(data, 16, 4);
 	}
+
 	@Override
 	protected int getRm(int data) {
-		return -1;
+		return getShiftInt(data, 0, 4);
 	}
+
 	@Override
 	protected int getS(int data) {
-		return -1;
+		return getShiftInt(data, 20, 1);
 	}
+
 	@Override
 	protected int getType(int data) {
-		return -1;
+		return getShiftInt(data, 4, 2);
 	}
+
 	@Override
 	protected int getShift(int data) {
-		return 0;
+		int imm3 = getShiftInt(data, 12, 3);
+		int imm2 = getShiftInt(data, 6, 2);
+		return imm3 << 2 | imm2;
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

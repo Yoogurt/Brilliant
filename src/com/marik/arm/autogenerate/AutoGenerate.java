@@ -313,7 +313,7 @@ public class AutoGenerate {
 
 			pw.println("	@Override");
 			pw.println("	protected String getOpCode(int data) {");
-			pw.println("		return \"" + className.split("_")[0] + ".W\";");
+			pw.println("		return \"" + className.split("_")[0] + "\";");
 			pw.println("	}");
 
 			if (!no_implements) {

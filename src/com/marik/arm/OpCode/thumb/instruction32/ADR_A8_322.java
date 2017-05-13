@@ -16,33 +16,43 @@ public class ADR_A8_322 extends ParseSupport {
 	public static final ADR_A8_322 INSTANCE = new ADR_A8_322();
 
 	@Override
-	protected String getOpCode(int data) {
-		return "ADR.W";
+	public String parse(int data) {
+
+		int type = getShiftInt(data, 21, 5);
+		if (type == 0b10101)
+			return EncodingT2(data);
+
+		if (type == 0b10000)
+			return EncodingT3(data);
+
+		return error(data);
 	}
-	@Override
-	protected int getRd(int data) {
-		return -1;
+
+	private String EncodingT3(int data) {
+		int Rd = getShiftInt(data, 8, 4);
+		int imm12 = getShiftInt(data, 26, 1) << 11
+				| getShiftInt(data, 12, 3) << 8 | getShiftInt(data, 0, 8);
+		StringBuilder sb = new StringBuilder("ADR.W ");
+		sb.append(parseRegister(Rd));
+		sb.append(" , #");
+		sb.append(imm12);
+
+		return sb.toString();
 	}
-	@Override
-	protected int getRn(int data) {
-		return -1;
+
+	private String EncodingT2(int data) {
+
+		int Rd = getShiftInt(data, 8, 4);
+		int imm12 = getShiftInt(data, 26, 1) << 11
+				| getShiftInt(data, 12, 3) << 8 | getShiftInt(data, 0, 8);
+		StringBuilder sb = new StringBuilder("ADR.W ");
+		sb.append(parseRegister(Rd));
+		sb.append(" , #-");
+		sb.append(imm12);
+
+		return sb.toString();
 	}
-	@Override
-	protected int getRm(int data) {
-		return -1;
-	}
-	@Override
-	protected int getS(int data) {
-		return -1;
-	}
-	@Override
-	protected int getType(int data) {
-		return -1;
-	}
-	@Override
-	protected int getShift(int data) {
-		return 0;
-	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

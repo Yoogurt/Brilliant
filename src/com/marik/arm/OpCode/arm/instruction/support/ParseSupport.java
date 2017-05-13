@@ -58,11 +58,9 @@ public abstract class ParseSupport implements ParseTemplate {
 		int type = getType(data);
 
 		if (imm5 != 0) {
-			if (type >= 0) {
+			if (type >= 0)
 				sb.append(TypeFactory.parse(type));
-				parseShift(sb, imm5, true , Rd == -1 && Rn == -1 && Rm == -1 && type == -1);
-			} else
-				parseShift(sb, imm5, false , Rd == -1 && Rn == -1 && Rm == -1 && type == -1);
+			parseShift(sb, imm5);
 		}
 		String comment = getCommnet(data);
 
@@ -72,22 +70,16 @@ public abstract class ParseSupport implements ParseTemplate {
 		return sb.toString();
 	}
 
-	private void parseShift(StringBuilder sb, int imm5, boolean type,
-			boolean dot) {
-		if (type)
-			sb.append(" ");
-		else {
-			if (!dot)
-				sb.append(" , ");
-			if (shifterRegister())
-				sb.append(parseRegister(imm5));
-			else if (shifterRegisterList())
-				sb.append("{").append(parseRegisterList(imm5, -1)).append("}");
-			else if (shifterMenory())
-				sb.append("[").append(parseRegister(imm5)).append("]");
-			else
-				sb.append("#").append(imm5);
-		}
+	private void parseShift(StringBuilder sb, int imm5) {
+		sb.append(" ");
+		if (shifterRegister())
+			sb.append(parseRegister(imm5));
+		else if (shifterRegisterList())
+			sb.append("{").append(parseRegisterList(imm5, -1)).append("}");
+		else if (shifterMenory())
+			sb.append("[").append(parseRegister(imm5)).append("]");
+		else
+			sb.append("#").append(imm5);
 	}
 
 	protected String getOpCode(int data) {

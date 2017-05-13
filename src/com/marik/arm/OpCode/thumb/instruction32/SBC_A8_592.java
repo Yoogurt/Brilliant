@@ -17,32 +17,30 @@ public class SBC_A8_592 extends ParseSupport {
 
 	@Override
 	protected String getOpCode(int data) {
-		return "SBC.W";
+		return "SBC";
 	}
+
 	@Override
 	protected int getRd(int data) {
-		return -1;
+		return getShiftInt(data, 8, 4);
 	}
+
 	@Override
 	protected int getRn(int data) {
-		return -1;
+		return getShiftInt(data, 16, 4);
 	}
-	@Override
-	protected int getRm(int data) {
-		return -1;
-	}
+
 	@Override
 	protected int getS(int data) {
-		return -1;
+		return getShiftInt(data, 20, 1);
 	}
-	@Override
-	protected int getType(int data) {
-		return -1;
-	}
+
 	@Override
 	protected int getShift(int data) {
-		return 0;
+		return thumbExpandImm(getShiftInt(data, 26, 1) << 11
+				| getShiftInt(data, 12, 3) << 8 | getShiftInt(data, 0, 8));
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

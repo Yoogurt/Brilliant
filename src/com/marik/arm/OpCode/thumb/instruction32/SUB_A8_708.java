@@ -16,33 +16,58 @@ public class SUB_A8_708 extends ParseSupport {
 	public static final SUB_A8_708 INSTANCE = new SUB_A8_708();
 
 	@Override
-	protected String getOpCode(int data) {
-		return "SUB.W";
+	public String parse(int data) {
+		int type = getShiftInt(data, 25, 1);
+		if (type == 0b0)
+			return super.parse(data);
+		return EncodingT4(data);
 	}
+
+	private String EncodingT4(int data) {
+
+		StringBuilder sb = new StringBuilder("SUBW");
+		sb.append(" ");
+		int Rd = getShiftInt(data, 8, 4);
+		int Rn = getShiftInt(data, 16, 4);
+		int imm12 = getShiftInt(data, 26, 1) << 11
+				| getShiftInt(data, 12, 3) << 8 | getShiftInt(data, 0, 8);
+
+		sb.append(parseRegister(Rd));
+		sb.append(" , ");
+		sb.append(parseRegister(Rn));
+
+		sb.append(" , #");
+		sb.append(imm12);
+
+		return sb.toString();
+	}
+
+	@Override
+	protected String getOpCode(int data) {
+		return "SUB";
+	}
+
 	@Override
 	protected int getRd(int data) {
-		return -1;
+		return getShiftInt(data, 8, 4);
 	}
+
 	@Override
 	protected int getRn(int data) {
-		return -1;
+		return getShiftInt(data, 16, 4);
 	}
-	@Override
-	protected int getRm(int data) {
-		return -1;
-	}
+
 	@Override
 	protected int getS(int data) {
-		return -1;
+		return getShiftInt(data, 20, 1);
 	}
-	@Override
-	protected int getType(int data) {
-		return -1;
-	}
+
 	@Override
 	protected int getShift(int data) {
-		return 0;
+		return thumbExpandImm(getShiftInt(data, 26, 1) << 11
+				| getShiftInt(data, 12, 3) << 8 | getShiftInt(data, 0, 8));
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

@@ -25,7 +25,6 @@ public class ADD_A8_306 extends ParseSupport {
 			return EncodingT1(data);
 
 		return error(data);
-
 	}
 
 	private String EncodingT1(int data) {

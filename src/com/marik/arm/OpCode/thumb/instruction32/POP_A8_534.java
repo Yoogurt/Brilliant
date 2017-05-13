@@ -15,34 +15,37 @@ public class POP_A8_534 extends ParseSupport {
 
 	public static final POP_A8_534 INSTANCE = new POP_A8_534();
 
+	public String parse(int data) {
+
+		int type = getShiftInt(data, 27, 5);
+		if (type == 0b11101)
+			return super.parse(data);
+		else
+			return EncodingT3(data); // push one register
+	}
+
+	private String EncodingT3(int data) {
+		StringBuilder sb = new StringBuilder("POP.W");
+		sb.append(" ");
+		sb.append(parseRegister(getShiftInt(data, 12, 4)));
+		return sb.toString();
+	}
+
 	@Override
 	protected String getOpCode(int data) {
-		return "POP.W";
+		return "POP";
 	}
-	@Override
-	protected int getRd(int data) {
-		return -1;
-	}
-	@Override
-	protected int getRn(int data) {
-		return -1;
-	}
-	@Override
-	protected int getRm(int data) {
-		return -1;
-	}
-	@Override
-	protected int getS(int data) {
-		return -1;
-	}
-	@Override
-	protected int getType(int data) {
-		return -1;
-	}
+
 	@Override
 	protected int getShift(int data) {
-		return 0;
+		return getShiftInt(data, 0, 16);
 	}
+
+	@Override
+	protected boolean shifterRegisterList() {
+		return true;
+	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

@@ -8,13 +8,13 @@ package com.marik.arm.OpCode.thumb.instruction32;
 import com.marik.arm.OpCode.thumb.instruction32.support.ParseSupport;
 
 @Deprecated
-public class PKH_A8_522 extends ParseSupport {
+public class SSAT16_A8_654 extends ParseSupport {
 
-	public static final PKH_A8_522 INSTANCE = new PKH_A8_522();
+	public static final SSAT16_A8_654 INSTANCE = new SSAT16_A8_654();
 
 	@Override
 	protected String getOpCode(int data) {
-		return "PKH";
+		return "SSAT16";
 	}
 	@Override
 	public void performExecuteCommand(int data) {
