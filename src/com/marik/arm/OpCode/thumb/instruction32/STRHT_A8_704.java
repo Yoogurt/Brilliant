@@ -11,18 +11,26 @@ import static com.marik.vm.OS.*;
 import static com.marik.vm.Register.*;
 import static com.marik.arm.OpCode.OpUtil.*;
 
-public class BXJ_A8_354 extends ParseSupport {
+public class STRHT_A8_704 extends ParseSupport {
 
-	public static final BXJ_A8_354 INSTANCE = new BXJ_A8_354();
-
-	@Override
-	protected String getOpCode(int data) {
-		return "BXJ";
-	}
+	public static final STRHT_A8_704 INSTANCE = new STRHT_A8_704();
 
 	@Override
-	protected int getRm(int data) {
-		return getShiftInt(data, 16, 4);
+	public String parse(int data) {
+
+		StringBuilder sb = new StringBuilder("STRBT.W ");
+		int Rt = getShiftInt(data, 12, 4);
+		int Rn = getShiftInt(data, 16, 4);
+		int imm8 = getShiftInt(data, 0, 8);
+
+		sb.append(parseRegister(Rt));
+		sb.append(" , [");
+		sb.append(parseRegister(Rn));
+		sb.append(" , #");
+		sb.append(imm8);
+		sb.append("]");
+
+		return sb.toString();
 	}
 
 	@Override

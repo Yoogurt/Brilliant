@@ -7,24 +7,15 @@ package com.marik.arm.OpCode.thumb.instruction32;
 
 import com.marik.arm.OpCode.thumb.instruction32.support.ParseSupport;
 
-import static com.marik.vm.OS.*;
-import static com.marik.vm.Register.*;
-import static com.marik.arm.OpCode.OpUtil.*;
+@Deprecated
+public class PLD_A8_526 extends ParseSupport {
 
-public class BXJ_A8_354 extends ParseSupport {
-
-	public static final BXJ_A8_354 INSTANCE = new BXJ_A8_354();
+	public static final PLD_A8_526 INSTANCE = new PLD_A8_526();
 
 	@Override
 	protected String getOpCode(int data) {
-		return "BXJ";
+		return "PLD";
 	}
-
-	@Override
-	protected int getRm(int data) {
-		return getShiftInt(data, 16, 4);
-	}
-
 	@Override
 	public void performExecuteCommand(int data) {
 	}

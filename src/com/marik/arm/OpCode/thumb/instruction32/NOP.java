@@ -6,25 +6,42 @@
 package com.marik.arm.OpCode.thumb.instruction32;
 
 import com.marik.arm.OpCode.thumb.instruction32.support.ParseSupport;
-
 import static com.marik.vm.OS.*;
 import static com.marik.vm.Register.*;
 import static com.marik.arm.OpCode.OpUtil.*;
 
-public class BXJ_A8_354 extends ParseSupport {
+public class NOP extends ParseSupport {
 
-	public static final BXJ_A8_354 INSTANCE = new BXJ_A8_354();
+	public static final NOP INSTANCE = new NOP();
 
 	@Override
 	protected String getOpCode(int data) {
-		return "BXJ";
+		return "NOP";
 	}
-
+	@Override
+	protected int getRd(int data) {
+		return -1;
+	}
+	@Override
+	protected int getRn(int data) {
+		return -1;
+	}
 	@Override
 	protected int getRm(int data) {
-		return getShiftInt(data, 16, 4);
+		return -1;
 	}
-
+	@Override
+	protected int getS(int data) {
+		return -1;
+	}
+	@Override
+	protected int getType(int data) {
+		return -1;
+	}
+	@Override
+	protected int getShift(int data) {
+		return 0;
+	}
 	@Override
 	public void performExecuteCommand(int data) {
 	}

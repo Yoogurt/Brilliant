@@ -11,20 +11,27 @@ import static com.marik.vm.OS.*;
 import static com.marik.vm.Register.*;
 import static com.marik.arm.OpCode.OpUtil.*;
 
-public class BXJ_A8_354 extends ParseSupport {
+public class LDRSB_A8_452 extends ParseSupport {
 
-	public static final BXJ_A8_354 INSTANCE = new BXJ_A8_354();
-
-	@Override
-	protected String getOpCode(int data) {
-		return "BXJ";
-	}
+	public static final LDRSB_A8_452 INSTANCE = new LDRSB_A8_452();
 
 	@Override
-	protected int getRm(int data) {
-		return getShiftInt(data, 16, 4);
-	}
+	public String parse(int data) {
 
+		StringBuilder sb = new StringBuilder("LDRSB.W ");
+		int Rt = getShiftInt(data, 12, 4);
+		int imm12 = getShiftInt(data, 0, 12);
+		boolean add = getShiftInt(data, 23, 1) == 0b1;
+		sb.append(parseRegister(Rt));
+		sb.append(" , [PC , #");
+		if (!add)
+			sb.append("-");
+		sb.append(imm12);
+		sb.append("]");
+
+		return sb.toString();
+
+	}
 	@Override
 	public void performExecuteCommand(int data) {
 	}
