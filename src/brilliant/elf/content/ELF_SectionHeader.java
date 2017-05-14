@@ -1,33 +1,33 @@
-package brilliant.elf;
+package brilliant.elf.content;
 
-import static brilliant.elf.ELF_Constant.ELFUnit.ELF32_Addr;
-import static brilliant.elf.ELF_Constant.ELFUnit.ELF32_Off;
-import static brilliant.elf.ELF_Constant.ELFUnit.ELF32_Word;
-import static brilliant.elf.ELF_Constant.ELFUnit.ELF64_Addr;
-import static brilliant.elf.ELF_Constant.ELFUnit.ELF64_Off;
-import static brilliant.elf.ELF_Constant.ELFUnit.ELF64_Word;
-import static brilliant.elf.ELF_Constant.ELFUnit.ELF64_Xword;
-import static brilliant.elf.ELF_Constant.SectionHeaderContent.SHT_DYMSYM;
-import static brilliant.elf.ELF_Constant.SectionHeaderContent.SHT_DYNAMIC;
-import static brilliant.elf.ELF_Constant.SectionHeaderContent.SHT_HASH;
-import static brilliant.elf.ELF_Constant.SectionHeaderContent.SHT_NOBITS;
-import static brilliant.elf.ELF_Constant.SectionHeaderContent.SHT_NOTE;
-import static brilliant.elf.ELF_Constant.SectionHeaderContent.SHT_NULL;
-import static brilliant.elf.ELF_Constant.SectionHeaderContent.SHT_NUM;
-import static brilliant.elf.ELF_Constant.SectionHeaderContent.SHT_PROGBITS;
-import static brilliant.elf.ELF_Constant.SectionHeaderContent.SHT_REL;
-import static brilliant.elf.ELF_Constant.SectionHeaderContent.SHT_RELA;
-import static brilliant.elf.ELF_Constant.SectionHeaderContent.SHT_SHLIB;
-import static brilliant.elf.ELF_Constant.SectionHeaderContent.SHT_STRTAB;
-import static brilliant.elf.ELF_Constant.SectionHeaderContent.SHT_SYMTAB;
-import static brilliant.elf.LogConstant.DIVISION_LINE;
-import static brilliant.elf.LogConstant.ELF_SECTION_TABLE;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.ELF32_Addr;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.ELF32_Off;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.ELF32_Word;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.ELF64_Addr;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.ELF64_Off;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.ELF64_Word;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.ELF64_Xword;
+import static brilliant.elf.content.ELF_Constant.SectionHeaderContent.SHT_DYMSYM;
+import static brilliant.elf.content.ELF_Constant.SectionHeaderContent.SHT_DYNAMIC;
+import static brilliant.elf.content.ELF_Constant.SectionHeaderContent.SHT_HASH;
+import static brilliant.elf.content.ELF_Constant.SectionHeaderContent.SHT_NOBITS;
+import static brilliant.elf.content.ELF_Constant.SectionHeaderContent.SHT_NOTE;
+import static brilliant.elf.content.ELF_Constant.SectionHeaderContent.SHT_NULL;
+import static brilliant.elf.content.ELF_Constant.SectionHeaderContent.SHT_NUM;
+import static brilliant.elf.content.ELF_Constant.SectionHeaderContent.SHT_PROGBITS;
+import static brilliant.elf.content.ELF_Constant.SectionHeaderContent.SHT_REL;
+import static brilliant.elf.content.ELF_Constant.SectionHeaderContent.SHT_RELA;
+import static brilliant.elf.content.ELF_Constant.SectionHeaderContent.SHT_SHLIB;
+import static brilliant.elf.content.ELF_Constant.SectionHeaderContent.SHT_STRTAB;
+import static brilliant.elf.content.ELF_Constant.SectionHeaderContent.SHT_SYMTAB;
+import static brilliant.elf.content.LogConstant.DIVISION_LINE;
+import static brilliant.elf.content.LogConstant.ELF_SECTION_TABLE;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import brilliant.util.ByteUtil;
-import brilliant.util.Log;
+import brilliant.elf.util.ByteUtil;
+import brilliant.elf.util.Log;
 
 /**
  * @author Yoogurt

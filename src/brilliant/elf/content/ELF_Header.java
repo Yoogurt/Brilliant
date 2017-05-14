@@ -1,35 +1,35 @@
-package brilliant.elf;
+package brilliant.elf.content;
 
-import static brilliant.elf.ELF_Constant.ELFUnit.ELF32_Addr;
-import static brilliant.elf.ELF_Constant.ELFUnit.ELF32_Half;
-import static brilliant.elf.ELF_Constant.ELFUnit.ELF32_Off;
-import static brilliant.elf.ELF_Constant.ELFUnit.ELF32_Word;
-import static brilliant.elf.ELF_Constant.HeaderContent.EI_CALSS;
-import static brilliant.elf.ELF_Constant.HeaderContent.EI_DATA;
-import static brilliant.elf.ELF_Constant.HeaderContent.EI_NIDENT;
-import static brilliant.elf.ELF_Constant.HeaderContent.ELFCLASS32;
-import static brilliant.elf.ELF_Constant.HeaderContent.ELFCLASS64;
-import static brilliant.elf.ELF_Constant.HeaderContent.ELFDATA2LSB;
-import static brilliant.elf.ELF_Constant.HeaderContent.ELFDATA2MSB;
-import static brilliant.elf.ELF_Constant.HeaderContent.ELFMagicCode;
-import static brilliant.elf.ELF_Constant.HeaderContent.EM_386;
-import static brilliant.elf.ELF_Constant.HeaderContent.EM_AARCH64;
-import static brilliant.elf.ELF_Constant.HeaderContent.EM_ARM;
-import static brilliant.elf.ELF_Constant.HeaderContent.EM_MIPS;
-import static brilliant.elf.ELF_Constant.HeaderContent.EM_X86_64;
-import static brilliant.elf.ELF_Constant.HeaderContent.ET_CORE;
-import static brilliant.elf.ELF_Constant.HeaderContent.ET_DYN;
-import static brilliant.elf.ELF_Constant.HeaderContent.ET_EXEC;
-import static brilliant.elf.ELF_Constant.HeaderContent.ET_HIPROC;
-import static brilliant.elf.ELF_Constant.HeaderContent.ET_LOPROC;
-import static brilliant.elf.ELF_Constant.HeaderContent.ET_NONE;
-import static brilliant.elf.ELF_Constant.HeaderContent.ET_REL;
-import static brilliant.elf.ELF_Constant.HeaderContent.EV_CURRENT;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.ELF32_Addr;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.ELF32_Half;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.ELF32_Off;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.ELF32_Word;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.EI_CALSS;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.EI_DATA;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.EI_NIDENT;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.ELFCLASS32;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.ELFCLASS64;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.ELFDATA2LSB;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.ELFDATA2MSB;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.ELFMagicCode;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.EM_386;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.EM_AARCH64;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.EM_ARM;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.EM_MIPS;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.EM_X86_64;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.ET_CORE;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.ET_DYN;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.ET_EXEC;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.ET_HIPROC;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.ET_LOPROC;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.ET_NONE;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.ET_REL;
+import static brilliant.elf.content.ELF_Constant.HeaderContent.EV_CURRENT;
 
 import java.io.RandomAccessFile;
 
-import brilliant.util.ByteUtil;
-import brilliant.util.Log;
+import brilliant.elf.util.ByteUtil;
+import brilliant.elf.util.Log;
 
 /**
  * @author Yoogurt

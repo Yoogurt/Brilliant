@@ -1,10 +1,10 @@
-package brilliant.elf;
+package brilliant.elf.content;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import brilliant.elf.ELF_SectionHeader.ELF_Shdr;
-import brilliant.util.ByteUtil;
+import brilliant.elf.content.ELF_SectionHeader.ELF_Shdr;
+import brilliant.elf.util.ByteUtil;
 
 /**
  * @author Yoogurt SectionHeaders are useless when we parse a dynamic library or

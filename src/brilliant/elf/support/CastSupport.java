@@ -1,4 +1,4 @@
-package brilliant.implement;
+package brilliant.elf.support;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;

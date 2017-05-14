@@ -1,10 +1,10 @@
-package brilliant.vm;
+package brilliant.elf.vm;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import brilliant.util.ByteUtil;
+import brilliant.elf.util.ByteUtil;
 
 class MemoryMapper {
 

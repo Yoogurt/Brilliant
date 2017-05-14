@@ -7,7 +7,7 @@ package brilliant.arm.OpCode.thumb.instruction32;
 
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
 import static brilliant.arm.OpCode.OpUtil.*;
-import static brilliant.vm.OS.*;
+import static brilliant.elf.vm.OS.*;
 
 public class LDMDB_A8_402 extends ParseSupport {
 

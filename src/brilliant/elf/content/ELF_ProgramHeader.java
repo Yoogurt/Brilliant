@@ -1,25 +1,25 @@
-package brilliant.elf;
+package brilliant.elf.content;
 
-import static brilliant.elf.ELF_Constant.ELFUnit.ELF32_Addr;
-import static brilliant.elf.ELF_Constant.ELFUnit.ELF32_Off;
-import static brilliant.elf.ELF_Constant.ELFUnit.ELF32_Word;
-import static brilliant.elf.ELF_Constant.ProgramHeaderContent.PT_DYNAMIC;
-import static brilliant.elf.ELF_Constant.ProgramHeaderContent.PT_GUN_STACK;
-import static brilliant.elf.ELF_Constant.ProgramHeaderContent.PT_INTERP;
-import static brilliant.elf.ELF_Constant.ProgramHeaderContent.PT_LOAD;
-import static brilliant.elf.ELF_Constant.ProgramHeaderContent.PT_NOTE;
-import static brilliant.elf.ELF_Constant.ProgramHeaderContent.PT_NULL;
-import static brilliant.elf.ELF_Constant.ProgramHeaderContent.PT_PHDR;
-import static brilliant.elf.ELF_Constant.ProgramHeaderContent.PT_SHLIB;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.ELF32_Addr;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.ELF32_Off;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.ELF32_Word;
+import static brilliant.elf.content.ELF_Constant.ProgramHeaderContent.PT_DYNAMIC;
+import static brilliant.elf.content.ELF_Constant.ProgramHeaderContent.PT_GUN_STACK;
+import static brilliant.elf.content.ELF_Constant.ProgramHeaderContent.PT_INTERP;
+import static brilliant.elf.content.ELF_Constant.ProgramHeaderContent.PT_LOAD;
+import static brilliant.elf.content.ELF_Constant.ProgramHeaderContent.PT_NOTE;
+import static brilliant.elf.content.ELF_Constant.ProgramHeaderContent.PT_NULL;
+import static brilliant.elf.content.ELF_Constant.ProgramHeaderContent.PT_PHDR;
+import static brilliant.elf.content.ELF_Constant.ProgramHeaderContent.PT_SHLIB;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
-import brilliant.implement.CastSupport;
-import brilliant.util.ByteUtil;
-import brilliant.util.Log;
+import brilliant.elf.support.CastSupport;
+import brilliant.elf.util.ByteUtil;
+import brilliant.elf.util.Log;
 
 class ELF_ProgramHeader {
 

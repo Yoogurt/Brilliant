@@ -1,4 +1,4 @@
-package brilliant.util;
+package brilliant.elf.util;
 
 public class BytesBuilder {
 

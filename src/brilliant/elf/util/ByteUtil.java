@@ -1,9 +1,9 @@
-package brilliant.util;
+package brilliant.elf.util;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import brilliant.vm.OS;
+import brilliant.elf.vm.OS;
 
 public class ByteUtil {
 

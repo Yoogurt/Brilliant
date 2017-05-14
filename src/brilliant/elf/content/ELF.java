@@ -1,35 +1,35 @@
-package brilliant.elf;
+package brilliant.elf.content;
 
-import static brilliant.elf.ELF_Constant.DT_RelType.R_ARM_ABS32;
-import static brilliant.elf.ELF_Constant.DT_RelType.R_ARM_COPY;
-import static brilliant.elf.ELF_Constant.DT_RelType.R_ARM_GLOB_DAT;
-import static brilliant.elf.ELF_Constant.DT_RelType.R_ARM_IRELATIVE;
-import static brilliant.elf.ELF_Constant.DT_RelType.R_ARM_JUMP_SLOT;
-import static brilliant.elf.ELF_Constant.DT_RelType.R_ARM_REL32;
-import static brilliant.elf.ELF_Constant.DT_RelType.R_ARM_RELATIVE;
-import static brilliant.elf.ELF_Constant.ELFUnit.ELF32_Addr;
-import static brilliant.elf.ELF_Constant.ELFUnit.uint32_t;
-import static brilliant.elf.ELF_Constant.SHN_Info.SHN_UNDEF;
-import static brilliant.elf.ELF_Constant.STB_Info.STB_GLOBAL;
-import static brilliant.elf.ELF_Constant.STB_Info.STB_LOCAL;
-import static brilliant.elf.ELF_Constant.STB_Info.STB_WEAK;
-import static brilliant.elf.ELF_Constant.ST_TYPE.STT_FILE;
-import static brilliant.elf.ELF_Constant.ST_TYPE.STT_FUNC;
-import static brilliant.elf.ELF_Constant.ST_TYPE.STT_HIPROC;
-import static brilliant.elf.ELF_Constant.ST_TYPE.STT_LOPROC;
-import static brilliant.elf.ELF_Constant.ST_TYPE.STT_NOTYPE;
-import static brilliant.elf.ELF_Constant.ST_TYPE.STT_OBJECT;
-import static brilliant.elf.ELF_Constant.ST_TYPE.STT_SECTION;
-import static brilliant.elf.ELF_Definition.ELF_R_SYM;
-import static brilliant.elf.ELF_Definition.ELF_R_TYPE;
-import static brilliant.elf.ELF_Definition.ELF_ST_BIND;
-import static brilliant.elf.ELF_Definition.ELF_ST_TYPE;
-import static brilliant.vm.OS.MAP_FIXED;
-import static brilliant.vm.OS.PAGE_END;
-import static brilliant.vm.OS.PAGE_START;
-import static brilliant.vm.OS.getMemory;
-import static brilliant.vm.OS.mmap;
-import static brilliant.vm.OS.unmmap;
+import static brilliant.elf.content.ELF_Constant.DT_RelType.R_ARM_ABS32;
+import static brilliant.elf.content.ELF_Constant.DT_RelType.R_ARM_COPY;
+import static brilliant.elf.content.ELF_Constant.DT_RelType.R_ARM_GLOB_DAT;
+import static brilliant.elf.content.ELF_Constant.DT_RelType.R_ARM_IRELATIVE;
+import static brilliant.elf.content.ELF_Constant.DT_RelType.R_ARM_JUMP_SLOT;
+import static brilliant.elf.content.ELF_Constant.DT_RelType.R_ARM_REL32;
+import static brilliant.elf.content.ELF_Constant.DT_RelType.R_ARM_RELATIVE;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.ELF32_Addr;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.uint32_t;
+import static brilliant.elf.content.ELF_Constant.SHN_Info.SHN_UNDEF;
+import static brilliant.elf.content.ELF_Constant.STB_Info.STB_GLOBAL;
+import static brilliant.elf.content.ELF_Constant.STB_Info.STB_LOCAL;
+import static brilliant.elf.content.ELF_Constant.STB_Info.STB_WEAK;
+import static brilliant.elf.content.ELF_Constant.ST_TYPE.STT_FILE;
+import static brilliant.elf.content.ELF_Constant.ST_TYPE.STT_FUNC;
+import static brilliant.elf.content.ELF_Constant.ST_TYPE.STT_HIPROC;
+import static brilliant.elf.content.ELF_Constant.ST_TYPE.STT_LOPROC;
+import static brilliant.elf.content.ELF_Constant.ST_TYPE.STT_NOTYPE;
+import static brilliant.elf.content.ELF_Constant.ST_TYPE.STT_OBJECT;
+import static brilliant.elf.content.ELF_Constant.ST_TYPE.STT_SECTION;
+import static brilliant.elf.content.ELF_Definition.ELF_R_SYM;
+import static brilliant.elf.content.ELF_Definition.ELF_R_TYPE;
+import static brilliant.elf.content.ELF_Definition.ELF_ST_BIND;
+import static brilliant.elf.content.ELF_Definition.ELF_ST_TYPE;
+import static brilliant.elf.vm.OS.MAP_FIXED;
+import static brilliant.elf.vm.OS.PAGE_END;
+import static brilliant.elf.vm.OS.PAGE_START;
+import static brilliant.elf.vm.OS.getMemory;
+import static brilliant.elf.vm.OS.mmap;
+import static brilliant.elf.vm.OS.unmmap;
 
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -42,12 +42,12 @@ import java.util.TreeSet;
 
 import javax.activation.UnsupportedDataTypeException;
 
-import brilliant.elf.ELF_Dynamic.Elf_Sym;
-import brilliant.elf.ELF_ProgramHeader.ELF_Phdr;
-import brilliant.elf.ELF_Relocate.Elf_rel;
-import brilliant.util.ByteUtil;
-import brilliant.util.Log;
-import brilliant.vm.OS;
+import brilliant.elf.content.ELF_Dynamic.Elf_Sym;
+import brilliant.elf.content.ELF_ProgramHeader.ELF_Phdr;
+import brilliant.elf.content.ELF_Relocate.Elf_rel;
+import brilliant.elf.util.ByteUtil;
+import brilliant.elf.util.Log;
+import brilliant.elf.vm.OS;
 
 /**
  * Construct a new Elf decoder which only support arm/32bit

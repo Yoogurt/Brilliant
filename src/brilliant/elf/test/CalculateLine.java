@@ -1,4 +1,4 @@
-package brilliant.test;
+package brilliant.elf.test;
 
 import java.io.BufferedReader;
 import java.io.File;

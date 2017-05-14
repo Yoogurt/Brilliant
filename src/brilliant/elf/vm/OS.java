@@ -1,9 +1,9 @@
-package brilliant.vm;
+package brilliant.elf.vm;
 
 import java.io.PrintStream;
 import java.io.RandomAccessFile;
 
-import brilliant.util.ByteUtil;
+import brilliant.elf.util.ByteUtil;
 
 public class OS {
 

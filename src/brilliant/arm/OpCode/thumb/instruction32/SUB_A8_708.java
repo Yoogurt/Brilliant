@@ -7,8 +7,8 @@ package brilliant.arm.OpCode.thumb.instruction32;
 
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
 import static brilliant.arm.OpCode.OpUtil.*;
-import static brilliant.vm.OS.*;
-import static brilliant.vm.Register.*;
+import static brilliant.elf.vm.OS.*;
+import static brilliant.elf.vm.Register.*;
 
 public class SUB_A8_708 extends ParseSupport {
 

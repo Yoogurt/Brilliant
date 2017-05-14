@@ -9,8 +9,8 @@ import brilliant.arm.OpCode.CondFactory;
 import brilliant.arm.OpCode.arm.instructionSet.factory.TypeFactory;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
 import static brilliant.arm.OpCode.OpUtil.*;
-import static brilliant.vm.OS.*;
-import static brilliant.vm.Register.*;
+import static brilliant.elf.vm.OS.*;
+import static brilliant.elf.vm.Register.*;
 
 public class STRB_A8_678 extends ParseSupport {
 

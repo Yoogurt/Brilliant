@@ -2,8 +2,8 @@ package brilliant.arm.OpCode;
 
 import brilliant.arm.OpCode.arm.instructionSet.ArmFactory;
 import brilliant.arm.OpCode.thumb.ThumbFactory;
-import brilliant.vm.Register;
-import brilliant.vm.Register.RegisterIllegalStateExeception;
+import brilliant.elf.vm.Register;
+import brilliant.elf.vm.Register.RegisterIllegalStateExeception;
 
 public class OpCode {
 

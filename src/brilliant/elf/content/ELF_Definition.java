@@ -1,6 +1,6 @@
-package brilliant.elf;
+package brilliant.elf.content;
 
-import brilliant.util.ByteUtil;
+import brilliant.elf.util.ByteUtil;
 
 class ELF_Definition {
 

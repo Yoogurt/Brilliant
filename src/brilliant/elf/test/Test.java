@@ -1,6 +1,6 @@
-package brilliant.test;
+package brilliant.elf.test;
 
-import brilliant.elf.ELF;
+import brilliant.elf.content.ELF;
 
 public class Test {
 

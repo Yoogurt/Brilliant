@@ -1,19 +1,19 @@
-package brilliant.elf;
+package brilliant.elf.content;
 
-import static brilliant.elf.ELF_Constant.DT_RelType.R_ARM_GLOB_DAT;
-import static brilliant.elf.ELF_Constant.DT_RelType.R_ARM_JUMP_SLOT;
-import static brilliant.elf.ELF_Constant.DT_RelType.R_ARM_RELATIVE;
-import static brilliant.elf.ELF_Constant.ELFUnit.ELF32_Addr;
-import static brilliant.elf.ELF_Constant.ELFUnit.ELF32_Sword;
-import static brilliant.elf.ELF_Constant.ELFUnit.ELF32_Word;
-import static brilliant.elf.ELF_Definition.ELF_R_SYM;
-import static brilliant.elf.ELF_Definition.ELF_R_TYPE;
+import static brilliant.elf.content.ELF_Constant.DT_RelType.R_ARM_GLOB_DAT;
+import static brilliant.elf.content.ELF_Constant.DT_RelType.R_ARM_JUMP_SLOT;
+import static brilliant.elf.content.ELF_Constant.DT_RelType.R_ARM_RELATIVE;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.ELF32_Addr;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.ELF32_Sword;
+import static brilliant.elf.content.ELF_Constant.ELFUnit.ELF32_Word;
+import static brilliant.elf.content.ELF_Definition.ELF_R_SYM;
+import static brilliant.elf.content.ELF_Definition.ELF_R_TYPE;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import brilliant.util.ByteUtil;
-import brilliant.util.Log;
+import brilliant.elf.util.ByteUtil;
+import brilliant.elf.util.Log;
 
 class ELF_Relocate {
 

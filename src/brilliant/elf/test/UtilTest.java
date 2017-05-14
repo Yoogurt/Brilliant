@@ -1,7 +1,7 @@
-package brilliant.test;
+package brilliant.elf.test;
 
-import brilliant.util.ByteUtil;
-import brilliant.vm.OS;
+import brilliant.elf.util.ByteUtil;
+import brilliant.elf.vm.OS;
 
 @SuppressWarnings("all")
 public class UtilTest {

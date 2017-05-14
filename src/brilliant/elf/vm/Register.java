@@ -1,4 +1,4 @@
-package brilliant.vm;
+package brilliant.elf.vm;
 
 public class Register {
 

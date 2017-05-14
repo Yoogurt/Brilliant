@@ -1,4 +1,4 @@
-package brilliant.elf;
+package brilliant.elf.content;
 
 public class ELFDecodeException extends Exception {
 

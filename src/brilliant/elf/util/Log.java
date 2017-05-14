@@ -1,4 +1,4 @@
-package brilliant.util;
+package brilliant.elf.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
