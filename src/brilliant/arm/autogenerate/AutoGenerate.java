@@ -1,4 +1,4 @@
-package brilliant.arm.OpCode.autogenerate;
+package brilliant.arm.autogenerate;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,9 +22,9 @@ public class AutoGenerate {
 
 	public static void main(String[] args) {
 		try {
-			// generateThumb16Class();
+			generateThumb16Class();
 			generateThumb32Class();
-			// generateArmClass();
+			generateArmClass();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -145,8 +145,8 @@ public class AutoGenerate {
 			pw.println("import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;");
 
 			if (!no_implements) {
-				pw.println("import static brilliant.vm.OS.*;");
-				pw.println("import static brilliant.vm.Register.*;");
+				pw.println("import static brilliant.elf.vm.OS.*;");
+				pw.println("import static brilliant.elf.vm.Register.*;");
 				pw.println("import static brilliant.arm.OpCode.OpUtil.*;");
 			}
 
@@ -230,9 +230,9 @@ public class AutoGenerate {
 			pw.println("import brilliant.arm.OpCode.thumb.instruction16.support.ParseSupport;");
 
 			if (!no_implements) {
-				pw.println("import static brilliant.vm.OS.*;");
+				pw.println("import static brilliant.elf.vm.OS.*;");
 				pw.println("import static brilliant.vm.Register.*;");
-				pw.println("import static brilliant.arm.OpCode.OpUtil.*;");
+				pw.println("import static brilliant.elf.arm.OpCode.OpUtil.*;");
 			}
 			pw.println();
 
@@ -296,8 +296,8 @@ public class AutoGenerate {
 			pw.println("import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;");
 
 			if (!no_implements) {
-				pw.println("import static brilliant.vm.OS.*;");
-				pw.println("import static brilliant.vm.Register.*;");
+				pw.println("import static brilliant.elf.vm.OS.*;");
+				pw.println("import static brilliant.elf.vm.Register.*;");
 				pw.println("import static brilliant.arm.OpCode.OpUtil.*;");
 			}
 			pw.println();

@@ -1,4 +1,4 @@
-package brilliant.arm.OpCode.arm.instruction.factory;
+package brilliant.arm.OpCode;
 
 public class ShiftFactory {
 	public static String parse(int type, int imm5) {

@@ -14,7 +14,6 @@ public class LDRBT_A8_424 extends ParseSupport {
 
 	public static final LDRBT_A8_424 INSTANCE = new LDRBT_A8_424();
 
-
 	@Override
 	public String parse(int data) {
 

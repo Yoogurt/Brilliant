@@ -1,7 +1,7 @@
 package brilliant.arm.OpCode.thumb.instruction16.support;
 
 import brilliant.arm.OpCode.ParseTemplate;
-import brilliant.arm.OpCode.arm.instructionSet.factory.ConditionParseFactory;
+import brilliant.arm.OpCode.arm.instructionSet.ConditionParseFactory;
 
 public abstract class ParseSupport implements ParseTemplate {
 

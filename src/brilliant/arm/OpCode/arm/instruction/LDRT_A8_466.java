@@ -8,8 +8,8 @@ package brilliant.arm.OpCode.arm.instruction;
 import static brilliant.arm.OpCode.OpUtil.getShiftInt;
 import static brilliant.arm.OpCode.OpUtil.parseRegister;
 import brilliant.arm.OpCode.CondFactory;
+import brilliant.arm.OpCode.TypeFactory;
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
-import brilliant.arm.OpCode.arm.instructionSet.factory.TypeFactory;
 
 public class LDRT_A8_466 extends ParseSupport {
 

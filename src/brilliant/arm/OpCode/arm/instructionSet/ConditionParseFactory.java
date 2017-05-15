@@ -1,13 +1,8 @@
-package brilliant.arm.OpCode.arm.instructionSet.factory;
+package brilliant.arm.OpCode.arm.instructionSet;
 
 import static brilliant.arm.OpCode.OpUtil.*;
 import brilliant.arm.OpCode.ParseTemplate;
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
-import brilliant.arm.OpCode.arm.instructionSet.BranchWithLinkAndBlockDataTransfer_A5_214;
-import brilliant.arm.OpCode.arm.instructionSet.CoprocessorInstructionAndSupervisorCall_A5_215;
-import brilliant.arm.OpCode.arm.instructionSet.DataProcessingAndMiscellaneousInstructions_A5_196;
-import brilliant.arm.OpCode.arm.instructionSet.LoadAndStore_A5_208;
-import brilliant.arm.OpCode.arm.instructionSet.MediaInstruction_A5_209;
 
 public class ConditionParseFactory {
 

@@ -5,7 +5,7 @@ import static brilliant.arm.OpCode.OpUtil.parseRegister;
 import static brilliant.arm.OpCode.OpUtil.parseRegisterList;
 import brilliant.arm.OpCode.CondFactory;
 import brilliant.arm.OpCode.ParseTemplate;
-import brilliant.arm.OpCode.arm.instructionSet.factory.TypeFactory;
+import brilliant.arm.OpCode.TypeFactory;
 
 public abstract class ParseSupport implements ParseTemplate {
 

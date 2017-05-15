@@ -6,7 +6,7 @@
 package brilliant.arm.OpCode.thumb.instruction32;
 
 import brilliant.arm.OpCode.CondFactory;
-import brilliant.arm.OpCode.arm.instructionSet.factory.TypeFactory;
+import brilliant.arm.OpCode.TypeFactory;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
 import static brilliant.arm.OpCode.OpUtil.*;
 import static brilliant.elf.vm.OS.*;

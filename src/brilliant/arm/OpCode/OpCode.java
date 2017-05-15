@@ -61,8 +61,8 @@ public class OpCode {
 	public static void main(String[] args) {
 		// access thumb mode
 		// decodeArm1(0xea00002a);
-		int comm1 = 0b1111100010111111;
-		int comm2 = 0b0000000000000011;
+		int comm1 = 0b1111101010010000;
+		int comm2 = 0b1111000110010001;
 		decodeThumb1(comm1, comm2);
 		System.out.println("0x" + Integer.toHexString(comm1) + "  0x"
 				+ Integer.toHexString(comm2));
