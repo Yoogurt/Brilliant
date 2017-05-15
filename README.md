@@ -1,5 +1,5 @@
 # Brilliant
-## Brilliant framework shows how do elf file works and run 
+## Brilliant framework shows how does elf file work and run 
 
 ### Arm architectures 
 ### all of above had supported
