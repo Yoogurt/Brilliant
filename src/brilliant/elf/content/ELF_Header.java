@@ -36,7 +36,7 @@ import brilliant.elf.util.Log;
  *
  */
 @SuppressWarnings("all")
-class ELF_Header {
+final class ELF_Header {
 
 	/**
 	 * ELF Identification 00 - 0F(32、64 bit)

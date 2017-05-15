@@ -28,10 +28,7 @@ public class LDR_A8_410 extends ParseSupport {
 
 	@Override
 	protected String getRm(int data) {
-		return "label_#" + (getShiftInt(data, 0, 8) << 2) + " (LDR "
-				+ parseRegister(getShiftInt(data, 8, 3))
-				+ " , =[align(PC , 4) , #" + (getShiftInt(data, 0, 8) << 2)
-				+ "])";
+		return "#" + (getShiftInt(data, 0, 8) << 2);
 	}
 
 	@Override

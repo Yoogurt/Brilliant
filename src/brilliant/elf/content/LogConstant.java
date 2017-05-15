@@ -1,6 +1,6 @@
 package brilliant.elf.content;
 
-public class LogConstant {
+public final class LogConstant {
 
 	public static final String DIVISION_LINE = "----------------------------------------------------";
 

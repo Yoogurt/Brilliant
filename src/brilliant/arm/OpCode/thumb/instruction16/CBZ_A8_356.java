@@ -6,15 +6,30 @@
 package brilliant.arm.OpCode.thumb.instruction16;
 
 import brilliant.arm.OpCode.thumb.instruction16.support.ParseSupport;
+import static brilliant.arm.OpCode.OpUtil.*;
 
-
-@Deprecated
 public class CBZ_A8_356 extends ParseSupport {
 
 	public static final CBZ_A8_356 INSTANCE = new CBZ_A8_356();
 
-	public String parse(int data) {
-		throw new UnsupportedOperationException("CBZ no implements");
+	@Override
+	protected String getOpCode(int data) {
+
+		int n = getShiftInt(data, 11, 1);
+
+		if (n == 0b1)
+			return "CBNZ";
+		return "CBZ";
+	}
+
+	@Override
+	protected String getRn(int data) {
+		return parseRegister(getShiftInt(data, 0, 3));
+	}
+
+	@Override
+	protected String getRm(int data) {
+		return "#" + (getShiftInt(data, 3, 5) << 1);
 	}
 
 	@Override

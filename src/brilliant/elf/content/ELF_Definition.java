@@ -2,7 +2,7 @@ package brilliant.elf.content;
 
 import brilliant.elf.util.ByteUtil;
 
-class ELF_Definition {
+final class ELF_Definition {
 
 	public static int ELF_ST_BIND(int i) {
 		return i >> 4;

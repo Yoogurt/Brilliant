@@ -36,7 +36,7 @@ import brilliant.elf.util.Log;
  *         executable. for Debug Only
  */
 @Deprecated
-class ELF_SectionHeader {
+final class ELF_SectionHeader {
 
 	public class ELF_Shdr {
 

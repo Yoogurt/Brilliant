@@ -2,6 +2,7 @@ package brilliant.arm.OpCode;
 
 import brilliant.arm.OpCode.arm.instructionSet.ArmFactory;
 import brilliant.arm.OpCode.thumb.ThumbFactory;
+import brilliant.elf.util.ByteUtil;
 import brilliant.elf.vm.Register;
 import brilliant.elf.vm.Register.RegisterIllegalStateExeception;
 
@@ -22,27 +23,122 @@ public class OpCode {
 	}
 
 	private static void decodeArm(int[] data) {
-		for (int i : data)
-			System.out.println(ArmFactory.parse(i).parse(i));
+		decodeArm(data, 0, data.length);
+	}
+
+	private static void decodeArm(int[] data, int start, int size) {
+		int current;
+		for (int i = 0; i < size; i++) {
+			current = i + start;
+			System.out.println(ArmFactory.parse(current).parse(current));
+		}
 	}
 
 	public static void decodeThumb(int[] data) {
+		decodeThumb(data, 0, data.length);
+	}
 
-		int length = data.length;
-		for (int i = 0; i < length; i++) {
+	public static void decodeThumb(byte[] data, int start, int size,
+			boolean isLittleEndian) {
 
-			ParseTemplate opcode = ThumbFactory.parse(data[i], true);
+		int current;
 
-			if (opcode != null)
-				System.out.println(opcode.parse(data[i]));
+		for (int i = 0; i < size; i += 2) {
+
+			current = start + i;
+
+			int opCode = ByteUtil.bytes2Int32(data, current, 2, isLittleEndian);
+
+			ParseTemplate ret = ThumbFactory.parse(opCode, true);
+
+			if (ret != null)
+				System.out.println(ret.parse(opCode));
 			else {
 
-				if (i + 1 >= length)
+				if (i + 2 >= size)
 					throw new IllegalArgumentException(
 							"Unable to decode instruction "
-									+ Integer.toBinaryString(data[i]));
+									+ Integer.toBinaryString(opCode));
 
-				int command = data[i] << 16 | data[++i];
+				int command = (opCode << 16)
+						| ByteUtil.bytes2Int32(data, current + 2, 2,
+								isLittleEndian);
+
+				i += 2;
+				ret = ThumbFactory.parse(command, false);
+				if (ret != null)
+					System.out.println(ret.parse(command));
+				else
+					throw new IllegalArgumentException(
+							"Unable to decode instruction "
+									+ Integer.toBinaryString(command));
+			}
+		}
+	}
+
+	public static void decodeThumbWithHex(byte[] data, int start, int size,
+			boolean isLittleEndian) {
+
+		int current;
+
+		for (int i = 0; i < size; i += 2) {
+
+			current = start + i;
+
+			int opCode = ByteUtil.bytes2Int32(data, current, 2, isLittleEndian);
+
+			ParseTemplate ret = ThumbFactory.parse(opCode, true);
+			
+			System.out.print(Integer.toHexString(current) + " : ");
+
+			if (ret != null)
+				System.out.println(ByteUtil.bytes2Hex(ByteUtil
+						.int2bytes(opCode)) + "  " + ret.parse(opCode));
+			else {
+
+				if (i + 2 >= size)
+					throw new IllegalArgumentException(
+							"Unable to decode instruction "
+									+ Integer.toBinaryString(opCode));
+
+				int command = (opCode << 16)
+						| ByteUtil.bytes2Int32(data, current + 2, 2,
+								isLittleEndian);
+
+				i += 2;
+				ret = ThumbFactory.parse(command, false);
+				if (ret != null)
+					System.out.println(ByteUtil.bytes2Hex(ByteUtil
+							.int2bytes(opCode)) + "  " + ret.parse(command));
+				else
+					throw new IllegalArgumentException(
+							"Unable to decode instruction "
+									+ Integer.toBinaryString(command));
+			}
+		}
+	}
+
+	public static void decodeThumb(int[] data, int start, int size) {
+
+		int current;
+
+		for (int i = 0; i < size; i++) {
+
+			current = start + i;
+
+			ParseTemplate opcode = ThumbFactory.parse(data[current], true);
+
+			if (opcode != null)
+				System.out.println(opcode.parse(data[current]));
+			else {
+
+				if (i + 1 >= size)
+					throw new IllegalArgumentException(
+							"Unable to decode instruction "
+									+ Integer.toBinaryString(data[current]));
+
+				int command = data[current] << 16 | data[1 + current];
+				i++;
 				opcode = ThumbFactory.parse(command, false);
 				if (opcode != null)
 					System.out.println(opcode.parse(command));
@@ -54,18 +150,12 @@ public class OpCode {
 		}
 	}
 
-	public static ParseTemplate decodeThumb32(int data) {
-		throw new UnsupportedOperationException("Thumb 32 do not implements");
-	}
-
 	public static void main(String[] args) {
 		// access thumb mode
 		// decodeArm1(0xea00002a);
-		int comm1 = 0b1111101010010000;
-		int comm2 = 0b1111000110010001;
-		decodeThumb1(comm1, comm2);
-		System.out.println("0x" + Integer.toHexString(comm1) + "  0x"
-				+ Integer.toHexString(comm2));
+		byte[] comm = { (byte) 0xc0, (byte) 0xfb, (byte) 0xd1, (byte) 0x10,
+				(byte) 0x90, (byte) 0xfa, (byte) 0x90, (byte) 0xf1 };
+		decodeThumb(comm, 0, comm.length, true);
 	}
 
 	private static void decodeArm1(int... opcode) {

@@ -10,13 +10,13 @@ import static brilliant.elf.vm.OS.*;
 import static brilliant.elf.vm.Register.*;
 import static brilliant.arm.OpCode.OpUtil.*;
 
-public class MUL_A8_502 extends ParseSupport {
+public class UDIV_A8_760 extends ParseSupport {
 
-	public static final MUL_A8_502 INSTANCE = new MUL_A8_502();
+	public static final UDIV_A8_760 INSTANCE = new UDIV_A8_760();
 
 	@Override
 	protected String getOpCode(int data) {
-		return "MUL";
+		return "UDIV";
 	}
 
 	@Override

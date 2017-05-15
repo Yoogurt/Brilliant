@@ -52,15 +52,18 @@ public abstract class ParseSupport implements ParseTemplate {
 		if (Rm != -1) {
 			if (Rd != -1 || Rn != -1)
 				sb.append(" , ");
-			sb.append(parseRegister(Rm)).append(" ");
+			sb.append(parseRegister(Rm));
 		}
 
 		int imm5 = getShift(data);
 		int type = getType(data);
 
 		if (imm5 != 0) {
-			if (type >= 0)
+			if (type >= 0){
+				sb.append(" ");
 				sb.append(TypeFactory.parse(type));
+				sb.append(" ");
+			}
 			parseShift(sb, imm5);
 		}
 		String comment = getCommnet(data);
@@ -72,10 +75,11 @@ public abstract class ParseSupport implements ParseTemplate {
 	}
 
 	private void parseShift(StringBuilder sb, int imm5) {
-		sb.append(" ");
 
-		if (shifterRegister())
+		if (shifterRegister()){
+			sb.append(" , ");
 			sb.append(parseRegister(imm5));
+		}
 		else if (shifterRegisterList())
 			sb.append("{").append(parseRegisterList(imm5, -1)).append("}");
 		else if (shifterMenory())

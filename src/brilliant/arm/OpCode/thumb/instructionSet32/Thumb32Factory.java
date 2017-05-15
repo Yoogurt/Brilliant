@@ -49,7 +49,7 @@ public class Thumb32Factory {
 			if (assert0(op2, 2, 5, 6) && assert1(op2, 0, 1))
 				return LoadHalfwordA6_240.parse(data);
 
-			if (assert0(op2, 1, 5, 6) && assert1(op1, 0, 2))
+			if (assert0(op2, 1, 5, 6) && assert1(op2, 0, 2))
 				return LoadWordA6_239.parse(data);
 
 			if (assert0(op2, 5, 6) && assert1(op2, 0, 1, 2))

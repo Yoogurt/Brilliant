@@ -1,6 +1,6 @@
 package brilliant.elf.content;
 
-public class ELF_Constant {
+public final class ELF_Constant {
 
 	public static class ELFUnit {
 

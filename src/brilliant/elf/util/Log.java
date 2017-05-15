@@ -6,19 +6,20 @@ import java.io.PrintStream;
 
 public class Log {
 
-	public static PrintStream out;
-	
-	static{
-		
-		try {
-			out = new PrintStream(new File("C:/Users/Administrator/Desktop/libdvm.dump"));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-	}
+	public static PrintStream out = System.out;
 
-	public static boolean DEBUG = true;
+	// static{
+	//
+	// try {
+	// out = new PrintStream(new
+	// File("C:/Users/Administrator/Desktop/libdvm.dump"));
+	// } catch (FileNotFoundException e) {
+	// e.printStackTrace();
+	// }
+	//
+	// }
+
+	public static boolean DEBUG = false;
 
 	public static void i(String msg) {
 		if (DEBUG)

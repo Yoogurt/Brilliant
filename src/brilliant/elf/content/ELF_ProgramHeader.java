@@ -21,9 +21,9 @@ import brilliant.elf.support.CastSupport;
 import brilliant.elf.util.ByteUtil;
 import brilliant.elf.util.Log;
 
-class ELF_ProgramHeader {
+final class ELF_ProgramHeader {
 
-	static public class ELF_Phdr extends CastSupport {
+	static class ELF_Phdr extends CastSupport {
 
 		/**
 		 * segment type

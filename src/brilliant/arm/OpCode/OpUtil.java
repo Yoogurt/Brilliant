@@ -91,7 +91,7 @@ public class OpUtil {
 
 		StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; data >> i > 0; i++)
+		for (int i = 0; (data >> i) > 0; i++)
 			if (((data >> i) & 1) == 1 && discard != i)
 				sb.append(parseRegister(i)).append(" , ");
 

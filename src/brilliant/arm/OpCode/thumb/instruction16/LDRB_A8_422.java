@@ -6,15 +6,29 @@
 package brilliant.arm.OpCode.thumb.instruction16;
 
 import brilliant.arm.OpCode.thumb.instruction16.support.ParseSupport;
+import static brilliant.arm.OpCode.OpUtil.*;
 
-
-@Deprecated
 public class LDRB_A8_422 extends ParseSupport {
 
 	public static final LDRB_A8_422 INSTANCE = new LDRB_A8_422();
 
+	@Override
 	public String parse(int data) {
-		throw new UnsupportedOperationException("LDRB no implements");
+
+		StringBuilder sb = new StringBuilder("LDRB ");
+
+		int Rt = getShiftInt(data, 0, 3);
+		int Rn = getShiftInt(data, 3, 3);
+		int Rm = getShiftInt(data, 6, 3);
+
+		sb.append(parseRegister(Rt));
+		sb.append(" , [");
+		sb.append(parseRegister(Rn));
+		sb.append(" , ");
+		sb.append(parseRegister(Rm));
+		sb.append("]");
+		
+		return sb.toString();
 	}
 
 	@Override

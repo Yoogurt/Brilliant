@@ -10,28 +10,53 @@ import static brilliant.elf.vm.OS.*;
 import static brilliant.elf.vm.Register.*;
 import static brilliant.arm.OpCode.OpUtil.*;
 
-public class MUL_A8_502 extends ParseSupport {
+public class SMLAL_A8_626 extends ParseSupport {
 
-	public static final MUL_A8_502 INSTANCE = new MUL_A8_502();
+	public static final SMLAL_A8_626 INSTANCE = new SMLAL_A8_626();
 
 	@Override
 	protected String getOpCode(int data) {
-		return "MUL";
+		int n = getShiftInt(data, 5, 1);
+		int m = getShiftInt(data, 4, 1);
+
+		String opCode = "SMLAL";
+
+		if (n == 0b0)
+			opCode += "B";
+		else
+			opCode += "T";
+
+		if (m == 0b0)
+			opCode += "B";
+		else
+			opCode += "T";
+
+		return opCode;
 	}
 
 	@Override
 	protected int getRd(int data) {
-		return getShiftInt(data, 8, 4);
+		return getShiftInt(data, 12, 4);
 	}
 
 	@Override
 	protected int getRn(int data) {
-		return getShiftInt(data, 16, 4);
+		return getShiftInt(data, 8, 4);
 	}
 
 	@Override
 	protected int getRm(int data) {
+		return getShiftInt(data, 16, 4);
+	}
+
+	@Override
+	protected int getShift(int data) {
 		return getShiftInt(data, 0, 4);
+	}
+
+	@Override
+	protected boolean shifterRegister() {
+		return true;
 	}
 
 	@Override

@@ -11,7 +11,7 @@ import brilliant.elf.util.ByteUtil;
  *         executable Debug Only
  */
 @Deprecated
-class ELF_Section {
+final class ELF_Section {
 
 	protected ELF_Shdr mHeader;
 

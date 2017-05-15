@@ -15,15 +15,15 @@ import java.io.RandomAccessFile;
 import brilliant.elf.util.ByteUtil;
 import brilliant.elf.util.Log;
 
-class ELF_Relocate {
+final class ELF_Relocate {
 
-	public class Elf_rel {
+	class Elf_rel {
 		public byte[] r_offset;
 
 		public byte[] r_info;
 	}
 
-	public class Elf_rela extends Elf_rel {
+	class Elf_rela extends Elf_rel {
 		public byte[] r_addend;
 	}
 

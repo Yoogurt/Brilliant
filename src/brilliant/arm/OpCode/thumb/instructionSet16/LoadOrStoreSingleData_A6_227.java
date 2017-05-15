@@ -48,21 +48,22 @@ class LoadOrStoreSingleData_A6_227 {
 			if (opB == 0b111)
 				return LDRSH_A8_462.INSTANCE;
 
-			if (opA == 0b0110) {
-				if (assert0(opB, 2))
-					return STR_A8_672.INSTANCE;
+		}
 
-				if (assert1(opB, 2))
-					return LDR_A8_406.INSTANCE;
-			}
+		if (opA == 0b0110) {
+			if (assert0(opB, 2))
+				return STR_A8_672.INSTANCE;
 
-			if (opA == 0b0111) {
-				if (assert0(opB, 2))
-					return STRB_A8_678.INSTANCE;
+			if (assert1(opB, 2))
+				return LDR_A8_406.INSTANCE;
+		}
 
-				if (assert1(opB, 2))
-					return LDRB_A8_416.INSTANCE;
-			}
+		if (opA == 0b0111) {
+			if (assert0(opB, 2))
+				return STRB_A8_678.INSTANCE;
+
+			if (assert1(opB, 2))
+				return LDRB_A8_416.INSTANCE;
 		}
 
 		if (opA == 0b1000) {
@@ -80,6 +81,7 @@ class LoadOrStoreSingleData_A6_227 {
 			if (assert1(opB, 2))
 				return LDR_A8_406.INSTANCE;
 		}
-		throw new IllegalArgumentException("Unable to decode instruction " + Integer.toBinaryString(data));
+		throw new IllegalArgumentException("Unable to decode instruction "
+				+ Integer.toBinaryString(data));
 	}
 }

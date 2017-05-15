@@ -17,7 +17,7 @@ public class PUSH_A8_538 extends ParseSupport {
 	public String parse(int data) {
 
 		int M = getShiftInt(data, 8, 1);
-		int registerList = getShiftInt(data, 0, 7);
+		int registerList = getShiftInt(data, 0, 8);
 
 		StringBuilder sb = new StringBuilder("PUSH ");
 

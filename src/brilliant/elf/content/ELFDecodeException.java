@@ -1,6 +1,6 @@
 package brilliant.elf.content;
 
-public class ELFDecodeException extends Exception {
+public final class ELFDecodeException extends Exception {
 
 	/**
 	 * 
