@@ -16,6 +16,7 @@ public class SMMUL_A8_640 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "SMMUL";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

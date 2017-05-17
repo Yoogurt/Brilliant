@@ -5,10 +5,9 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction32;
 
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.signExtend;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
-import static brilliant.arm.OpCode.OpUtil.*;
-import static brilliant.elf.vm.OS.*;
-import static brilliant.elf.vm.Register.*;
 
 public class BL_A8_348 extends ParseSupport {
 
@@ -42,7 +41,7 @@ public class BL_A8_348 extends ParseSupport {
 	private String EncodingT1(int data) {
 		return super.parse(data);
 	}
-	
+
 	@Override
 	protected String getOpCode(int data) {
 		return "BL";

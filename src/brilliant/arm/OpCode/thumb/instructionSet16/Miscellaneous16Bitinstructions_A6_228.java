@@ -1,5 +1,8 @@
 package brilliant.arm.OpCode.thumb.instructionSet16;
 
+import static brilliant.arm.OpCode.factory.OpUtil.assert0;
+import static brilliant.arm.OpCode.factory.OpUtil.assert1;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction16.ADD_A8_316;
 import brilliant.arm.OpCode.thumb.instruction16.BKPT_A8_346;
 import brilliant.arm.OpCode.thumb.instruction16.CBZ_A8_356;
@@ -15,7 +18,6 @@ import brilliant.arm.OpCode.thumb.instruction16.SXTH_A8_734;
 import brilliant.arm.OpCode.thumb.instruction16.UXTB_A8_812;
 import brilliant.arm.OpCode.thumb.instruction16.UXTH_A8_816;
 import brilliant.arm.OpCode.thumb.instruction16.support.ParseSupport;
-import static brilliant.arm.OpCode.OpUtil.*;
 
 class Miscellaneous16Bitinstructions_A6_228 {
 	public static ParseSupport parse(int data) {
@@ -79,6 +81,7 @@ class Miscellaneous16Bitinstructions_A6_228 {
 		if (assert1(OpCode, 3, 4, 5, 6))
 			return IfThenHint_A6_229.parse(data);
 
-		throw new IllegalArgumentException("Unable to decode instruction " + Integer.toBinaryString(data));
+		throw new IllegalArgumentException("Unable to decode instruction "
+				+ Integer.toBinaryString(data));
 	}
 }

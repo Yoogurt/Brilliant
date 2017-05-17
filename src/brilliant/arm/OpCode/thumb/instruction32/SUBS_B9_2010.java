@@ -16,6 +16,7 @@ public class SUBS_B9_2010 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "SUBS.W";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

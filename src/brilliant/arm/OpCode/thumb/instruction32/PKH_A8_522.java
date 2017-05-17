@@ -16,6 +16,7 @@ public class PKH_A8_522 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "PKH";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

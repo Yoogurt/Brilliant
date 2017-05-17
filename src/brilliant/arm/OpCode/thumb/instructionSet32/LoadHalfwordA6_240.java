@@ -1,5 +1,8 @@
 package brilliant.arm.OpCode.thumb.instructionSet32;
 
+import static brilliant.arm.OpCode.factory.OpUtil.assert0;
+import static brilliant.arm.OpCode.factory.OpUtil.assert1;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction32.LDRHT_A8_448;
 import brilliant.arm.OpCode.thumb.instruction32.LDRH_A8_440;
 import brilliant.arm.OpCode.thumb.instruction32.LDRH_A8_444;
@@ -13,7 +16,6 @@ import brilliant.arm.OpCode.thumb.instruction32.PLD_A8_524;
 import brilliant.arm.OpCode.thumb.instruction32.PLD_A8_526;
 import brilliant.arm.OpCode.thumb.instruction32.PLD_A8_528;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
-import static brilliant.arm.OpCode.OpUtil.*;
 
 class LoadHalfwordA6_240 {
 	public static ParseSupport parse(int data) {
@@ -118,7 +120,7 @@ class LoadHalfwordA6_240 {
 			if (Rn != 0b1111)
 				if (Rt == 0b1111)
 					return NOP.INSTANCE;
-		
+
 		throw new IllegalArgumentException("Unable to decode instruction "
 				+ Integer.toBinaryString(data));
 	}

@@ -7,7 +7,6 @@ package brilliant.arm.OpCode.arm.instruction;
 
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
 
-
 public class MRS_B9_1990 extends ParseSupport {
 
 	public static final MRS_B9_1990 INSTANCE = new MRS_B9_1990();

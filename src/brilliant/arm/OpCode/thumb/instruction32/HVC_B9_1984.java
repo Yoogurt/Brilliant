@@ -16,6 +16,7 @@ public class HVC_B9_1984 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "HVC.W";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

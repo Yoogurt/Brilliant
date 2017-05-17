@@ -5,10 +5,8 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction32;
 
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
-import static brilliant.elf.vm.OS.*;
-import static brilliant.elf.vm.Register.*;
-import static brilliant.arm.OpCode.OpUtil.*;
 
 public class SSUB8_A8_660 extends ParseSupport {
 
@@ -18,6 +16,7 @@ public class SSUB8_A8_660 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "SSUB";
 	}
+
 	@Override
 	protected int getRd(int data) {
 		return getShiftInt(data, 8, 4);
@@ -30,8 +29,9 @@ public class SSUB8_A8_660 extends ParseSupport {
 
 	@Override
 	protected int getRm(int data) {
-	return getShiftInt(data, 0, 4);
+		return getShiftInt(data, 0, 4);
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

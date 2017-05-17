@@ -5,8 +5,8 @@
 -------------------------------*/
 package brilliant.arm.OpCode.arm.instruction;
 
-import static brilliant.arm.OpCode.OpUtil.SP;
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.SP;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
 
 public class LDMDB_A8_402 extends ParseSupport {

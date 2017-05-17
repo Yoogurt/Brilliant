@@ -5,10 +5,8 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction32;
 
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
-import static brilliant.arm.OpCode.OpUtil.*;
-import static brilliant.elf.vm.OS.*;
-import static brilliant.elf.vm.Register.*;
 
 public class BIC_A8_342 extends ParseSupport {
 
@@ -18,7 +16,7 @@ public class BIC_A8_342 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "BIC";
 	}
-	
+
 	@Override
 	protected int getRd(int data) {
 		return getShiftInt(data, 8, 4);

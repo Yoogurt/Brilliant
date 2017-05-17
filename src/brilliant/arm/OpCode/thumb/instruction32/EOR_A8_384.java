@@ -5,15 +5,12 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction32;
 
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
-import static brilliant.arm.OpCode.OpUtil.*;
-import static brilliant.elf.vm.OS.*;
-import static brilliant.elf.vm.Register.*;
 
 public class EOR_A8_384 extends ParseSupport {
 
 	public static final EOR_A8_384 INSTANCE = new EOR_A8_384();
-
 
 	@Override
 	protected String getOpCode(int data) {

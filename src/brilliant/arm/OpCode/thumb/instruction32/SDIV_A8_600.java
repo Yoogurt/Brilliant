@@ -5,10 +5,8 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction32;
 
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
-import static brilliant.elf.vm.OS.*;
-import static brilliant.elf.vm.Register.*;
-import static brilliant.arm.OpCode.OpUtil.*;
 
 public class SDIV_A8_600 extends ParseSupport {
 
@@ -18,6 +16,7 @@ public class SDIV_A8_600 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "SDIV";
 	}
+
 	@Override
 	protected int getRd(int data) {
 		return getShiftInt(data, 8, 4);

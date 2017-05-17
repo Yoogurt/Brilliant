@@ -5,8 +5,8 @@
 -------------------------------*/
 package brilliant.arm.OpCode.arm.instruction;
 
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
-import static brilliant.arm.OpCode.OpUtil.signExtend;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.signExtend;
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
 
 public class B_A8_334 extends ParseSupport {

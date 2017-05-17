@@ -8,12 +8,6 @@ import brilliant.elf.util.ByteUtil;
 
 class MemoryMapper {
 
-	@Deprecated
-	public static int mmap(int start, int length, int prot, int flags, int fd,
-			long offset) {
-		throw new UnsupportedOperationException("Not implements");
-	}
-
 	/**
 	 * we mmap a file into byte[]
 	 */
@@ -216,16 +210,4 @@ class MemoryMapper {
 		OS.mFlag = flag;
 
 	}
-
-	public static byte[] getMemory() {
-		return OS.mMemory;
-	}
-
-	public static void main(String[] args) {
-
-		mmap(0, 52, (byte) 0, new File("C:\\Users\\monitor\\Desktop\\test"), 0);
-		System.out.println(ByteUtil.bytes2Hex(OS.mMemory, 0, 52));
-
-	}
-
 }

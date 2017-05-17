@@ -7,7 +7,6 @@ package brilliant.arm.OpCode.thumb.instruction16;
 
 import brilliant.arm.OpCode.thumb.instruction16.support.ParseSupport;
 
-
 @Deprecated
 public class REVSH_A8_566 extends ParseSupport {
 

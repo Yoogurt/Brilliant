@@ -5,11 +5,11 @@
 -------------------------------*/
 package brilliant.arm.OpCode.arm.instruction;
 
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
-import static brilliant.arm.OpCode.OpUtil.parseRegister;
-import brilliant.arm.OpCode.CondFactory;
-import brilliant.arm.OpCode.TypeFactory;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.parseRegister;
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import brilliant.arm.OpCode.factory.CondFactory;
+import brilliant.arm.OpCode.factory.TypeFactory;
 
 public class LDRB_A8_418 extends ParseSupport {
 

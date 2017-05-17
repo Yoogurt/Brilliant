@@ -16,6 +16,7 @@ public class SMMLA_A8_636 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "SMMLA";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

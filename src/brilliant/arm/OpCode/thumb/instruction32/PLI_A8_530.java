@@ -16,6 +16,7 @@ public class PLI_A8_530 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "PLI";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

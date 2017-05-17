@@ -1,5 +1,6 @@
 package brilliant.arm.OpCode.thumb.instructionSet32;
 
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction32.QADD16_A8_542;
 import brilliant.arm.OpCode.thumb.instruction32.QADD8_A8_544;
 import brilliant.arm.OpCode.thumb.instruction32.QASX_A8_546;
@@ -19,7 +20,6 @@ import brilliant.arm.OpCode.thumb.instruction32.SSAX_A8_656;
 import brilliant.arm.OpCode.thumb.instruction32.SSUB16_A8_658;
 import brilliant.arm.OpCode.thumb.instruction32.SSUB8_A8_660;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
-import static brilliant.arm.OpCode.OpUtil.*;
 
 public class ParallelAddition_A6_246 {
 

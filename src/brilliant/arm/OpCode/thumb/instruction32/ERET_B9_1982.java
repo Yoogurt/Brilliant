@@ -16,6 +16,7 @@ public class ERET_B9_1982 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "ERET.W";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

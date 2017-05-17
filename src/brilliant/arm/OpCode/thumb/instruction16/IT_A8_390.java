@@ -5,8 +5,8 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction16;
 
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
-import brilliant.arm.OpCode.CondFactory;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+import brilliant.arm.OpCode.factory.CondFactory;
 import brilliant.arm.OpCode.thumb.instruction16.support.ParseSupport;
 
 public class IT_A8_390 extends ParseSupport {

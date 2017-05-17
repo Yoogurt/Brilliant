@@ -7,7 +7,6 @@ package brilliant.arm.OpCode.arm.instruction;
 
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
 
-
 public class LDRB_A8_420 extends ParseSupport {
 
 	public static final LDRB_A8_420 INSTANCE = new LDRB_A8_420();

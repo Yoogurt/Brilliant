@@ -5,10 +5,9 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction32;
 
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.thumbExpandImm;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
-import static brilliant.arm.OpCode.OpUtil.*;
-import static brilliant.elf.vm.OS.*;
-import static brilliant.elf.vm.Register.*;
 
 public class CMP_A8_370 extends ParseSupport {
 
@@ -18,7 +17,6 @@ public class CMP_A8_370 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "CMP";
 	}
-
 
 	@Override
 	protected int getRn(int data) {

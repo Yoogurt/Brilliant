@@ -16,6 +16,7 @@ public class MOVT_A8_491 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "MOVT.W";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

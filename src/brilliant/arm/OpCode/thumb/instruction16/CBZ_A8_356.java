@@ -5,8 +5,10 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction16;
 
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.parseRegister;
 import brilliant.arm.OpCode.thumb.instruction16.support.ParseSupport;
-import static brilliant.arm.OpCode.OpUtil.*;
+import brilliant.elf.vm.Register;
 
 public class CBZ_A8_356 extends ParseSupport {
 
@@ -30,6 +32,15 @@ public class CBZ_A8_356 extends ParseSupport {
 	@Override
 	protected String getRm(int data) {
 		return "#" + (getShiftInt(data, 3, 5) << 1);
+	}
+
+	@Override
+	protected String getComment(int data) {
+		if (Register.PC < 0)
+			return null;
+		return "@"
+				+ Integer.toHexString(Register.PC
+						+ (getShiftInt(data, 3, 5) << 1));
 	}
 
 	@Override

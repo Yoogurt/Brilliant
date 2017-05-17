@@ -7,7 +7,6 @@ package brilliant.arm.OpCode.thumb.instruction16;
 
 import brilliant.arm.OpCode.thumb.instruction16.support.ParseSupport;
 
-
 @Deprecated
 public class LDRSB_A8_454 extends ParseSupport {
 

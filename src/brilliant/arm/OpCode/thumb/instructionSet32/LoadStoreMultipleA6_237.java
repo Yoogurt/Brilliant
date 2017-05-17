@@ -1,5 +1,6 @@
 package brilliant.arm.OpCode.thumb.instructionSet32;
 
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction32.LDMDB_A8_402;
 import brilliant.arm.OpCode.thumb.instruction32.LDM_A8_396;
 import brilliant.arm.OpCode.thumb.instruction32.POP_A8_534;
@@ -9,7 +10,6 @@ import brilliant.arm.OpCode.thumb.instruction32.SRS_B9_2004;
 import brilliant.arm.OpCode.thumb.instruction32.STMDB_A8_668;
 import brilliant.arm.OpCode.thumb.instruction32.STM_A8_664;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
-import static brilliant.arm.OpCode.OpUtil.*;
 
 class LoadStoreMultipleA6_237 {
 	public static ParseSupport parse(int data) {

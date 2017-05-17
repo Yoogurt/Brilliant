@@ -1,8 +1,8 @@
 package brilliant.arm.OpCode.arm.instructionSet;
 
-import static brilliant.arm.OpCode.OpUtil.assert0;
-import static brilliant.arm.OpCode.OpUtil.assert1;
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.assert0;
+import static brilliant.arm.OpCode.factory.OpUtil.assert1;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.arm.instruction.LDRD_A8_426;
 import brilliant.arm.OpCode.arm.instruction.LDRD_A8_428;
 import brilliant.arm.OpCode.arm.instruction.LDRD_A8_430;
@@ -60,9 +60,8 @@ public class ExtraLoadOrStoreInstructions_A5_203 {
 				else
 					return LDRSB_A8_452.INSTANCE;
 		}
-		
-		if(op2 == 0b11)
-		{
+
+		if (op2 == 0b11) {
 			if (assert0(op1, 0, 2))
 				return STRD_A8_688.INSTANCE;
 			if (assert0(op1, 2) && assert1(op1, 0))

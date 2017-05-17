@@ -1,4 +1,4 @@
-package brilliant.arm.OpCode;
+package brilliant.arm.OpCode.factory;
 
 public class TypeFactory {
 

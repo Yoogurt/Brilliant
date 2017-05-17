@@ -16,6 +16,7 @@ public class BFC_A8_336 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "BFC.W";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

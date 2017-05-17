@@ -5,8 +5,9 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction16;
 
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.parseRegister;
 import brilliant.arm.OpCode.thumb.instruction16.support.ParseSupport;
-import static brilliant.arm.OpCode.OpUtil.*;
 
 public class LDRB_A8_422 extends ParseSupport {
 
@@ -27,7 +28,7 @@ public class LDRB_A8_422 extends ParseSupport {
 		sb.append(" , ");
 		sb.append(parseRegister(Rm));
 		sb.append("]");
-		
+
 		return sb.toString();
 	}
 

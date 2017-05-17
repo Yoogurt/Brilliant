@@ -17,7 +17,7 @@ public class BytesBuilder {
 			System.arraycopy(mInternal, 0, mTmp, 0, mInternal.length);
 			mInternal = mTmp;
 		}
-		
+
 		System.arraycopy(data, offset, mInternal, this.length, length);
 
 		this.length += length;
@@ -40,5 +40,5 @@ public class BytesBuilder {
 		return mReturn;
 
 	}
-	
+
 }

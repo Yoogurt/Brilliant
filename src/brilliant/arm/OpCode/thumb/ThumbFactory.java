@@ -1,9 +1,9 @@
 package brilliant.arm.OpCode.thumb;
 
-import brilliant.arm.OpCode.ParseTemplate;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+import brilliant.arm.OpCode.factory.ParseTemplate;
 import brilliant.arm.OpCode.thumb.instructionSet16.Thumb16Factory;
 import brilliant.arm.OpCode.thumb.instructionSet32.Thumb32Factory;
-import static brilliant.arm.OpCode.OpUtil.*;
 
 public class ThumbFactory {
 

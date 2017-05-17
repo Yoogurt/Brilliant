@@ -1,6 +1,6 @@
 package brilliant.arm.OpCode.thumb.instructionSet16;
 
-import static brilliant.arm.OpCode.OpUtil.*;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction16.ADC_A8_302;
 import brilliant.arm.OpCode.thumb.instruction16.AND_A8_326;
 import brilliant.arm.OpCode.thumb.instruction16.ASR_A8_332;
@@ -58,7 +58,8 @@ class DataProcessing_A6_225 {
 		case 0b1111:
 			return MVN_A8_506.INSTANCE;
 		default:
-			throw new IllegalArgumentException("Unable to decode instruction " + Integer.toBinaryString(data));
+			throw new IllegalArgumentException("Unable to decode instruction "
+					+ Integer.toBinaryString(data));
 		}
 	}
 }

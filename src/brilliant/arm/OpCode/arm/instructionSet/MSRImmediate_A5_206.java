@@ -1,8 +1,8 @@
 package brilliant.arm.OpCode.arm.instructionSet;
 
-import static brilliant.arm.OpCode.OpUtil.assert0;
-import static brilliant.arm.OpCode.OpUtil.assert1;
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.assert0;
+import static brilliant.arm.OpCode.factory.OpUtil.assert1;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.arm.instruction.DBG_A8_377;
 import brilliant.arm.OpCode.arm.instruction.MSR_A8_498;
 import brilliant.arm.OpCode.arm.instruction.MSR_B8_1996;
@@ -47,7 +47,7 @@ public class MSRImmediate_A5_206 {
 				return MSR_B8_1996.INSTANCE;
 		}
 
-		if (op == 0b1) 
+		if (op == 0b1)
 			return MSR_B8_1996.INSTANCE;
 
 		throw new IllegalArgumentException("Unable to decode instruction "

@@ -5,9 +5,10 @@
 -------------------------------*/
 package brilliant.arm.OpCode.arm.instruction;
 
-import static brilliant.arm.OpCode.OpUtil.armExpandImm;
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.armExpandImm;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import brilliant.elf.vm.Register;
 
 public class ADR_A8_322 extends ParseSupport {
 
@@ -48,6 +49,13 @@ public class ADR_A8_322 extends ParseSupport {
 		boolean before = getShiftInt(data, 21, 4) == 0b0010;
 		return before ? -armExpandImm(getShiftInt(data, 0, 12))
 				: armExpandImm(getShiftInt(data, 0, 12));
+	}
+
+	@Override
+	protected String getCommnet(int data) {
+		if (Register.PC >= 0)
+			return " @" + Integer.toHexString(Register.PC);
+		return super.getCommnet(data);
 	}
 
 	@Override

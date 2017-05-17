@@ -5,8 +5,8 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction16;
 
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
-import static brilliant.arm.OpCode.OpUtil.parseRegister;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.parseRegister;
 import brilliant.arm.OpCode.thumb.instruction16.support.ParseSupport;
 
 public class ASR_A8_332 extends ParseSupport {

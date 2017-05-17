@@ -5,12 +5,9 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction32;
 
-import brilliant.arm.OpCode.CondFactory;
-import brilliant.arm.OpCode.TypeFactory;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.parseRegister;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
-import static brilliant.arm.OpCode.OpUtil.*;
-import static brilliant.elf.vm.OS.*;
-import static brilliant.elf.vm.Register.*;
 
 public class STRB_A8_678 extends ParseSupport {
 

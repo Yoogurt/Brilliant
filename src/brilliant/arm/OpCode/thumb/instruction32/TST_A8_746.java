@@ -5,15 +5,12 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction32;
 
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
-import static brilliant.arm.OpCode.OpUtil.*;
-import static brilliant.elf.vm.OS.*;
-import static brilliant.elf.vm.Register.*;
 
 public class TST_A8_746 extends ParseSupport {
 
 	public static final TST_A8_746 INSTANCE = new TST_A8_746();
-
 
 	@Override
 	protected String getOpCode(int data) {

@@ -5,10 +5,11 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction16;
 
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
-import static brilliant.arm.OpCode.OpUtil.signExtend;
-import brilliant.arm.OpCode.CondFactory;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.signExtend;
+import brilliant.arm.OpCode.factory.CondFactory;
 import brilliant.arm.OpCode.thumb.instruction16.support.ParseSupport;
+import brilliant.elf.vm.Register;
 
 public class B_A8_334 extends ParseSupport {
 	public static final B_A8_334 INSTANCE = new B_A8_334();
@@ -40,20 +41,30 @@ public class B_A8_334 extends ParseSupport {
 		sb.append(CondFactory.parse(cond));
 
 		sb.append(" #");
+		int imm8 = (signExtend(getShiftInt(data, 0, 8), 8)) << 1;
 
-		sb.append((signExtend(getShiftInt(data, 0, 8), 8)) << 1);
+		sb.append(imm8);
+
+		if (Register.PC >= 0)
+			sb.append(" @").append(Integer.toHexString(Register.PC + imm8));
 
 		return sb.toString();
 
 	}
 
 	private String decodeEncodingT2(int data) {
-		StringBuilder sb = new StringBuilder("B ");
-
-		int imm11 = getShiftInt(data, 0, 11);
+		StringBuilder sb = new StringBuilder("B");
 
 		sb.append(" #");
-		return sb.append(signExtend(imm11, 11) << 1).toString();
+
+		int imm11 = signExtend(getShiftInt(data, 0, 11), 11) << 1;
+
+		sb.append(imm11);
+
+		if (Register.PC >= 0)
+			sb.append(" @").append(Integer.toHexString(Register.PC + imm11));
+
+		return sb.toString();
 	}
 
 	@Override

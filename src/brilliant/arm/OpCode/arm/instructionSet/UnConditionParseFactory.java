@@ -1,5 +1,8 @@
 package brilliant.arm.OpCode.arm.instructionSet;
 
+import static brilliant.arm.OpCode.factory.OpUtil.assert0;
+import static brilliant.arm.OpCode.factory.OpUtil.assert1;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.arm.instruction.BL_A8_348;
 import brilliant.arm.OpCode.arm.instruction.CDP_A8_358;
 import brilliant.arm.OpCode.arm.instruction.LDC_A8_392;
@@ -11,7 +14,6 @@ import brilliant.arm.OpCode.arm.instruction.MRRC_A8_494;
 import brilliant.arm.OpCode.arm.instruction.RFE_B9_2000;
 import brilliant.arm.OpCode.arm.instruction.SRS_B9_2006;
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
-import static brilliant.arm.OpCode.OpUtil.*;
 
 public class UnConditionParseFactory {
 

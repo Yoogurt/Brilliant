@@ -5,9 +5,11 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction16;
 
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
-import static brilliant.arm.OpCode.OpUtil.parseRegister;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.parseRegister;
+import static brilliant.arm.OpCode.factory.OpUtil.align;
 import brilliant.arm.OpCode.thumb.instruction16.support.ParseSupport;
+import brilliant.elf.vm.Register;
 
 /**
  * load from memory , <label> = [PC + zeroExtend(imm8:00)]
@@ -29,6 +31,15 @@ public class LDR_A8_410 extends ParseSupport {
 	@Override
 	protected String getRm(int data) {
 		return "#" + (getShiftInt(data, 0, 8) << 2);
+	}
+
+	@Override
+	protected String getComment(int data) {
+		if (Register.PC < 0)
+			return null;
+		return "@"
+				+ Integer.toHexString(align(Register.PC, 4) 
+						+ (getShiftInt(data, 0, 8) << 2));
 	}
 
 	@Override

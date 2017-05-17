@@ -1,8 +1,8 @@
 package brilliant.arm.OpCode.arm.instructionSet;
 
-import static brilliant.arm.OpCode.OpUtil.assert0;
-import static brilliant.arm.OpCode.OpUtil.assert1;
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.assert0;
+import static brilliant.arm.OpCode.factory.OpUtil.assert1;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.arm.instruction.MOVT_A8_491;
 import brilliant.arm.OpCode.arm.instruction.MOV_A8_484;
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
@@ -48,26 +48,28 @@ public class DataProcessingAndMiscellaneousInstructions_A5_196 {
 
 			if (assert0(op1, 4) && assert1(op1, 1))/* 0xx1x */
 				if (op2 == 0b1011)
-					return ExtraLoadOrStoreInstructionUnprivileged_A5_204.parse(data);
+					return ExtraLoadOrStoreInstructionUnprivileged_A5_204
+							.parse(data);
 
 			if (assert0(op1, 4) && assert1(op1, 0, 1))/* 0xx11 */
 				if (assert1(op2, 0, 2, 3))/* 11x1 */
-					return ExtraLoadOrStoreInstructionUnprivileged_A5_204.parse(data);
+					return ExtraLoadOrStoreInstructionUnprivileged_A5_204
+							.parse(data);
 
 		}
-		
-		if(op == 0b1){
-			
-			if(!(assert0(op1 , 0,3) && assert1(op1 , 4)))
+
+		if (op == 0b1) {
+
+			if (!(assert0(op1, 0, 3) && assert1(op1, 4)))
 				return DataProcessingImmediate_A5_199.parse(data);
-			
-			if(op1 == 0b10000)
+
+			if (op1 == 0b10000)
 				return MOV_A8_484.INSTANCE;
-			
-			if(op1 == 0b10100)
+
+			if (op1 == 0b10100)
 				return MOVT_A8_491.INSTANCE;
-			
-			if(assert0(op1 , 0,3)&& assert1(op1 , 1,4))
+
+			if (assert0(op1, 0, 3) && assert1(op1, 1, 4))
 				return MSRImmediate_A5_206.parse(data);
 		}
 

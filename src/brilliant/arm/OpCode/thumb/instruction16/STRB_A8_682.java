@@ -6,15 +6,29 @@
 package brilliant.arm.OpCode.thumb.instruction16;
 
 import brilliant.arm.OpCode.thumb.instruction16.support.ParseSupport;
+import static brilliant.arm.OpCode.factory.OpUtil.*;
 
-
-@Deprecated
 public class STRB_A8_682 extends ParseSupport {
 
 	public static final STRB_A8_682 INSTANCE = new STRB_A8_682();
 
 	public String parse(int data) {
-		throw new UnsupportedOperationException("STRB no implements");
+
+		StringBuilder sb = new StringBuilder("STRB ");
+		int Rt = getShiftInt(data, 0, 3);
+		int Rn = getShiftInt(data, 3, 3);
+		int Rm = getShiftInt(data, 6, 3);
+		sb.append(parseRegister(Rt));
+		sb.append(" , [");
+
+		sb.append(parseRegister(Rn));
+		sb.append(" , ");
+		sb.append(parseRegister(Rm));
+
+		sb.append("]");
+
+		return sb.toString();
+
 	}
 
 	@Override

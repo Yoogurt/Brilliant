@@ -1,8 +1,8 @@
 package brilliant.arm.OpCode.arm.instructionSet;
 
-import static brilliant.arm.OpCode.OpUtil.assert0;
-import static brilliant.arm.OpCode.OpUtil.assert1;
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.assert0;
+import static brilliant.arm.OpCode.factory.OpUtil.assert1;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.arm.instruction.MLA_A8_480;
 import brilliant.arm.OpCode.arm.instruction.MLS_A8_482;
 import brilliant.arm.OpCode.arm.instruction.MUL_A8_502;

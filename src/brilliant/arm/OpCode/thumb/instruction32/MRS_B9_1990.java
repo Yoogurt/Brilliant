@@ -16,6 +16,7 @@ public class MRS_B9_1990 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "MRS.W";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

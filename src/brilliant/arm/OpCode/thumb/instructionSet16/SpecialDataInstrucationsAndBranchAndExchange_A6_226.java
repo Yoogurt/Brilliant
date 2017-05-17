@@ -1,6 +1,8 @@
 package brilliant.arm.OpCode.thumb.instructionSet16;
 
-import static brilliant.arm.OpCode.OpUtil.*;
+import static brilliant.arm.OpCode.factory.OpUtil.assert0;
+import static brilliant.arm.OpCode.factory.OpUtil.assert1;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction16.ADD_A8_310;
 import brilliant.arm.OpCode.thumb.instruction16.BLX_A8_350;
 import brilliant.arm.OpCode.thumb.instruction16.BX_A8_352;
@@ -34,6 +36,7 @@ class SpecialDataInstrucationsAndBranchAndExchange_A6_226 {
 		if (assert1(OpCode, 1, 2, 3))
 			return BLX_A8_350.INSTANCE;
 
-		throw new IllegalArgumentException("Unable to decode instruction " + Integer.toBinaryString(data));
+		throw new IllegalArgumentException("Unable to decode instruction "
+				+ Integer.toBinaryString(data));
 	}
 }

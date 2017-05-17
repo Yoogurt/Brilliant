@@ -7,15 +7,15 @@ package brilliant.arm.OpCode.arm.instruction;
 
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
 
-
 @Deprecated
 public class LDC_A8_392 extends ParseSupport {
 
 	public static final LDC_A8_392 INSTANCE = new LDC_A8_392();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("LDC no implements");
+		throw new UnsupportedOperationException("LDC no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

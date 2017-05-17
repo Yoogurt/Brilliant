@@ -16,6 +16,7 @@ public class USAT_A8_796 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "USAT.W";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

@@ -1,6 +1,6 @@
 package brilliant.arm.OpCode.arm.instructionSet;
 
-import static brilliant.arm.OpCode.OpUtil.assert1;
+import static brilliant.arm.OpCode.factory.OpUtil.assert1;
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
 
 public class ArmFactory {

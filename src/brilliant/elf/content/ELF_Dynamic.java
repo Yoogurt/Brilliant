@@ -125,8 +125,10 @@ final class ELF_Dynamic {
 	private int mRela;
 	private int mRelaSz;
 
-	private int mJmpRel; // in linker , this call PltRel
-	private int mJmpRelSz;
+	private int mPltRel; // in linker , this call PltRel
+	private int mPltRelSz;
+
+	private int mPltGot;
 
 	private int mDT_TEXTREL;
 
@@ -213,6 +215,7 @@ final class ELF_Dynamic {
 			Log.e("   " + "DT_PLTRELSZ " + +getVal(dynamic.d_val));
 			break;
 		case DT_PLTGOT:
+			readDT_PLTGOT(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
 			Log.e("   " + "DT_PLTGOT at " + ByteUtil.bytes2Hex(dynamic.d_val));
 			break;
@@ -297,7 +300,7 @@ final class ELF_Dynamic {
 		case DT_PLTREL:
 			verifyPltRel(dynamic);
 			Log.e("   " + LogConstant.DIVISION_LINE);
-			Log.e("   " + "DT_PLTREL at " + ByteUtil.bytes2Hex(dynamic.d_val));
+			Log.e("   " + "DT_PLTREL " + getVal(dynamic.d_val));
 			break;
 		case DT_DEBUG:
 			Log.e("   " + LogConstant.DIVISION_LINE);
@@ -380,9 +383,16 @@ final class ELF_Dynamic {
 		return true;
 	}
 
+	private void readDT_PLTGOT(Elf_Dyn dynamic) {
+		if (mPltGot == 0)
+			mPltGot = getVal(dynamic.d_val);
+		else
+			throw new IllegalStateException("DT_PLTGOT appear over once");
+	}
+
 	private void readDT_PLTRELSZ(Elf_Dyn dynamic) {
-		if (mJmpRel == 0)
-			mJmpRelSz = getVal(dynamic.d_val);
+		if (mPltRel == 0)
+			mPltRelSz = getVal(dynamic.d_val);
 		else
 			throw new IllegalStateException("DT_PLTRELSZ appear over once");
 	}
@@ -411,8 +421,8 @@ final class ELF_Dynamic {
 	}
 
 	private void readDT_JMPREL(Elf_Dyn dynamic) {
-		if (mJmpRel == 0)
-			mJmpRel = (int) getVal(dynamic.d_val);
+		if (mPltRel == 0)
+			mPltRel = (int) getVal(dynamic.d_val);
 		else
 			throw new IllegalStateException("DT_JMPREL appear over once");
 	}
@@ -541,6 +551,10 @@ final class ELF_Dynamic {
 		}
 	}
 
+	public int getDT_PLTGOT() {
+		return mPltGot;
+	}
+
 	public int getDT_INIT() {
 		return mInitFunc;
 	}
@@ -609,8 +623,8 @@ final class ELF_Dynamic {
 		if (mRel != 0)
 			mRelocateSections.add(new ELF_Relocate(raf, mRel, mRelSz, this,
 					false));
-		if (mJmpRel != 0) // we don't check size
-			mRelocateSections.add(new ELF_Relocate(raf, mJmpRel, mJmpRelSz,
+		if (mPltRel != 0) // we don't check size
+			mRelocateSections.add(new ELF_Relocate(raf, mPltRel, mPltRelSz,
 					this, false));
 		if (mRela != 0)
 			mRelocateSections.add(new ELF_Relocate(raf, mRela, mRelaSz, this,

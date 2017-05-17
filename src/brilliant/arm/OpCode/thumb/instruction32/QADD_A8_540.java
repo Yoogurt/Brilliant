@@ -5,10 +5,8 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction32;
 
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
-import static brilliant.elf.vm.OS.*;
-import static brilliant.elf.vm.Register.*;
-import static brilliant.arm.OpCode.OpUtil.*;
 
 public class QADD_A8_540 extends ParseSupport {
 
@@ -26,7 +24,8 @@ public class QADD_A8_540 extends ParseSupport {
 
 	@Override
 	protected int getRn(int data) {
-		return getShiftInt(data, 0, 4); // <opcode> <Rd> , <Rm> , <Rn> ,exchage Rn and Rm
+		return getShiftInt(data, 0, 4); // <opcode> <Rd> , <Rm> , <Rn> ,exchage
+										// Rn and Rm
 	}
 
 	@Override

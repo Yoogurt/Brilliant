@@ -7,15 +7,15 @@ package brilliant.arm.OpCode.arm.instruction;
 
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
 
-
 @Deprecated
 public class MCRR_A8_478 extends ParseSupport {
 
 	public static final MCRR_A8_478 INSTANCE = new MCRR_A8_478();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("MCRR no implements");
+		throw new UnsupportedOperationException("MCRR no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

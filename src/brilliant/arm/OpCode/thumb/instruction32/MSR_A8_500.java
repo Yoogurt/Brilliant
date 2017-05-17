@@ -16,6 +16,7 @@ public class MSR_A8_500 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "MSR.W";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

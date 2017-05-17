@@ -7,15 +7,15 @@ package brilliant.arm.OpCode.arm.instruction;
 
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
 
-
 @Deprecated
 public class SRS_B9_2006 extends ParseSupport {
 
 	public static final SRS_B9_2006 INSTANCE = new SRS_B9_2006();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("SRS no implements");
+		throw new UnsupportedOperationException("SRS no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

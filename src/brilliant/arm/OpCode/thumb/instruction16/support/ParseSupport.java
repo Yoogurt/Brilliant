@@ -1,7 +1,7 @@
 package brilliant.arm.OpCode.thumb.instruction16.support;
 
-import brilliant.arm.OpCode.ParseTemplate;
 import brilliant.arm.OpCode.arm.instructionSet.ConditionParseFactory;
+import brilliant.arm.OpCode.factory.ParseTemplate;
 
 public abstract class ParseSupport implements ParseTemplate {
 
@@ -37,6 +37,10 @@ public abstract class ParseSupport implements ParseTemplate {
 				sb.append(getRm(data));
 		}
 
+		String comment = getComment(data);
+		if (comment != null)
+			sb.append(" ").append(comment);
+
 		return sb.toString();
 	}
 
@@ -70,6 +74,10 @@ public abstract class ParseSupport implements ParseTemplate {
 
 	protected boolean isRmMenory() {
 		return false;
+	}
+
+	protected String getComment(int data) {
+		return null;
 	}
 
 	protected String error(int data) {

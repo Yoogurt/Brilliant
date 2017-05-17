@@ -16,6 +16,7 @@ public class SMULWB_A8_648 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "SMULWB";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

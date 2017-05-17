@@ -1,25 +1,12 @@
 package brilliant.elf.util;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
 public class Log {
 
 	public static PrintStream out = System.out;
 
-	// static{
-	//
-	// try {
-	// out = new PrintStream(new
-	// File("C:/Users/Administrator/Desktop/libdvm.dump"));
-	// } catch (FileNotFoundException e) {
-	// e.printStackTrace();
-	// }
-	//
-	// }
-
-	public static boolean DEBUG = false;
+	public static boolean DEBUG = true;
 
 	public static void i(String msg) {
 		if (DEBUG)

@@ -1,7 +1,6 @@
 package brilliant.arm.OpCode.thumb.instructionSet32;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MoveAction;
-
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction32.ADC_A8_302;
 import brilliant.arm.OpCode.thumb.instruction32.ADD_A8_310;
 import brilliant.arm.OpCode.thumb.instruction32.AND_A8_326;
@@ -19,7 +18,6 @@ import brilliant.arm.OpCode.thumb.instruction32.SUB_A8_712;
 import brilliant.arm.OpCode.thumb.instruction32.TEQ_A8_740;
 import brilliant.arm.OpCode.thumb.instruction32.TST_A8_746;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
-import static brilliant.arm.OpCode.OpUtil.*;
 
 class DataProcessingA6_243 {
 	public static ParseSupport parse(int data) {

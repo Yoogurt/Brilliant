@@ -16,6 +16,7 @@ public class BFI_A8_338 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "BFI.W";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

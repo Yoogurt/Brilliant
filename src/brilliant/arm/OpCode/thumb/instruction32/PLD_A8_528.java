@@ -16,6 +16,7 @@ public class PLD_A8_528 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "PLD";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

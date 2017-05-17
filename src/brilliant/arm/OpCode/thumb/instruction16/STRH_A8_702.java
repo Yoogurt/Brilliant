@@ -5,16 +5,31 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction16;
 
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.parseRegister;
 import brilliant.arm.OpCode.thumb.instruction16.support.ParseSupport;
 
-
-@Deprecated
 public class STRH_A8_702 extends ParseSupport {
 
 	public static final STRH_A8_702 INSTANCE = new STRH_A8_702();
 
 	public String parse(int data) {
-		throw new UnsupportedOperationException("STRH no implements");
+
+		StringBuilder sb = new StringBuilder("STRH ");
+		int Rt = getShiftInt(data, 0, 3);
+		int Rn = getShiftInt(data, 3, 3);
+		int Rm = getShiftInt(data, 6, 3);
+		sb.append(parseRegister(Rt));
+		sb.append(" , [");
+
+		sb.append(parseRegister(Rn));
+		sb.append(" , ");
+		sb.append(parseRegister(Rm));
+
+		sb.append("]");
+
+		return sb.toString();
+
 	}
 
 	@Override

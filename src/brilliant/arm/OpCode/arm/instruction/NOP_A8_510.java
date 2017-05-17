@@ -7,7 +7,6 @@ package brilliant.arm.OpCode.arm.instruction;
 
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
 
-
 public class NOP_A8_510 extends ParseSupport {
 
 	public static final NOP_A8_510 INSTANCE = new NOP_A8_510();

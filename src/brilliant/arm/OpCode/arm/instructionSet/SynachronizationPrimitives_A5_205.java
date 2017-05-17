@@ -1,7 +1,7 @@
 package brilliant.arm.OpCode.arm.instructionSet;
 
-import static brilliant.arm.OpCode.OpUtil.assert0;
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.assert0;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.arm.instruction.LDREXB_A8_434;
 import brilliant.arm.OpCode.arm.instruction.LDREXD_A8_436;
 import brilliant.arm.OpCode.arm.instruction.LDREXH_A8_438;

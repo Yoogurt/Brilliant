@@ -5,7 +5,7 @@
 -------------------------------*/
 package brilliant.arm.OpCode.arm.instruction;
 
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
 
 public class BIC_A8_342 extends ParseSupport {

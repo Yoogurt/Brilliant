@@ -5,9 +5,11 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction16;
 
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
-import static brilliant.arm.OpCode.OpUtil.parseRegister;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.parseRegister;
+import brilliant.arm.OpCode.factory.OpUtil;
 import brilliant.arm.OpCode.thumb.instruction16.support.ParseSupport;
+import brilliant.elf.vm.Register;
 
 public class ADD_A8_310 extends ParseSupport {
 
@@ -37,6 +39,10 @@ public class ADD_A8_310 extends ParseSupport {
 		StringBuilder sb = new StringBuilder("ADD ");
 		sb.append(parseRegister(Rd)).append(" , ");
 		sb.append(parseRegister(Rm));
+
+		if (Rm == OpUtil.PC)
+			if (Register.PC > 0)
+				sb.append(" @" + Integer.toHexString(Register.PC));
 
 		return sb.toString();
 	}

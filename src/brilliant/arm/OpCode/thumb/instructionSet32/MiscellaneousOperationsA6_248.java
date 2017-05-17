@@ -1,5 +1,6 @@
 package brilliant.arm.OpCode.thumb.instructionSet32;
 
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction32.CLZ_A8_362;
 import brilliant.arm.OpCode.thumb.instruction32.QADD_A8_540;
 import brilliant.arm.OpCode.thumb.instruction32.QDADD_A8_548;
@@ -11,7 +12,6 @@ import brilliant.arm.OpCode.thumb.instruction32.REVSH_A8_566;
 import brilliant.arm.OpCode.thumb.instruction32.REV_A8_562;
 import brilliant.arm.OpCode.thumb.instruction32.SEL_A8_602;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
-import static brilliant.arm.OpCode.OpUtil.*;
 
 public class MiscellaneousOperationsA6_248 {
 

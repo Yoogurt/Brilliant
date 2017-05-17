@@ -16,6 +16,7 @@ public class SMLSD_A8_632 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "SMLSD";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

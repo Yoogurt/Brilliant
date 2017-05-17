@@ -1,4 +1,4 @@
-package brilliant.arm.OpCode;
+package brilliant.arm.OpCode.factory;
 
 public class OpUtil {
 
@@ -117,9 +117,9 @@ public class OpUtil {
 
 		return data;
 	}
-	
+
 	public static int align(int data, int alignment) {
-		return data / alignment * data;
+		return data / alignment * alignment;
 	}
 
 	public static int armExpandImm(int imm12) {
@@ -134,7 +134,7 @@ public class OpUtil {
 	public static int thumbExpandImm(int imm12) {
 		imm12 &= 0xfff;
 		int high5 = imm12 >> 7;
-		
+
 		if (high5 == 0b00000 || high5 == 0b00001)
 			return imm12 & 0xff;
 		if (high5 == 0b00010 || high5 == 0b00011)

@@ -16,6 +16,7 @@ public class SRS_B9_2004 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "SRS.W";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

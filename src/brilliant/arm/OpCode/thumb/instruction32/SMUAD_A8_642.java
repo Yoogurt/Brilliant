@@ -16,6 +16,7 @@ public class SMUAD_A8_642 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "SMUAD";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

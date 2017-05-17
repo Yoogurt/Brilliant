@@ -7,15 +7,15 @@ package brilliant.arm.OpCode.arm.instruction;
 
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
 
-
 @Deprecated
 public class CDP_A8_358 extends ParseSupport {
 
 	public static final CDP_A8_358 INSTANCE = new CDP_A8_358();
 
 	public String parse(int data) {
-			throw new UnsupportedOperationException("CDP no implements");
+		throw new UnsupportedOperationException("CDP no implements");
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

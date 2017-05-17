@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 public class CalculateLine {
 	public static void main(String[] args) {
 
-		File file = new File("src\\com\\marik");
+		File file = new File("src\\brilliant");
 
 		if (!file.exists())
 			throw new RuntimeException("file not exists");
@@ -37,13 +37,19 @@ public class CalculateLine {
 
 	private static int getFileLine(File file) {
 
+		System.out.println("at " + file.getAbsolutePath());
+
 		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					new FileInputStream(file)));
 
 			int count = 0;
 
-			while (br.readLine() != null)
-				count++;
+			String str;
+
+			while ((str = br.readLine()) != null)
+				if (!str.equals(""))
+					count++;
 
 			br.close();
 

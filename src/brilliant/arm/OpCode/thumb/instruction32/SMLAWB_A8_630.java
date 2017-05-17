@@ -16,6 +16,7 @@ public class SMLAWB_A8_630 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "SMLAWB";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

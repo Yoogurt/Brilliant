@@ -16,6 +16,7 @@ public class SMLAD_A8_622 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "SMLAD";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

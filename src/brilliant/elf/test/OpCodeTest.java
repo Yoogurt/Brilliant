@@ -11,36 +11,48 @@ import static brilliant.elf.content.ELF_Constant.ST_TYPE.STT_NOTYPE;
 import static brilliant.elf.content.ELF_Constant.ST_TYPE.STT_OBJECT;
 import static brilliant.elf.content.ELF_Constant.ST_TYPE.STT_SECTION;
 
+import java.io.PrintStream;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
-import brilliant.arm.OpCode.OpCode;
+import brilliant.arm.OpCode.OpCodeDecodeHelper;
+import brilliant.arm.OpCode.OpCodeDecodeHelper.OpCodeHookCallback;
+import brilliant.arm.OpCode.factory.ParseTemplate;
 import brilliant.elf.content.ELF;
 import brilliant.elf.export.ELF_Symbol;
+import brilliant.elf.util.ByteUtil;
 import brilliant.elf.vm.OS;
-import brilliant.elf.vm.Register;
 
 public class OpCodeTest {
 
-	public static final int ARM = 0x0;
-	public static final int THUMB = 0x1;
-
 	public static void main(String[] args) throws Exception {
 		ELF elf = ELF.dlopen("C:/Users/Administrator/Desktop/libDS.so");
+		// OS.dumpMemory(new
+		// PrintStream("C:/Users/Administrator/Desktop/新建文本文档.txt"));
 
-		List<ELF_Symbol> symbols = elf.dumpHashSymtab();
+		// OpCodeDecodeHelper.decode(OS.getMemory(), 0xb68, 0xb74 - 0xb68, true,
+		// new C());
 
-		String functionName = "Java_com_gemo_mintourc_util_DSUtil_decode";
+		// List<ELF_Symbol> symbols = elf.dumpHashSymtab();
+		//
+		// String functionName = "Java_com_gemo_mintourc_util_DSUtil_decode";
+		//
+		// for (ELF_Symbol s : symbols) {
+		// if (functionName.equals(s.name)) {
+		// System.out.println(functionName);
+		// dumpOpCode(s);
+		// break;
+		// }
+		// }
 
-		for (ELF_Symbol s : symbols) {
-			if (functionName.equals(s.name)) {
-				System.out.println(functionName);
-				dumpOpCode(s);
-				break;
-			}
-		}
+		dump(elf.extractELF().funcs);
 	}
 
 	private static void dump(List<ELF_Symbol> symbols) {
+		
+		Collections.sort(symbols);
+		
 		for (ELF_Symbol s : symbols) {
 
 			String bind = null;
@@ -87,22 +99,40 @@ public class OpCodeTest {
 		}
 	}
 
-	private static void dumpOpCode(ELF_Symbol sym) {
+	private static class C implements OpCodeHookCallback {
 
-		System.out.println("address : 0x" + Integer.toHexString(sym.address));
-		System.out.println("size : 0x" + Integer.toHexString(sym.size));
+		@Override
+		public boolean exception(Throwable t) {
+			t.printStackTrace();
+			return true;
+		}
 
-		int mode = sym.address & 1;
-		
-		int start = sym.address & (-1 ^ 1);
-		
-		System.out.println("start : 0x" + Integer.toHexString(start));
+		@Override
+		public boolean Thumb32instructionDecodeDone(int current,
+				int instruction, ParseTemplate ret) {
+			System.out.println(Integer.toHexString(current) + " : "
+					+ ByteUtil.bytes2Hex(ByteUtil.int2bytes(instruction))
+					+ "  " + ret.parse(instruction));
+			return true;
+		}
 
-		if (mode == 0x0)
-			return;
-		else
-			OpCode.decodeThumbWithHex(OS.getMemory(), start, sym.size, true);
+		@Override
+		public boolean Thumb16instructionDecodeDone(int current,
+				short instruction, ParseTemplate ret) {
+			System.out.println(Integer.toHexString(current) + " : "
+					+ ByteUtil.bytes2Hex(ByteUtil.short2bytes(instruction))
+					+ "  " + ret.parse(instruction));
+			return true;
+		}
 
+		@Override
+		public boolean ArminstructionDecodeDone(int current, int instruction,
+				ParseTemplate ret) {
+			System.out.println(Integer.toHexString(current) + " : "
+					+ ByteUtil.bytes2Hex(ByteUtil.int2bytes(instruction))
+					+ "  " + ret.parse(instruction));
+			return true;
+		}
 	}
 
 }

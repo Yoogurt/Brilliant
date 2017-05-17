@@ -16,6 +16,7 @@ public class SBFX_A8_598 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "SBFX.W";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

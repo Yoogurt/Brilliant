@@ -1,11 +1,13 @@
 package brilliant.arm.OpCode.thumb.instructionSet32;
 
+import static brilliant.arm.OpCode.factory.OpUtil.assert0;
+import static brilliant.arm.OpCode.factory.OpUtil.assert1;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction32.LDRT_A8_466;
 import brilliant.arm.OpCode.thumb.instruction32.LDR_A8_406;
 import brilliant.arm.OpCode.thumb.instruction32.LDR_A8_410;
 import brilliant.arm.OpCode.thumb.instruction32.LDR_A8_412;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
-import static brilliant.arm.OpCode.OpUtil.*;
 
 class LoadWordA6_239 {
 	public static ParseSupport parse(int data) {

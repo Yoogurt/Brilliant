@@ -5,9 +5,9 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction32;
 
+import static brilliant.arm.OpCode.factory.OpUtil.SP;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
-import static brilliant.arm.OpCode.OpUtil.*;
-import static brilliant.elf.vm.OS.*;
 
 public class LDM_A8_396 extends ParseSupport {
 
@@ -30,7 +30,7 @@ public class LDM_A8_396 extends ParseSupport {
 	protected int getShift(int data) {
 		return getShiftInt(data, 0, 16);
 	}
-	
+
 	@Override
 	protected boolean shifterRegisterList() {
 		return true;
@@ -40,6 +40,7 @@ public class LDM_A8_396 extends ParseSupport {
 	protected boolean isRnwback(int data) {
 		return getShiftInt(data, 21, 1) == 0b1;
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

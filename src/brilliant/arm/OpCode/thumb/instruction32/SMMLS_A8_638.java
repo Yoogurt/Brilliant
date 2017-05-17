@@ -16,6 +16,7 @@ public class SMMLS_A8_638 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "SMMLS";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

@@ -16,6 +16,7 @@ public class SMLABB_A8_620 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "SMLABB";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

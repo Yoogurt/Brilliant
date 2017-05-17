@@ -16,6 +16,7 @@ public class SSAT16_A8_654 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "SSAT16";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

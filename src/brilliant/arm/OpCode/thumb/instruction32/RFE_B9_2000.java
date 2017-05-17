@@ -16,6 +16,7 @@ public class RFE_B9_2000 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "RFE.W";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

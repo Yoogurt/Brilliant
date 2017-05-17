@@ -1,6 +1,8 @@
 package brilliant.arm.OpCode.thumb.instructionSet16;
 
-import static brilliant.arm.OpCode.OpUtil.*;
+import static brilliant.arm.OpCode.factory.OpUtil.assert0;
+import static brilliant.arm.OpCode.factory.OpUtil.assert1;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction16.LDRB_A8_416;
 import brilliant.arm.OpCode.thumb.instruction16.LDRB_A8_422;
 import brilliant.arm.OpCode.thumb.instruction16.LDRH_A8_440;

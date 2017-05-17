@@ -7,7 +7,6 @@ package brilliant.arm.OpCode.arm.instruction;
 
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
 
-
 public class SBC_A8_596 extends ParseSupport {
 
 	public static final SBC_A8_596 INSTANCE = new SBC_A8_596();

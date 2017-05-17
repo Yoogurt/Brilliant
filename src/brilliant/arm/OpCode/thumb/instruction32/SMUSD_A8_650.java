@@ -16,6 +16,7 @@ public class SMUSD_A8_650 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "SMUSD";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

@@ -16,6 +16,7 @@ public class SMC_B9_2002 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "SMC.W";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

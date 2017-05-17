@@ -2,25 +2,25 @@ package brilliant.elf.vm;
 
 public class Register {
 
-	public static volatile int R1;
-	public static volatile int R2;
-	public static volatile int R3;
-	public static volatile int R4;
-	public static volatile int R5;
-	public static volatile int R6;
-	public static volatile int R7;
-	public static volatile int R8;
-	public static volatile int R9;
-	public static volatile int R10;
-	public static volatile int R11;
-	public static volatile int R12;
-	public static volatile int SP;
-	public static volatile int LR;
-	public static volatile int PC;
+	public static volatile int R1 = -1;
+	public static volatile int R2 = -1;
+	public static volatile int R3 = -1;
+	public static volatile int R4 = -1;
+	public static volatile int R5 = -1;
+	public static volatile int R6 = -1;
+	public static volatile int R7 = -1;
+	public static volatile int R8 = -1;
+	public static volatile int R9 = -1;
+	public static volatile int R10 = -1;
+	public static volatile int R11 = -1;
+	public static volatile int R12 = -1;
+	public static volatile int SP = -1;
+	public static volatile int LR = -1;
+	public static volatile int PC = -1;
 
-	public static volatile int APSR;
-	public static volatile int CPSR;
-	public static volatile int SPCR;
+	public static volatile int APSR = -1;
+	public static volatile int CPSR = -1;
+	public static volatile int SPCR = -1;
 
 	/**
 	 * Negative condition flag

@@ -1,6 +1,5 @@
 package brilliant.elf.test;
 
-import brilliant.elf.util.ByteUtil;
 import brilliant.elf.vm.OS;
 
 @SuppressWarnings("all")

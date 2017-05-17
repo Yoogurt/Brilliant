@@ -1,6 +1,6 @@
 package brilliant.arm.OpCode.arm.instructionSet;
 
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.arm.instruction.LDRHT_A8_448;
 import brilliant.arm.OpCode.arm.instruction.LDRSBT_A8_456;
 import brilliant.arm.OpCode.arm.instruction.LDRSHT_A8_464;

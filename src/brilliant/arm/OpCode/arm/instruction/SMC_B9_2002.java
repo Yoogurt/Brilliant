@@ -7,7 +7,6 @@ package brilliant.arm.OpCode.arm.instruction;
 
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
 
-
 public class SMC_B9_2002 extends ParseSupport {
 
 	public static final SMC_B9_2002 INSTANCE = new SMC_B9_2002();

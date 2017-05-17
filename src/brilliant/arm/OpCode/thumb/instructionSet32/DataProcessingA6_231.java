@@ -1,6 +1,6 @@
 package brilliant.arm.OpCode.thumb.instructionSet32;
 
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction32.ADC_A8_300;
 import brilliant.arm.OpCode.thumb.instruction32.ADD_A8_306;
 import brilliant.arm.OpCode.thumb.instruction32.AND_A8_324;

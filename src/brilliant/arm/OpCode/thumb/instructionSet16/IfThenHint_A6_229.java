@@ -1,6 +1,6 @@
 package brilliant.arm.OpCode.thumb.instructionSet16;
 
-import brilliant.arm.OpCode.OpUtil;
+import brilliant.arm.OpCode.factory.OpUtil;
 import brilliant.arm.OpCode.thumb.instruction16.IT_A8_390;
 import brilliant.arm.OpCode.thumb.instruction16.NOP_A8_510;
 import brilliant.arm.OpCode.thumb.instruction16.SEV_A8_606;
@@ -30,7 +30,8 @@ class IfThenHint_A6_229 {
 		case 0b0100:
 			return SEV_A8_606.INSTANCE;
 		default:
-			throw new IllegalArgumentException("Unable to decode " + Integer.toBinaryString(data));
+			throw new IllegalArgumentException("Unable to decode "
+					+ Integer.toBinaryString(data));
 		}
 	}
 }

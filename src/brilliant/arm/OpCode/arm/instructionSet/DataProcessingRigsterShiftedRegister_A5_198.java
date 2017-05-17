@@ -1,8 +1,8 @@
 package brilliant.arm.OpCode.arm.instructionSet;
 
-import static brilliant.arm.OpCode.OpUtil.assert0;
-import static brilliant.arm.OpCode.OpUtil.assert1;
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.assert0;
+import static brilliant.arm.OpCode.factory.OpUtil.assert1;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.arm.instruction.ADC_A8_304;
 import brilliant.arm.OpCode.arm.instruction.ADD_A8_314;
 import brilliant.arm.OpCode.arm.instruction.AND_A8_328;
@@ -26,7 +26,7 @@ import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
 
 public class DataProcessingRigsterShiftedRegister_A5_198 {
 	public static ParseSupport parse(int data) {
-		
+
 		int op1 = getShiftInt(data, 20, 5);
 		int op2 = getShiftInt(data, 5, 2);
 
@@ -71,8 +71,8 @@ public class DataProcessingRigsterShiftedRegister_A5_198 {
 
 		if (assert0(op1, 1, 2) && assert1(op1, 3, 4))
 			return ORR_A8_520.INSTANCE;
-		
-		if(assert0(op1 , 2) && assert1(op1 , 1,3,4))
+
+		if (assert0(op1, 2) && assert1(op1, 1, 3, 4))
 			switch (op2) {
 			case 0b00:
 				return LSL_A8_470.INSTANCE;
@@ -83,14 +83,13 @@ public class DataProcessingRigsterShiftedRegister_A5_198 {
 			case 0b11:
 				return ROR_A8_570.INSTANCE;
 			}
-		
 
 		if (assert0(op1, 1) && assert1(op1, 2, 3, 4))
 			return BIC_A8_344.INSTANCE;
 
 		if (assert1(op1, 1, 2, 3, 4))
-			return MVN_A8_508.INSTANCE;		
-		
+			return MVN_A8_508.INSTANCE;
+
 		throw new IllegalArgumentException("Unable to decode instruction "
 				+ Integer.toBinaryString(data));
 	}

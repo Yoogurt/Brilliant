@@ -1,11 +1,11 @@
 package brilliant.arm.OpCode.arm.instruction.support;
 
-import static brilliant.arm.OpCode.OpUtil.getShiftInt;
-import static brilliant.arm.OpCode.OpUtil.parseRegister;
-import static brilliant.arm.OpCode.OpUtil.parseRegisterList;
-import brilliant.arm.OpCode.CondFactory;
-import brilliant.arm.OpCode.ParseTemplate;
-import brilliant.arm.OpCode.TypeFactory;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.parseRegister;
+import static brilliant.arm.OpCode.factory.OpUtil.parseRegisterList;
+import brilliant.arm.OpCode.factory.CondFactory;
+import brilliant.arm.OpCode.factory.ParseTemplate;
+import brilliant.arm.OpCode.factory.TypeFactory;
 
 public abstract class ParseSupport implements ParseTemplate {
 
@@ -59,7 +59,7 @@ public abstract class ParseSupport implements ParseTemplate {
 		if (imm5 != 0) {
 			if (type >= 0)
 				sb.append(TypeFactory.parse(type));
-			parseShift(sb, imm5);
+			parseShift(sb, imm5, type >= 0);
 		}
 		String comment = getCommnet(data);
 
@@ -69,8 +69,13 @@ public abstract class ParseSupport implements ParseTemplate {
 		return sb.toString();
 	}
 
-	private void parseShift(StringBuilder sb, int imm5) {
+	private void parseShift(StringBuilder sb, int imm5, boolean type) {
+
 		sb.append(" ");
+
+		if (!type)
+			sb.append(", ");
+
 		if (shifterRegister())
 			sb.append(parseRegister(imm5));
 		else if (shifterRegisterList())

@@ -16,6 +16,7 @@ public class SSAT_A8_652 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "SSAT.W";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

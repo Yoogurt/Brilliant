@@ -7,7 +7,6 @@ package brilliant.arm.OpCode.thumb.instruction16;
 
 import brilliant.arm.OpCode.thumb.instruction16.support.ParseSupport;
 
-
 @Deprecated
 public class YIELD_A8_1108 extends ParseSupport {
 

@@ -7,7 +7,6 @@ package brilliant.arm.OpCode.arm.instruction;
 
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
 
-
 /**
  * @author Yoogurt This class is an other implements of {@link LDR_A8_408}
  */

@@ -16,6 +16,7 @@ public class USADA8_A8_794 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "USADA8";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

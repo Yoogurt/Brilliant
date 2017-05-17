@@ -16,6 +16,7 @@ public class UBFX_A8_756 extends ParseSupport {
 	protected String getOpCode(int data) {
 		return "UBFX.W";
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

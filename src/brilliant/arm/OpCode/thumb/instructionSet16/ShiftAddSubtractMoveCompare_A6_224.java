@@ -1,6 +1,8 @@
 package brilliant.arm.OpCode.thumb.instructionSet16;
 
-import static brilliant.arm.OpCode.OpUtil.*;
+import static brilliant.arm.OpCode.factory.OpUtil.assert0;
+import static brilliant.arm.OpCode.factory.OpUtil.assert1;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction16.ADD_A8_306;
 import brilliant.arm.OpCode.thumb.instruction16.ADD_A8_310;
 import brilliant.arm.OpCode.thumb.instruction16.ASR_A8_330;
@@ -50,7 +52,8 @@ class ShiftAddSubtractMoveCompare_A6_224 {
 		if (assert1(OpCode, 2, 3, 4))
 			return SUB_A8_708.INSTANCE;
 
-		throw new IllegalArgumentException("Unable to decode instruction " + Integer.toBinaryString(data));
+		throw new IllegalArgumentException("Unable to decode instruction "
+				+ Integer.toBinaryString(data));
 	}
 
 }

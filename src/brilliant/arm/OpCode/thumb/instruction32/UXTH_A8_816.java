@@ -5,11 +5,9 @@
 -------------------------------*/
 package brilliant.arm.OpCode.thumb.instruction32;
 
-import brilliant.arm.OpCode.TypeFactory;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+import brilliant.arm.OpCode.factory.TypeFactory;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
-import static brilliant.elf.vm.OS.*;
-import static brilliant.elf.vm.Register.*;
-import static brilliant.arm.OpCode.OpUtil.*;
 
 public class UXTH_A8_816 extends ParseSupport {
 
@@ -39,6 +37,7 @@ public class UXTH_A8_816 extends ParseSupport {
 	protected int getShift(int data) {
 		return getShiftInt(data, 4, 2) << 3;
 	}
+
 	@Override
 	public void performExecuteCommand(int data) {
 	}

@@ -1,6 +1,8 @@
 package brilliant.arm.OpCode.thumb.instructionSet32;
 
-import brilliant.arm.OpCode.arm.instructionSet.MiscellaneousInstruction_A5_207;
+import static brilliant.arm.OpCode.factory.OpUtil.assert0;
+import static brilliant.arm.OpCode.factory.OpUtil.assert1;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.thumb.instruction32.BL_A8_348;
 import brilliant.arm.OpCode.thumb.instruction32.BXJ_A8_354;
 import brilliant.arm.OpCode.thumb.instruction32.B_A8_334;
@@ -16,7 +18,6 @@ import brilliant.arm.OpCode.thumb.instruction32.SMC_B9_2002;
 import brilliant.arm.OpCode.thumb.instruction32.SUBS_B9_2010;
 import brilliant.arm.OpCode.thumb.instruction32.UDF_A8_758;
 import brilliant.arm.OpCode.thumb.instruction32.support.ParseSupport;
-import static brilliant.arm.OpCode.OpUtil.*;
 
 class BranchesA6_235 {
 	public static ParseSupport parse(int data) {
