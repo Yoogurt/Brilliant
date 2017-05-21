@@ -440,7 +440,11 @@ final class ELF_Dynamic {
 	}
 
 	private void readDT_GNU_HASH(Elf_Dyn dynamic) {
-		throw new UnsupportedOperationException("DT_GNU_HASH no implements");
+		if (mHash == 0)
+			mHash = ByteUtil.bytes2Int32(dynamic.d_val);
+		else
+			throw new IllegalStateException(
+					"DT_GNU_HASH and DT_HASH appear together");
 	}
 
 	private void assertSYMENT(Elf_Dyn dynamic) {

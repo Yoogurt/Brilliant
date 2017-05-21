@@ -321,7 +321,7 @@ public class ByteUtil {
 		StringBuilder sb = new StringBuilder();
 
 		int read;
-		while ((read = raf.read()) != 0)
+		while ((read = raf.read()) != 0 && read > 0)
 			sb.append((char) read);
 
 		return sb.toString();

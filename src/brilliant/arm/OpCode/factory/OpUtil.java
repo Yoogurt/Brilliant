@@ -1,5 +1,7 @@
 package brilliant.arm.OpCode.factory;
 
+import brilliant.elf.util.Log;
+
 public class OpUtil {
 
 	public static final int R0 = 0x0;
@@ -27,7 +29,7 @@ public class OpUtil {
 	public static boolean assert0(int data, int... index) {
 
 		for (int mIndex : index)
-			if (((data >> mIndex) & 1) == 1)
+			if (((data >>> mIndex) & 1) == 1)
 				return false;
 
 		return true;
@@ -40,7 +42,7 @@ public class OpUtil {
 	 */
 	public static boolean assert1(int data, int... index) {
 		for (int mIndex : index)
-			if (((data >> mIndex) & 1) == 0)
+			if (((data >>> mIndex) & 1) == 0)
 				return false;
 
 		return true;
@@ -57,7 +59,9 @@ public class OpUtil {
 	 * result 0b10 = 2
 	 */
 	public static int getShiftInt(int data, int from, int length) {
-		return (data >> from) & ((1 << length) - 1);
+		Log.e(Integer.toBinaryString(data) + "  from " + from + "  length "
+				+ length);
+		return (data >>> from) & ((1 << length) - 1);
 	}
 
 	/**
@@ -91,8 +95,8 @@ public class OpUtil {
 
 		StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; (data >> i) > 0; i++)
-			if (((data >> i) & 1) == 1 && discard != i)
+		for (int i = 0; (data >>> i) > 0; i++)
+			if (((data >>> i) & 1) == 1 && discard != i)
 				sb.append(parseRegister(i)).append(" , ");
 
 		if (sb.length() > 0)
@@ -102,13 +106,13 @@ public class OpUtil {
 
 	public static boolean isRigisterInRegisterList(int target, int registerList) {
 
-		return 1 == ((registerList >> target) & 1);
+		return 1 == ((registerList >>> target) & 1);
 
 	}
 
 	public static int signExtend(int data, int length) {
 
-		int sign = 1 & (data >> (length - 1));
+		int sign = 1 & (data >>> (length - 1));
 
 		data ^= sign << (length - 1);
 
@@ -151,9 +155,7 @@ public class OpUtil {
 	}
 
 	public static void main(String[] args) {
-		int no = 0b111111111111;
-		System.out.println(Integer.toBinaryString(thumbExpandImm(no)));
-		System.out.println(Integer.toHexString(thumbExpandImm(no)));
+	System.out.println(Integer.toBinaryString(0b1110101111111111111011001110 >>> 1));
 	}
 
 }

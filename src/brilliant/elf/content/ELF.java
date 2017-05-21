@@ -16,13 +16,11 @@ import static brilliant.elf.content.ELF_Constant.STB_Info.STB_WEAK;
 import static brilliant.elf.content.ELF_Definition.ELF_R_SYM;
 import static brilliant.elf.content.ELF_Definition.ELF_R_TYPE;
 import static brilliant.elf.content.ELF_Definition.ELF_ST_BIND;
-import static brilliant.elf.content.ELF_Definition.ELF_ST_TYPE;
 import static brilliant.elf.vm.OS.MAP_FIXED;
 import static brilliant.elf.vm.OS.PAGE_END;
 import static brilliant.elf.vm.OS.PAGE_START;
 import static brilliant.elf.vm.OS.getMemory;
 import static brilliant.elf.vm.OS.mmap;
-import static brilliant.elf.vm.OS.unmmap;
 
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -38,8 +36,6 @@ import javax.activation.UnsupportedDataTypeException;
 import brilliant.elf.content.ELF_Dynamic.Elf_Sym;
 import brilliant.elf.content.ELF_ProgramHeader.ELF_Phdr;
 import brilliant.elf.content.ELF_Relocate.Elf_rel;
-import brilliant.elf.export.ELFExport;
-import brilliant.elf.export.ELF_Symbol;
 import brilliant.elf.util.ByteUtil;
 import brilliant.elf.util.Log;
 import brilliant.elf.vm.OS;
@@ -100,9 +96,7 @@ public class ELF {
 		}
 	}
 
-	private ELFExport mExport;
-
-	public static boolean forDisassmebler = false;
+	public static boolean forDisassmebler = true;
 
 	private Map<ELF_Phdr, MapEntry> MAP = new HashMap<>();
 
@@ -176,6 +170,10 @@ public class ELF {
 
 	public static final String dlerror() {
 		return null;
+	}
+
+	public boolean isLittleEndian() {
+		return elf_header.isLittleEndian();
 	}
 
 	private ELF(String file, boolean do_load) throws Exception {
@@ -1023,75 +1021,6 @@ public class ELF {
 
 		} while (false);
 		return s;
-	}
-
-	/*--------------------------------export---------------------------*/
-
-	private List<ELF_Symbol> dumpHashSymtab() {
-		/*
-		 * for (int n = ByteUtil.bytes2Int32(OS.getMemory(), (int) (si.bucket +
-		 * (hash % si.nbucket) * uint32_t), uint32_t,
-		 * si.elf_header.isLittleEndian()); n != 0; n =
-		 * ByteUtil.bytes2Int32(OS.getMemory(), si.chain + n * uint32_t,
-		 * uint32_t, si.elf_header.isLittleEndian()))
-		 */
-
-		List<ELF_Symbol> AllFunction = new ArrayList<ELF_Symbol>();
-
-		for (int hash = 0; hash < nbucket; hash++) {
-			for (int n = ByteUtil.bytes2Int32(OS.getMemory(),
-					(int) (bucket + hash * uint32_t), uint32_t, true); n != 0; n = ByteUtil
-					.bytes2Int32(OS.getMemory(), chain + n * uint32_t,
-							uint32_t, elf_header.isLittleEndian())) {
-
-				Elf_Sym s = Elf_Sym.reinterpret_cast(OS.getMemory(), symtab
-						+ (n * Elf_Sym.size()));
-
-				ELF_Symbol symbol = new ELF_Symbol();
-
-				symbol.name = ByteUtil.getStringFromMemory(strtab
-						+ ByteUtil.bytes2Int32(s.st_name));
-
-				symbol.address = ByteUtil.bytes2Int32(s.st_value);
-
-				symbol.size = ByteUtil.bytes2Int32(s.st_size);
-				symbol.shndx = ByteUtil.bytes2Int32(s.st_shndx);
-
-				symbol.other = ByteUtil.byte2Int32(s.st_other);
-
-				symbol.bind = ELF_ST_BIND(s.st_info);
-				symbol.type = ELF_ST_TYPE(s.st_info);
-
-				AllFunction.add(symbol);
-
-			}
-
-		}
-		return AllFunction;
-	}
-
-	public ELFExport extractELF() {
-
-		if (mExport != null)
-			return mExport;
-
-		mExport = new ELFExport();
-		mExport.got = pltgot;
-		mExport.initFunc = init_func;
-		mExport.initArray = init_array;
-		mExport.initArraySz = init_array_sz;
-
-		mExport.finiFunc = fini_func;
-		mExport.finiArray = fini_array;
-		mExport.finiArraySz = fini_array_sz;
-
-		mExport.funcs = dumpHashSymtab();
-
-		mExport.funcImpl = mFakeFuncImpl;
-
-		mExport.needed = elf_dynamic.getNeedLibraryName();
-
-		return mExport;
 	}
 
 	public static void main(String[] args) throws Exception {

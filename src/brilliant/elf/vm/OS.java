@@ -120,5 +120,9 @@ public class OS {
 		out.println();
 		out.flush();
 	}
+	
+	public static void main(String[] args) {
+		System.out.println(PAGE_END(0X8EC8));
+	}
 
 }

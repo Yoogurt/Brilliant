@@ -4,11 +4,14 @@ import static brilliant.arm.OpCode.factory.OpUtil.assert0;
 import static brilliant.arm.OpCode.factory.OpUtil.assert1;
 import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import brilliant.elf.util.Log;
 
 public class ConditionParseFactory {
 
 	public static ParseSupport parseCondition(int data) {
+		
 		int op1 = getShiftInt(data, 25, 3);
+		
 		int op = getShiftInt(data, 4, 1);
 
 		if (assert0(op1, 1, 2))
