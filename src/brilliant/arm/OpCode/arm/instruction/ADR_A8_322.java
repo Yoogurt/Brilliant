@@ -8,9 +8,10 @@ package brilliant.arm.OpCode.arm.instruction;
 import static brilliant.arm.OpCode.factory.OpUtil.armExpandImm;
 import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import brilliant.arm.OpCode.factory.Remotable;
 import brilliant.elf.vm.Register;
 
-public class ADR_A8_322 extends ParseSupport {
+public class ADR_A8_322 extends ParseSupport implements Remotable {
 
 	public static final ADR_A8_322 INSTANCE = new ADR_A8_322();
 
@@ -47,8 +48,7 @@ public class ADR_A8_322 extends ParseSupport {
 	@Override
 	protected int getShift(int data) {
 		boolean before = getShiftInt(data, 21, 4) == 0b0010;
-		return before ? -armExpandImm(getShiftInt(data, 0, 12))
-				: armExpandImm(getShiftInt(data, 0, 12));
+		return before ? -armExpandImm(getShiftInt(data, 0, 12)) : armExpandImm(getShiftInt(data, 0, 12));
 	}
 
 	@Override
@@ -60,6 +60,12 @@ public class ADR_A8_322 extends ParseSupport {
 
 	@Override
 	public void performExecuteCommand(int data) {
+	}
+
+	@Override
+	public int remoteValue(int data) {
+		boolean before = getShiftInt(data, 21, 4) == 0b0010;
+		return before ? -armExpandImm(getShiftInt(data, 0, 12)) : armExpandImm(getShiftInt(data, 0, 12));
 	}
 
 }

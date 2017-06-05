@@ -1,6 +1,6 @@
 package brilliant.arm.OpCode;
 
-import brilliant.arm.OpCode.arm.instructionSet.ArmFactory;
+import brilliant.arm.OpCode.arm.ArmFactory;
 import brilliant.arm.OpCode.factory.ParseTemplate;
 import brilliant.arm.OpCode.thumb.ThumbFactory;
 import brilliant.elf.content.ELF;
@@ -54,7 +54,7 @@ public final class OpCodeDecodeHelper {
 
 		int current;
 
-		for (int i = 0; i < size; i += 4) {
+		for (int i = 0; i < size; i += 0b1000) {
 
 			current = start + i;
 			Register.PC = current + 8;
@@ -89,7 +89,7 @@ public final class OpCodeDecodeHelper {
 
 		int current;
 
-		for (int i = 0; i <= size; i += 2) {
+		for (int i = 0; i <= size; i += 0b10) {
 
 			current = start + i;
 			Register.PC = current + 4;
@@ -151,11 +151,6 @@ public final class OpCodeDecodeHelper {
 					break;
 			}
 		}
-	}
-
-	public static void main(String[] arg) {
-		int data = 0xebfffece;
-		System.out.println(ArmFactory.parse(data).parse(data));
 	}
 
 	public interface OpCodeHookCallback {

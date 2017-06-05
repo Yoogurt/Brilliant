@@ -8,6 +8,11 @@ package brilliant.arm.OpCode.arm.instruction;
 import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
 
+/**
+ * @author Yoogurt
+ * BX_A8_352 is not Remotable , because it jumps by register
+ *
+ */
 public class BX_A8_352 extends ParseSupport {
 
 	public static final BX_A8_352 INSTANCE = new BX_A8_352();

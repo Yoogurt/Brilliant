@@ -8,8 +8,9 @@ package brilliant.arm.OpCode.arm.instruction;
 import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 import static brilliant.arm.OpCode.factory.OpUtil.signExtend;
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import brilliant.arm.OpCode.factory.Remotable;
 
-public class B_A8_334 extends ParseSupport {
+public class B_A8_334 extends ParseSupport implements Remotable {
 
 	public static final B_A8_334 INSTANCE = new B_A8_334();
 
@@ -25,6 +26,11 @@ public class B_A8_334 extends ParseSupport {
 
 	@Override
 	public void performExecuteCommand(int data) {
+	}
+
+	@Override
+	public int remoteValue(int data) {
+		return signExtend(getShiftInt(data, 0, 24) << 2, 24);
 	}
 
 }
