@@ -38,7 +38,7 @@ public final class OpCodeDecodeHelper {
 
 	public static void decode(int start, int size, ELF elf,
 			OpCodeHookCallback callback) {
-		decode(OS.getMemory(), start, size, elf.isLittleEndian(), callback);
+		decode(OS.getMainImage().getMemory(), start, size, elf.isLittleEndian(), callback);
 	}
 
 	public static boolean isArm(int position) {

@@ -7,17 +7,31 @@ import brilliant.elf.util.ByteUtil;
 
 public class OS {
 
+	private OS() {
+
+	}
+
+	private final static OS main = new OS();
+
+	public static final OS getMainImage() {
+		return main;
+	}
+
+	public static final OS newImage() {
+		return new OS();
+	}
+
 	public static boolean debug = false;
 	/**
 	 * don't pull it out , because it will change the reference while running
 	 * out space
 	 */
-	public static byte[] mMemory = new byte[OS.PAGE_SIZE];
+	public byte[] mMemory = new byte[OS.PAGE_SIZE];
 	/**
 	 * don't pull it out , because it will change the reference while running
 	 * out space
 	 */
-	public static byte[] mFlag = { -1 };
+	public byte[] mFlag = { -1 };
 
 	@Deprecated
 	public static final byte PROT_EXEC = 4;// not implements
@@ -50,58 +64,35 @@ public class OS {
 		return PAGE_START(val + (PAGE_SIZE - 1));
 	}
 
-	public static int mmap(int start, int length, int flags,
-			RandomAccessFile fd, long offset) {
-		return MemoryMapper.mmap(start, length, (byte) (flags | MAP_ANONYMOUS),
-				fd, offset);
+	public int mmap(int start, int length, int flags, RandomAccessFile fd, long offset) {
+		return MemoryMapper.mmap(start, length, (byte) (flags | MAP_ANONYMOUS), fd, offset , this);
 	}
 
-	public static byte[] getMemory() {
+	public byte[] getMemory() {
 		return mMemory;
 	}
 
-	public static void reset() {
+	public void reset() {
 		mMemory = new byte[OS.PAGE_SIZE];
 		mFlag = new byte[] { -1 };
-
-		Register.R1 = -1;
-		Register.R2 = -1;
-		Register.R3 = -1;
-		Register.R4 = -1;
-		Register.R5 = -1;
-		Register.R6 = -1;
-		Register.R7 = -1;
-		Register.R8 = -1;
-		Register.R9 = -1;
-		Register.R10 = -1;
-		Register.R11 = -1;
-		Register.R12 = -1;
-		Register.SP = -1;
-		Register.LR = -1;
-		Register.PC = -1;
-
-		Register.APSR = -1;
-		Register.CPSR = -1;
-		Register.SPCR = -1;
 
 		System.gc(); // collect garbage if necessary
 	}
 
-	public static int unmmap(int start, int size) {
-		return MemoryMapper.unmmap(start, size);
+	public int unmmap(int start, int size) {
+		return MemoryMapper.unmmap(start, size, this);
 	}
 
-	public static void dumpMemory() {
-
+	public void dumpMemory() {
 		dumpMemory(System.out);
 	}
 
-	public static void dumpMemory(PrintStream out) {
+	public void dumpMemory(PrintStream out) {
 
 		dumpMemory(out, 0, mMemory.length);
 	}
 
-	public static void dumpMemory(PrintStream out, int startIndex, int endIndex) {
+	public void dumpMemory(PrintStream out, int startIndex, int endIndex) {
 
 		int line = startIndex >> 4;
 		out.printf("%5s : ", line);
@@ -120,7 +111,7 @@ public class OS {
 		out.println();
 		out.flush();
 	}
-	
+
 	public static void main(String[] args) {
 		System.out.println(PAGE_END(0X8EC8));
 	}

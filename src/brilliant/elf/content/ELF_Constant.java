@@ -554,5 +554,4 @@ public final class ELF_Constant {
 		public static final int SHN_COMMON = 0xfff2;
 		public static final int SHN_HIRESERVE = 0xffff;
 	}
-
 }

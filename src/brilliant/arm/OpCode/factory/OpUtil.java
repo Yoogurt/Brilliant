@@ -137,7 +137,7 @@ public class OpUtil {
 
 	public static int thumbExpandImm(int imm12) {
 		imm12 &= 0xfff;
-		int high5 = imm12 >> 7;
+		int high5 = imm12 >>> 7;
 
 		if (high5 == 0b00000 || high5 == 0b00001)
 			return imm12 & 0xff;

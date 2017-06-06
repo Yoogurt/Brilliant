@@ -19,10 +19,9 @@ import static brilliant.elf.content.ELF_Definition.ELF_ST_BIND;
 import static brilliant.elf.vm.OS.MAP_FIXED;
 import static brilliant.elf.vm.OS.PAGE_END;
 import static brilliant.elf.vm.OS.PAGE_START;
-import static brilliant.elf.vm.OS.getMemory;
-import static brilliant.elf.vm.OS.mmap;
 
 import java.io.File;
+import java.io.PrintStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.activation.UnsupportedDataTypeException;
+import javax.management.RuntimeErrorException;
 
 import brilliant.elf.content.ELF_Dynamic.Elf_Sym;
 import brilliant.elf.content.ELF_ProgramHeader.ELF_Phdr;
@@ -46,18 +46,20 @@ import brilliant.elf.vm.OS;
  * @author Yoogurt
  *
  */
+@SuppressWarnings("all")
 public class ELF {
 
 	public static final String[] ENV = { "env/" };
 
 	/**
-	 * Global Share Object
+	 * Global Loaded Object
 	 */
-	private static final Map<String, ELF> gso = new LinkedHashMap<>();
+	private static final Map<String, ELF> glo = new LinkedHashMap<>();
 
+	/* main executable */
 	private static final ELF somain;
 
-	/* main executable file , in android usually is app_process , ignore */
+	/* main executable file , in android , usually is app_process , ignore */
 	static {
 		somain = null;
 	}
@@ -68,7 +70,6 @@ public class ELF {
 	}
 
 	private static class MapEntry {
-
 		long seg_start;
 		long seg_end;
 
@@ -83,9 +84,9 @@ public class ELF {
 
 		long file_page_start;
 		long file_length;
-
 	}
 
+	/* for disassembler */
 	public static class FakeFuncImpl {
 		public String function;
 		public int address;
@@ -102,41 +103,68 @@ public class ELF {
 
 	private boolean mEnable = false;
 
+	/* full name of this file */
 	private String name;
 
 	private ELF_Header elf_header;
 	private ELF_ProgramHeader elf_phdr;
 	private ELF_Dynamic elf_dynamic;
 
+	/* current elf needs file */
 	private ELF[] needed;
 
+	/* elf hash */
 	private int nbucket;
 	private int nchain;
 	private int bucket;
 	private int chain;
+	/* elf hash */
 
+	/* gnu hash */
+	private boolean is_gnu_hash = false;
+
+	private long gnu_hash;
+	private int gnu_nbucket;
+	private int gnu_maskwords;
+	private int gnu_shift2;
+	private int gnu_bloom_filter;
+	private int gnu_bucket;
+	private int gnu_chain;
+	/* gnu hash */
+
+	/* symbol table */
 	private int symtab;
 
+	/* string table */
 	private int strtab;
 
 	private int pltgot;
 
+	/* initialized function */
 	private int init_func;
 	private boolean hasInitFunc = false;
 
 	private int init_array;
 	private int init_array_sz;
 	private boolean hasInitArray = false;
+	/* initialized function */
 
+	/* finished function */
 	private int fini_func;
 	private boolean hasFiniFunc = false;
 
 	private int fini_array;
 	private int fini_array_sz;
 	private boolean hasFiniArray = false;
+	/* initialize function */
 
+	/* elf base address , usually be 0 */
 	private int elf_base;
+
+	/* elf load offset */
 	private int elf_load_bias;
+
+	/* takes space in memory */
 	private int elf_size;
 
 	private boolean hasDT_SYMBOLIC;
@@ -151,15 +179,15 @@ public class ELF {
 
 	public static ELF dlopen(String file) {
 
-		if (gso.containsKey(file))
-			return gso.get(file);
+		if (glo.containsKey(file))
+			return glo.get(file);
 
 		try {
 
 			ELF elf = new ELF(file, true);
 			elf.mEnable = true;
 
-			gso.put(file, elf);
+			glo.put(file, elf);
 			return elf;
 
 		} catch (Throwable e) {
@@ -178,10 +206,9 @@ public class ELF {
 
 	private ELF(String file, boolean do_load) throws Exception {
 		this(new File(file), do_load);
-		System.out.println("\n" + name + " loaded ! base : "
-				+ Integer.toHexString(elf_base) + " to : "
-				+ Integer.toHexString(elf_base + elf_size) + "  load_bias : "
-				+ Integer.toHexString(elf_load_bias) + "\n\n\n");
+		System.out.println("\n" + name + " loaded ! base : " + Integer.toHexString(elf_base) + " to : "
+				+ Integer.toHexString(elf_base + elf_size) + "  load_bias : " + Integer.toHexString(elf_load_bias)
+				+ "\n\n\n");
 	}
 
 	public static int dlsym(ELF elf, String functionName) {
@@ -190,22 +217,19 @@ public class ELF {
 			return -1;
 
 		if (elf != null) {
-			Elf_Sym sym = soinfo_elf_lookup(elf, elf_hash(functionName),
-					functionName);
+			Elf_Sym sym = soinfo_elf_lookup(elf, elf_hash(functionName), functionName);
 
 			if (sym != null)
-				if (ELF_ST_BIND(sym.st_info) == STB_GLOBAL
-						&& ByteUtil.bytes2Int32(sym.st_shndx) != 0)
-					return ByteUtil.bytes2Int32(sym.st_value)
-							+ elf.elf_load_bias;
+				if (ELF_ST_BIND(sym.st_info) == STB_GLOBAL && ByteUtil.bytes2Int32(sym.st_shndx) != 0)
+					return ByteUtil.bytes2Int32(sym.st_value) + elf.elf_load_bias;
 		}
 		return 0;
 	}
 
 	public static void dlcolse() {
 
-		OS.reset();
-		gso.clear();
+		OS.getMainImage().reset();
+		glo.clear();
 
 	}
 
@@ -221,23 +245,20 @@ public class ELF {
 		}
 	}
 
-	private void findLibrary(RandomAccessFile raf, boolean do_load)
-			throws Exception {
+	private void findLibrary(RandomAccessFile raf, boolean do_load) throws Exception {
 
 		elf_header = new ELF_Header(raf);
 		/*
 		 * big endian will be supported someday rather than now
 		 */
 		if (!elf_header.isLittleEndian())
-			throw new UnsupportedDataTypeException(
-					"ELFDecoder don't support big endian architecture");
+			throw new UnsupportedDataTypeException("ELFDecoder don't support big endian architecture");
 
 		/*
 		 * 64bit will be supported someday rather than now
 		 */
 		if (!elf_header.is32Bit())
-			throw new UnsupportedDataTypeException(
-					"ELFDecoder don't support except 32 bit architecture");
+			throw new UnsupportedDataTypeException("ELFDecoder don't support except 32 bit architecture");
 
 		elf_phdr = new ELF_ProgramHeader(raf, elf_header, false);
 
@@ -248,7 +269,7 @@ public class ELF {
 			loadSegments(raf);
 		}
 
-		elf_dynamic = new ELF_Dynamic(raf, elf_phdr.getDynamicSegment());
+		elf_dynamic = new ELF_Dynamic(raf, elf_phdr.getDynamicSegment(), elf_load_bias);
 
 		if (do_load) {
 			link_image();
@@ -264,21 +285,20 @@ public class ELF {
 
 		ReserveLoadableSegment r = phdr_table_get_load_size(allLoadableSegment);
 
-		elf_base = mmap(0, (int) (r.max_address - r.min_address), (byte) 0,
-				null, 0);
+		elf_base = OS.getMainImage().mmap(0, (int) (r.max_address - r.min_address), (byte) 0, null, 0);
 		if (elf_base < 0)
 			throw new RuntimeException("mmap fail while reservse space");
 
-		elf_load_bias = (int) (elf_base - r.min_address); /*
-														 * r.min_address is
-														 * supposed to be 0 , in
-														 * face , it is
-														 */
+		elf_load_bias = (int) (elf_base
+				- r.min_address); /*
+									 * r.min_address is supposed to be 0 , in
+									 * face , it is
+									 */
+		Log.e("load_bias " + elf_load_bias + "  elf_base " + elf_base + " r.min_address " + r.min_address);
 		elf_size = (int) (r.max_address + elf_load_bias - elf_base);
 	}
 
-	private ReserveLoadableSegment phdr_table_get_load_size(
-			List<ELF_Phdr> loadableSegment) throws ELFDecodeException {
+	private ReserveLoadableSegment phdr_table_get_load_size(List<ELF_Phdr> loadableSegment) throws ELFDecodeException {
 
 		int minAddress = Integer.MAX_VALUE;
 		int maxAddress = Integer.MIN_VALUE;
@@ -308,6 +328,9 @@ public class ELF {
 		r.min_address = PAGE_START(minAddress);
 		r.max_address = PAGE_END(maxAddress);
 
+		Log.e("min_address 0x" + Long.toHexString(r.min_address));
+		Log.e("max_address 0x" + Long.toHexString(r.max_address));
+
 		if (minAddress > maxAddress || maxAddress < 0 || minAddress < 0)
 			throw new ELFDecodeException("can not parse phdr address");
 
@@ -336,10 +359,9 @@ public class ELF {
 			m.file_page_start = PAGE_START(m.file_start);
 			m.file_length = m.file_end - m.file_page_start;
 
-			if (0 > mmap((int) m.seg_page_start, (int) m.file_length,
-					MAP_FIXED, raf, m.file_page_start))
-				throw new RuntimeException("Unable to mmap segment : "
-						+ ph.toString());
+			if (0 > OS.getMainImage().mmap((int) m.seg_page_start, (int) m.file_length, MAP_FIXED, raf,
+					m.file_page_start))
+				throw new RuntimeException("Unable to mmap segment : " + ph.toString());
 
 			MAP.put(ph, m);
 		}
@@ -353,48 +375,71 @@ public class ELF {
 
 	private void link_image() {
 
-		/* extract some useful informations */
-		nbucket = ByteUtil.bytes2Int32(OS.getMemory(), elf_dynamic.getDT_HASH()
-				+ elf_base + uint32_t * 0, uint32_t,
-				elf_header.isLittleEndian()); // value
-		nchain = ByteUtil.bytes2Int32(OS.getMemory(), elf_dynamic.getDT_HASH()
-				+ elf_base + uint32_t * 1, uint32_t,
-				elf_header.isLittleEndian()); // value
-		bucket = elf_dynamic.getDT_HASH() + elf_base + 8; // pointer
-		chain = elf_dynamic.getDT_HASH() + elf_base + 8 + (nbucket << 2); // pointer
+		if (elf_dynamic.getDT_HASH() > 0) {
+			/* extract some useful informations */
+			nbucket = ByteUtil.bytes2Int32(OS.getMainImage().getMemory(),
+					elf_dynamic.getDT_HASH() + elf_load_bias + uint32_t * 0, uint32_t, elf_header.isLittleEndian()); // value
+			nchain = ByteUtil.bytes2Int32(OS.getMainImage().getMemory(),
+					elf_dynamic.getDT_HASH() + elf_load_bias + uint32_t * 1, uint32_t, elf_header.isLittleEndian()); // value
+			bucket = elf_dynamic.getDT_HASH() + elf_load_bias + 8; // pointer
+			chain = elf_dynamic.getDT_HASH() + elf_load_bias + 8 + (nbucket << 2); // pointer
+		}
 
-		symtab = elf_dynamic.getDT_SYMTAB() + elf_base; // pointer
+		if (elf_dynamic.getDT_GNU_HASH() > 0) {
+			gnu_nbucket = ByteUtil.bytes2Int32(OS.getMainImage().getMemory(),
+					elf_dynamic.getDT_GNU_HASH() + elf_load_bias + uint32_t * 0, uint32_t, isLittleEndian());
+			gnu_maskwords = ByteUtil.bytes2Int32(OS.getMainImage().getMemory(),
+					elf_dynamic.getDT_GNU_HASH() + elf_load_bias + uint32_t * 2, uint32_t, isLittleEndian());
+			gnu_shift2 = ByteUtil.bytes2Int32(OS.getMainImage().getMemory(),
+					elf_dynamic.getDT_GNU_HASH() + elf_load_bias + uint32_t * 3, uint32_t, isLittleEndian());
+			gnu_bloom_filter = elf_dynamic.getDT_GNU_HASH() + elf_load_bias + 16; // pointer
+			gnu_bucket = gnu_bloom_filter + gnu_maskwords; // pointer
 
-		strtab = elf_dynamic.getDT_STRTAB() + elf_base; // pointer
+			gnu_chain = gnu_bucket + gnu_nbucket - ByteUtil.bytes2Int32(OS.getMainImage().getMemory(),
+					elf_dynamic.getDT_GNU_HASH() + elf_load_bias + uint32_t * 1, uint32_t, isLittleEndian()); // pointer
 
-		pltgot = elf_dynamic.getDT_PLTGOT() + elf_base;
+			if (!ByteUtil.powerof2(gnu_maskwords))
+				throw new IllegalArgumentException("invalid maskwords for gnu_hash = 0x"
+						+ Integer.toHexString(gnu_maskwords) + " , in \"" + name + "\" expecting power to two");
+
+			--gnu_maskwords;
+
+			gnu_hash = gnu_hash(name);
+			is_gnu_hash = true;
+		}
+
+		symtab = elf_dynamic.getDT_SYMTAB() + elf_load_bias; // pointer
+
+		strtab = elf_dynamic.getDT_STRTAB() + elf_load_bias; // pointer
+
+		pltgot = elf_dynamic.getDT_PLTGOT() + elf_load_bias;
 
 		hasDT_SYMBOLIC = elf_dynamic.getDT_SYMBOLIC();
 
 		if (elf_dynamic.getDT_INIT() != 0) {
-			init_func = elf_dynamic.getDT_INIT() + elf_base; // pointer
+			init_func = elf_dynamic.getDT_INIT() + elf_load_bias; // pointer
 			hasInitFunc = true;
 		}
 
 		if (elf_dynamic.getDT_INIT_ARRAY() != 0) {
-			init_array = elf_dynamic.getDT_INIT_ARRAY() + elf_base; // pointer
+			init_array = elf_dynamic.getDT_INIT_ARRAY() + elf_load_bias; // pointer
 			init_array_sz = elf_dynamic.getDT_INIT_ARRAYSZ() / ELF32_Addr;
 			hasInitArray = true;
 		}
 
 		if (elf_dynamic.getDT_FINI() != 0) {
-			fini_func = elf_dynamic.getDT_FINI() + elf_base; // pointer
+			fini_func = elf_dynamic.getDT_FINI() + elf_load_bias; // pointer
 			hasFiniFunc = true;
 		}
 		if (elf_dynamic.getDT_FINI_ARRAY() != 0) {
-			fini_array = elf_dynamic.getDT_FINI_ARRAY() + elf_base;// pointer
+			fini_array = elf_dynamic.getDT_FINI_ARRAY() + elf_load_bias;// pointer
 			fini_array_sz = elf_dynamic.getDT_FINI_ARRAYSZ() / ELF32_Addr;
 			hasFiniArray = false;
 		}
 
 		/* verify some parameters */
-		if (nbucket == 0)
-			throw new RuntimeException("empty/missing DT_HASH");
+		if (elf_dynamic.getDT_HASH() <= 0 && elf_dynamic.getDT_GNU_HASH() <= 0)
+			throw new RuntimeException("empty/mission DT_HASH and DT_GNU_HASH , new hash type in the future ?");
 		if (strtab == 0)
 			throw new RuntimeException("empty/missing DT_STRTAB");
 		if (symtab == 0)
@@ -416,8 +461,7 @@ public class ELF {
 						break;
 				}
 				if (elf == null)
-					throw new RuntimeException("Unable to load depend library "
-							+ name);
+					throw new RuntimeException("Unable to load depend library " + name);
 
 				this.needed[count++] = elf;
 			}
@@ -441,7 +485,7 @@ public class ELF {
 		int start;
 
 		/* each function takes 4B */
-		if ((start = mmap(0, functions.size() << 2, 0, null, 0)) < 0)
+		if ((start = OS.getMainImage().mmap(0, functions.size() << 2, 0, null, 0)) < 0)
 			return null;
 
 		if (PAGE_START(start) != start)
@@ -479,16 +523,15 @@ public class ELF {
 				 * ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rel->r_offset +
 				 * load_bias);
 				 */
-				int reloc = ByteUtil.bytes2Int32(rel.r_offset) + elf_load_bias;
 				int sym = ELF_R_SYM(rel.r_info);
 				int type = ELF_R_TYPE(rel.r_info);
+				Log.e("strtab " + strtab);
+				Log.e("sym " + sym);
+				Log.e("symtab " + symtab);
 
-				String sym_name = ByteUtil.getStringFromMemory(ByteUtil
-						.bytes2Int32(Elf_Sym.reinterpret_cast(OS.getMemory(),
-								symtab + Elf_Sym.size() * sym).st_name)
-						+ strtab);
-
-				int sym_address = 0;
+				String sym_name = ByteUtil.getStringFromMemory(ByteUtil.bytes2Int32(
+						Elf_Sym.reinterpret_cast(OS.getMainImage().getMemory(), symtab + Elf_Sym.size() * sym).st_name)
+						+ strtab, OS.getMainImage());
 
 				if (type == 0)
 					continue;
@@ -523,10 +566,9 @@ public class ELF {
 				int type = ELF_R_TYPE(rel.r_info);
 				int addend = get_addend(rel, reloc);
 
-				String sym_name = ByteUtil.getStringFromMemory(ByteUtil
-						.bytes2Int32(Elf_Sym.reinterpret_cast(OS.getMemory(),
-								symtab + Elf_Sym.size() * sym).st_name)
-						+ strtab);
+				String sym_name = ByteUtil.getStringFromMemory(ByteUtil.bytes2Int32(
+						Elf_Sym.reinterpret_cast(OS.getMainImage().getMemory(), symtab + Elf_Sym.size() * sym).st_name)
+						+ strtab, OS.getMainImage());
 
 				int sym_address = 0;
 
@@ -535,8 +577,7 @@ public class ELF {
 
 				if (sym != 0) {
 					sym_address = soinfo_fake_lookup(sym_name);
-					Log.e("Found fake Sym : " + sym_name + " at : "
-							+ Integer.toHexString(sym_address));
+					Log.e("Found fake Sym : " + sym_name + " at : " + Integer.toHexString(sym_address));
 				}
 
 				/*---------------------------------------------------------------------------------------*/
@@ -544,88 +585,59 @@ public class ELF {
 				switch (type) {
 				case R_ARM_GLOB_DAT:
 
-					Log.e("name : "
-							+ sym_name
-							+ " R_GENERIC_GLB_DAT at "
-							+ ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc))
-							+ " , relocating to 0x"
-							+ Integer.toHexString(sym_address)
-							+ " , previours values : "
-							+ ByteUtil.bytes2Int32(getMemory(), reloc,
-									ELF32_Addr, true));
+					Log.e("name : " + sym_name + " R_GENERIC_GLB_DAT at "
+							+ ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc)) + " , relocating to 0x"
+							+ Integer.toHexString(sym_address) + " , previours values : "
+							+ ByteUtil.bytes2Int32(OS.getMainImage().getMemory(), reloc, ELF32_Addr, true));
 
-					System.arraycopy(ByteUtil.int2bytes(sym_address), 0,
-							OS.getMemory(), reloc, ELF32_Addr);/*
-																 * reinterpret_cast<
-																 * Elf32_Addr
-																 * *>(reloc) =
-																 * sym_addr;
-																 */
+					System.arraycopy(ByteUtil.int2bytes(sym_address), 0, OS.getMainImage().getMemory(), reloc,
+							ELF32_Addr);/*
+										 * reinterpret_cast< Elf32_Addr
+										 * *>(reloc) = sym_addr;
+										 */
 					break;
 				case R_ARM_JUMP_SLOT:
 
-					Log.e("name : "
-							+ sym_name
-							+ " R_GENERIC_JUMP_SLOT at "
-							+ ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc))
-							+ " , relocating to 0x"
-							+ Integer.toHexString(sym_address)
-							+ " , previours values : 0x"
-							+ Integer.toHexString(ByteUtil.bytes2Int32(
-									getMemory(), reloc, ELF32_Addr, true)));
+					Log.e("name : " + sym_name + " R_GENERIC_JUMP_SLOT at "
+							+ ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc)) + " , relocating to 0x"
+							+ Integer.toHexString(sym_address) + " , previours values : 0x" + Integer.toHexString(
+									ByteUtil.bytes2Int32(OS.getMainImage().getMemory(), reloc, ELF32_Addr, true)));
 
-					System.arraycopy(ByteUtil.int2bytes(sym_address), 0,
-							OS.getMemory(), reloc, ELF32_Addr);
+					System.arraycopy(ByteUtil.int2bytes(sym_address), 0, OS.getMainImage().getMemory(), reloc,
+							ELF32_Addr);
 
 					break;
 
 				case R_ARM_ABS32:
-					Log.e("name : "
-							+ sym_name
-							+ " R_ARM_ABS32 at "
-							+ ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc))
-							+ " , relocating to 0x"
-							+ Integer.toHexString(sym_address + addend)
-							+ " , previours values : 0x"
-							+ Integer.toHexString(ByteUtil.bytes2Int32(
-									getMemory(), reloc, ELF32_Addr, true)));
-					System.arraycopy(ByteUtil.int2bytes(sym_address + addend),
-							0, OS.getMemory(), reloc, ELF32_Addr);
+					Log.e("name : " + sym_name + " R_ARM_ABS32 at " + ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc))
+							+ " , relocating to 0x" + Integer.toHexString(sym_address + addend)
+							+ " , previours values : 0x" + Integer.toHexString(
+									ByteUtil.bytes2Int32(OS.getMainImage().getMemory(), reloc, ELF32_Addr, true)));
+					System.arraycopy(ByteUtil.int2bytes(sym_address + addend), 0, OS.getMainImage().getMemory(), reloc,
+							ELF32_Addr);
 
 					break;
 
 				case R_ARM_REL32:
-					Log.e("name : "
-							+ sym_name
-							+ " R_ARM_REL32 at "
-							+ ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc))
+					Log.e("name : " + sym_name + " R_ARM_REL32 at " + ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc))
 							+ " , relocating to 0x"
-							+ Integer.toHexString(addend + sym_address
-									- ByteUtil.bytes2Int32(rel.r_offset))
-							+ " , previours values : "
-							+ Integer.toHexString(ByteUtil.bytes2Int32(
-									getMemory(), reloc, ELF32_Addr, true)));
-					System.arraycopy(
-							ByteUtil.int2bytes(addend + sym_address
-									- ByteUtil.bytes2Int32(rel.r_offset)), 0,
-							OS.getMemory(), reloc, ELF32_Addr);
+							+ Integer.toHexString(addend + sym_address - ByteUtil.bytes2Int32(rel.r_offset))
+							+ " , previours values : " + Integer.toHexString(
+									ByteUtil.bytes2Int32(OS.getMainImage().getMemory(), reloc, ELF32_Addr, true)));
+					System.arraycopy(ByteUtil.int2bytes(addend + sym_address - ByteUtil.bytes2Int32(rel.r_offset)), 0,
+							OS.getMainImage().getMemory(), reloc, ELF32_Addr);
 
 					break;
 				case R_ARM_RELATIVE: { // *reinterpret_cast<ElfW(Addr)*>(reloc)
 										// = (load_bias + addend);
-					Log.e("local sym : "
-							+ sym_name
-							+ " reloc : "
-							+ ByteUtil.bytes2Hex(OS.getMemory(), reloc, 4)
-							+ "  become : "
-							+ Integer.toHexString(elf_load_bias + addend)
-							+ " , previours values : "
-							+ Integer.toHexString(ByteUtil.bytes2Int32(
-									getMemory(), reloc, ELF32_Addr, true)));
+					Log.e("local sym : " + sym_name + " reloc : "
+							+ ByteUtil.bytes2Hex(OS.getMainImage().getMemory(), reloc, 4) + "  become : "
+							+ Integer.toHexString(elf_load_bias + addend) + " , previours values : "
+							+ Integer.toHexString(
+									ByteUtil.bytes2Int32(OS.getMainImage().getMemory(), reloc, ELF32_Addr, true)));
 
-					System.arraycopy(
-							ByteUtil.int2bytes(elf_load_bias + addend), 0,
-							OS.getMemory(), reloc, ELF32_Addr);
+					System.arraycopy(ByteUtil.int2bytes(elf_load_bias + addend), 0, OS.getMainImage().getMemory(),
+							reloc, ELF32_Addr);
 					/* relocate here */
 
 				}
@@ -646,20 +658,18 @@ public class ELF {
 	 */
 	public int get_addend(Elf_rel rel, int reloc_addr) {
 
-		if (ELF_R_TYPE(rel.r_info) == R_ARM_RELATIVE
-				|| ELF_R_TYPE(rel.r_info) == R_ARM_IRELATIVE
-				|| ELF_R_TYPE(rel.r_info) == R_ARM_ABS32
-				|| ELF_R_TYPE(rel.r_info) == R_ARM_REL32)
-			return ByteUtil.bytes2Int32(OS.getMemory(), reloc_addr, ELF32_Addr,
+		if (ELF_R_TYPE(rel.r_info) == R_ARM_RELATIVE || ELF_R_TYPE(rel.r_info) == R_ARM_IRELATIVE
+				|| ELF_R_TYPE(rel.r_info) == R_ARM_ABS32 || ELF_R_TYPE(rel.r_info) == R_ARM_REL32)
+			return ByteUtil.bytes2Int32(OS.getMainImage().getMemory(), reloc_addr, ELF32_Addr,
 					elf_header.isLittleEndian()); // Extract
-													// reloc_addr(pointer)'s
-													// value
+		// reloc_addr(pointer)'s
+		// value
 
 		return 0; /*
-				 * if (ELFW(R_TYPE)(rel->r_info) == R_ARM_RELATIVE ||
-				 * ELFW(R_TYPE)(rel->r_info) == R_ARM_IRELATIVE) { return
-				 * *reinterpret_cast<ElfW(Addr)*>(reloc_addr); } return 0;
-				 */
+					 * if (ELFW(R_TYPE)(rel->r_info) == R_ARM_RELATIVE ||
+					 * ELFW(R_TYPE)(rel->r_info) == R_ARM_IRELATIVE) { return
+					 * *reinterpret_cast<ElfW(Addr)*>(reloc_addr); } return 0;
+					 */
 	}
 
 	/**
@@ -685,10 +695,9 @@ public class ELF {
 				int type = ELF_R_TYPE(rel.r_info);
 				int addend = get_addend(rel, reloc);
 
-				String sym_name = ByteUtil.getStringFromMemory(ByteUtil
-						.bytes2Int32(Elf_Sym.reinterpret_cast(OS.getMemory(),
-								symtab + Elf_Sym.size() * sym).st_name)
-						+ strtab);
+				String sym_name = ByteUtil.getStringFromMemory(ByteUtil.bytes2Int32(
+						Elf_Sym.reinterpret_cast(OS.getMainImage().getMemory(), symtab + Elf_Sym.size() * sym).st_name)
+						+ strtab, OS.getMainImage());
 
 				int sym_address = 0;
 
@@ -706,11 +715,9 @@ public class ELF {
 					 * from symtab
 					 */
 					ELF[] lsi = new ELF[1];
-					if (null == (s = soinfo_do_lookup(this, sym_name, lsi,
-							needed))) {
+					if (null == (s = find_sym_by_name(this, sym_name, lsi, needed))) {
 
-						s = Elf_Sym.reinterpret_cast(OS.getMemory(), symtab
-								+ sym * Elf_Sym.size());
+						s = Elf_Sym.reinterpret_cast(OS.getMainImage().getMemory(), symtab + sym * Elf_Sym.size());
 
 						/*
 						 * we only allow STB_WEAK which is compiling with key
@@ -718,17 +725,9 @@ public class ELF {
 						 */
 
 						if (ELF_ST_BIND(s.st_info) != STB_WEAK)
-							throw new RuntimeException(
-									"cannot locate symbol \""
-											+ sym_name
-											+ "\" referenced by \""
-											+ name
-											+ "\"... s.st_info "
-											+ Integer
-													.toHexString(ELF_ST_BIND(s.st_info))
-											+ " , s at "
-											+ Integer.toHexString(symtab + sym
-													* Elf_Sym.size()));
+							throw new RuntimeException("cannot locate symbol \"" + sym_name + "\" referenced by \""
+									+ name + "\"... s.st_info " + Integer.toHexString(ELF_ST_BIND(s.st_info))
+									+ " , s at " + Integer.toHexString(symtab + sym * Elf_Sym.size()));
 
 						switch (type) {
 
@@ -740,9 +739,7 @@ public class ELF {
 
 						case R_ARM_COPY:
 						default:
-							throw new RuntimeException(
-									"unknown weak reloc type "
-											+ ByteUtil.bytes2Hex(rel.r_info));
+							throw new RuntimeException("unknown weak reloc type " + ByteUtil.bytes2Hex(rel.r_info));
 						}
 						/*
 						 * sym_address == 0 , we don't care STB_WEAK Symbol's
@@ -752,11 +749,9 @@ public class ELF {
 
 					} else {// we got a definition
 
-						sym_address = lsi[0].elf_load_bias
-								+ ByteUtil.bytes2Int32(s.st_value);
+						sym_address = lsi[0].elf_load_bias + ByteUtil.bytes2Int32(s.st_value);
 
-						Log.e("Found Sym : " + sym_name + " at : "
-								+ Integer.toHexString(sym_address));
+						Log.e("Found Sym : " + sym_name + " at : " + Integer.toHexString(sym_address));
 					}
 
 				} else
@@ -767,88 +762,59 @@ public class ELF {
 				switch (type) {
 				case R_ARM_GLOB_DAT:
 
-					Log.e("name : "
-							+ sym_name
-							+ " R_GENERIC_GLB_DAT at "
-							+ ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc))
-							+ " , relocating to 0x"
-							+ Integer.toHexString(sym_address)
-							+ " , previours values : "
-							+ ByteUtil.bytes2Int32(getMemory(), reloc,
-									ELF32_Addr, true));
+					Log.e("name : " + sym_name + " R_GENERIC_GLB_DAT at "
+							+ ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc)) + " , relocating to 0x"
+							+ Integer.toHexString(sym_address) + " , previours values : "
+							+ ByteUtil.bytes2Int32(OS.getMainImage().getMemory(), reloc, ELF32_Addr, true));
 
-					System.arraycopy(ByteUtil.int2bytes(sym_address), 0,
-							OS.getMemory(), reloc, ELF32_Addr);/*
-																 * reinterpret_cast<
-																 * Elf32_Addr
-																 * *>(reloc) =
-																 * sym_addr;
-																 */
+					System.arraycopy(ByteUtil.int2bytes(sym_address), 0, OS.getMainImage().getMemory(), reloc,
+							ELF32_Addr);/*
+										 * reinterpret_cast< Elf32_Addr
+										 * *>(reloc) = sym_addr;
+										 */
 					break;
 				case R_ARM_JUMP_SLOT:
 
-					Log.e("name : "
-							+ sym_name
-							+ " R_GENERIC_JUMP_SLOT at "
-							+ ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc))
-							+ " , relocating to 0x"
-							+ Integer.toHexString(sym_address)
-							+ " , previours values : 0x"
-							+ Integer.toHexString(ByteUtil.bytes2Int32(
-									getMemory(), reloc, ELF32_Addr, true)));
+					Log.e("name : " + sym_name + " R_GENERIC_JUMP_SLOT at "
+							+ ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc)) + " , relocating to 0x"
+							+ Integer.toHexString(sym_address) + " , previours values : 0x" + Integer.toHexString(
+									ByteUtil.bytes2Int32(OS.getMainImage().getMemory(), reloc, ELF32_Addr, true)));
 
-					System.arraycopy(ByteUtil.int2bytes(sym_address), 0,
-							OS.getMemory(), reloc, ELF32_Addr);
+					System.arraycopy(ByteUtil.int2bytes(sym_address), 0, OS.getMainImage().getMemory(), reloc,
+							ELF32_Addr);
 
 					break;
 
 				case R_ARM_ABS32:
-					Log.e("name : "
-							+ sym_name
-							+ " R_ARM_ABS32 at "
-							+ ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc))
-							+ " , relocating to 0x"
-							+ Integer.toHexString(sym_address + addend)
-							+ " , previours values : 0x"
-							+ Integer.toHexString(ByteUtil.bytes2Int32(
-									getMemory(), reloc, ELF32_Addr, true)));
-					System.arraycopy(ByteUtil.int2bytes(sym_address + addend),
-							0, OS.getMemory(), reloc, ELF32_Addr);
+					Log.e("name : " + sym_name + " R_ARM_ABS32 at " + ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc))
+							+ " , relocating to 0x" + Integer.toHexString(sym_address + addend)
+							+ " , previours values : 0x" + Integer.toHexString(
+									ByteUtil.bytes2Int32(OS.getMainImage().getMemory(), reloc, ELF32_Addr, true)));
+					System.arraycopy(ByteUtil.int2bytes(sym_address + addend), 0, OS.getMainImage().getMemory(), reloc,
+							ELF32_Addr);
 
 					break;
 
 				case R_ARM_REL32:
-					Log.e("name : "
-							+ sym_name
-							+ " R_ARM_REL32 at "
-							+ ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc))
+					Log.e("name : " + sym_name + " R_ARM_REL32 at " + ByteUtil.bytes2Hex(ByteUtil.int2bytes(reloc))
 							+ " , relocating to 0x"
-							+ Integer.toHexString(addend + sym_address
-									- ByteUtil.bytes2Int32(rel.r_offset))
-							+ " , previours values : "
-							+ Integer.toHexString(ByteUtil.bytes2Int32(
-									getMemory(), reloc, ELF32_Addr, true)));
-					System.arraycopy(
-							ByteUtil.int2bytes(addend + sym_address
-									- ByteUtil.bytes2Int32(rel.r_offset)), 0,
-							OS.getMemory(), reloc, ELF32_Addr);
+							+ Integer.toHexString(addend + sym_address - ByteUtil.bytes2Int32(rel.r_offset))
+							+ " , previours values : " + Integer.toHexString(
+									ByteUtil.bytes2Int32(OS.getMainImage().getMemory(), reloc, ELF32_Addr, true)));
+					System.arraycopy(ByteUtil.int2bytes(addend + sym_address - ByteUtil.bytes2Int32(rel.r_offset)), 0,
+							OS.getMainImage().getMemory(), reloc, ELF32_Addr);
 
 					break;
 				case R_ARM_RELATIVE: { // *reinterpret_cast<ElfW(Addr)*>(reloc)
 										// = (load_bias + addend);
-					Log.e("local sym : "
-							+ sym_name
-							+ " reloc : "
-							+ ByteUtil.bytes2Hex(OS.getMemory(), reloc, 4)
-							+ "  become : "
-							+ Integer.toHexString(elf_load_bias + addend)
-							+ " , previours values : "
-							+ Integer.toHexString(ByteUtil.bytes2Int32(
-									getMemory(), reloc, ELF32_Addr, true)));
+					Log.e("local sym : " + sym_name + " reloc : "
+							+ ByteUtil.bytes2Hex(OS.getMainImage().getMemory(), reloc, 4) + "  become : "
+							+ Integer.toHexString(elf_load_bias + addend) + " , previours values : "
+							+ Integer.toHexString(
+									ByteUtil.bytes2Int32(OS.getMainImage().getMemory(), reloc, ELF32_Addr, true)));
 
-					System.arraycopy(
-							ByteUtil.int2bytes(elf_load_bias + addend), 0,
-							OS.getMemory(), reloc, ELF32_Addr);
+					System.arraycopy(ByteUtil.int2bytes(elf_load_bias + addend), 0, OS.getMainImage().getMemory(),
+							reloc, ELF32_Addr);
 					/* relocate here */
 
 				}
@@ -870,8 +836,7 @@ public class ELF {
 	private void callConstructors() {
 
 		if (hasInitFunc) {
-			Log.e("Calling Constructor : "
-					+ ByteUtil.bytes2Hex(ByteUtil.int2bytes(init_func)));
+			Log.e("Calling Constructor : " + ByteUtil.bytes2Hex(ByteUtil.int2bytes(init_func)));
 			callFunction(init_func);
 		} else
 			Log.e("Constructor DT_INIT no found , skipping ... ");
@@ -897,10 +862,9 @@ public class ELF {
 			h = (h << 4) + n;
 			g = h & 0xf0000000;
 			h ^= g;
-			h ^= g >> 24;
+			h ^= g >>> 24;
 		}
-
-		return h;
+		return h & 0xffffffff;
 	}
 
 	/*
@@ -932,17 +896,14 @@ public class ELF {
 		int symtab = si.symtab;
 		int strtab = si.strtab;
 
-		for (int n = ByteUtil.bytes2Int32(OS.getMemory(),
+		for (int n = ByteUtil.bytes2Int32(OS.getMainImage().getMemory(),
 				(int) (si.bucket + (hash % si.nbucket) * uint32_t), uint32_t,
-				si.elf_header.isLittleEndian()); n != 0; n = ByteUtil
-				.bytes2Int32(OS.getMemory(), si.chain + n * uint32_t, uint32_t,
-						si.elf_header.isLittleEndian())) {
+				si.elf_header.isLittleEndian()); n != 0; n = ByteUtil.bytes2Int32(OS.getMainImage().getMemory(),
+						si.chain + n * uint32_t, uint32_t, si.elf_header.isLittleEndian())) {
 
-			Elf_Sym s = Elf_Sym.reinterpret_cast(OS.getMemory(), symtab
-					+ (n * Elf_Sym.size()));
+			Elf_Sym s = Elf_Sym.reinterpret_cast(OS.getMainImage().getMemory(), symtab + (n * Elf_Sym.size()));
 
-			if (!name.equals(ByteUtil.getStringFromMemory(strtab
-					+ ByteUtil.bytes2Int32(s.st_name))))
+			if (!name.equals(ByteUtil.getStringFromMemory(strtab + ByteUtil.bytes2Int32(s.st_name), OS.getMainImage())))
 				continue;
 			else {
 
@@ -966,9 +927,19 @@ public class ELF {
 		return null;
 	}
 
-	public static Elf_Sym soinfo_do_lookup(ELF si, String name, ELF[] lsi,
-			ELF[] needed) {
+	private static Elf_Sym find_sym_by_name(ELF si, String name, ELF[] lsi, ELF[] needed) {
 
+		if (si.is_gnu_hash)
+			return gnu_lookup(si, name, lsi, needed);
+		else
+			return elf_lookup(si, name, lsi, needed);
+	}
+
+	private static Elf_Sym gnu_lookup(ELF si, String name, ELF[] lsi, ELF[] needed) {
+		return null;
+	}
+
+	private static Elf_Sym elf_lookup(ELF si, String name, ELF[] lsi, ELF[] needed) {
 		long elf_hash = elf_hash(name);
 		Elf_Sym s = null;
 
@@ -1023,9 +994,40 @@ public class ELF {
 		return s;
 	}
 
-	public static void main(String[] args) throws Exception {
+	private static long gnu_hash(String name) {
+		long h = 5381;
+		char[] array = name.toCharArray();
 
-		ELF elf = new ELF("C:/Users/Administrator/Desktop/libdvm.so", false);
+		for (int i = 0; i < array.length; i++) {
+			h += (h << 5) + (byte) array[i];
+		}
+
+		return h & 0xffffffffL;
+	}
+
+	public static void main(String[] args) {
+
+		long i = 0xffffffff;
+
+		System.out.println(i);
+
+		// try {
+		//
+		// ELF elf = new
+		// ELF("C:\\Users\\monitor\\Desktop\\hw_lib\\test\\system\\lib\\libgui.so",
+		// true);
+		//
+		// } catch (Exception e) {
+		//
+		// e.printStackTrace();
+		// }
+		//
+		// try {
+		// OS.getMainImage().dumpMemory(new
+		// PrintStream("C:\\Users\\monitor\\Desktop\\dump.txt"));
+		// } catch (Exception e) {
+		// // TODO: handle exception
+		// }
 
 	}
 

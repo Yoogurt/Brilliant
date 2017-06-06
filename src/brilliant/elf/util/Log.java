@@ -1,10 +1,20 @@
 package brilliant.elf.util;
 
+import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
 public class Log {
 
 	public static PrintStream out = System.out;
+	
+	static{
+		try {
+			out = new PrintStream("C:\\Users\\monitor\\Desktop\\test.dump");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+	}
 
 	public static boolean DEBUG = true;
 
