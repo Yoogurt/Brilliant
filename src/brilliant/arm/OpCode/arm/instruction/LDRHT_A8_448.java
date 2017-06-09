@@ -6,14 +6,69 @@
 package brilliant.arm.OpCode.arm.instruction;
 
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import brilliant.arm.OpCode.factory.CondFactory;
 
-@Deprecated
+import static brilliant.arm.OpCode.factory.OpUtil.*;
+
 public class LDRHT_A8_448 extends ParseSupport {
 
 	public static final LDRHT_A8_448 INSTANCE = new LDRHT_A8_448();
 
 	public String parse(int data) {
-		throw new UnsupportedOperationException("LDRHT no implements");
+		int bit22 = getShiftInt(data, 22, 1);
+		if (bit22 == 1)
+			return super.parse(data);
+		else
+			return EncodingA2(data);
+	}
+
+	@Override
+	protected int getRd(int data) {
+		return getShiftInt(data, 12, 4);
+	}
+
+	@Override
+	protected int getRn(int data) {
+		return getShiftInt(data, 16, 4);
+	}
+
+	@Override
+	protected int getShift(int data) {
+		int add = getShiftInt(data, 23, 1);
+		int imm8 = (getShiftInt(data, 8, 4) << 4) | getShiftInt(data, 0, 4);
+		if (add == 1)
+			return imm8;
+		else
+			return -imm8;
+	}
+
+	@Override
+	protected boolean isRnMemory() {
+		return true;
+	}
+
+	private String EncodingA2(int data) {
+		StringBuilder sb = new StringBuilder("LDRHT");
+		int Rt = getRd(data);
+		int Rn = getRn(data);
+		int Rm = getShiftInt(data, 0, 4);
+		boolean add = getShiftInt(data, 23, 1) == 1;
+
+		sb.append(CondFactory.parse(getCond(data)));
+
+		sb.append(" ");
+		sb.append(parseRegister(Rt));
+
+		sb.append(" , [");
+		sb.append(parseRegister(Rn));
+		sb.append("] , ");
+
+		if (!add)
+			sb.append("-");
+
+		sb.append(parseRegister(Rm));
+
+		return sb.toString();
 	}
 
 	@Override

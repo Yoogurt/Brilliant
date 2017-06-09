@@ -29,7 +29,7 @@ public class B_A8_334 extends ParseSupport implements Remotable {
 	}
 
 	@Override
-	public int remoteValue(int data) {
+	public int offset(int data) {
 		return signExtend(getShiftInt(data, 0, 24) << 2, 24);
 	}
 

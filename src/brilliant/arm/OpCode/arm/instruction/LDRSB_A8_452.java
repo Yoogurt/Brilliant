@@ -5,19 +5,43 @@
 -------------------------------*/
 package brilliant.arm.OpCode.arm.instruction;
 
-import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 
-@Deprecated
-public class LDRSB_A8_452 extends ParseSupport {
+import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import brilliant.arm.OpCode.factory.Remotable;
+import brilliant.elf.vm.Register;
+
+public class LDRSB_A8_452 extends ParseSupport implements Remotable {
 
 	public static final LDRSB_A8_452 INSTANCE = new LDRSB_A8_452();
 
+	@Override
 	public String parse(int data) {
-		throw new UnsupportedOperationException("LDRSB no implements");
+		return LDRSB_A8_450.INSTANCE.parse(data);
+	}
+
+	@Override
+	protected String getCommnet(int data) {
+		if (Register.PC <= 0)
+			return null;
+
+		return "@" + (offset(data) + Register.PC);
+	}
+
+	@Override
+	protected boolean shifterUsed() {
+		return true;
 	}
 
 	@Override
 	public void performExecuteCommand(int data) {
+	}
+
+	@Override
+	public int offset(int data) {
+		int imm8 = (getShiftInt(data, 8, 4) << 4) | getShiftInt(data, 0, 4);
+		int add = getShiftInt(data, 23, 1);
+		return add == 1 ? imm8 : -imm8;
 	}
 
 }

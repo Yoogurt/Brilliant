@@ -11,8 +11,7 @@ import brilliant.elf.vm.Register.RegisterIllegalStateExeception;
 
 public final class OpCodeDecodeHelper {
 
-	private static void decode(byte[] data, int start, int size,
-			boolean isLittleEndian, OpCodeHookCallback callback) {
+	private static void decode(byte[] data, int start, int size, boolean isLittleEndian, OpCodeHookCallback callback) {
 
 		if (callback == null)
 			throw new NullPointerException("callback must no tbe null");
@@ -30,14 +29,12 @@ public final class OpCodeDecodeHelper {
 			decodeThumb(data, start, size, isLittleEndian, callback);
 			break;
 		default:
-			throw new RegisterIllegalStateExeception(
-					"Flag Rigister has accessed an unpredictable state");
+			throw new RegisterIllegalStateExeception("Flag Rigister has accessed an unpredictable state");
 		}
 		callback.onFinish();
 	}
 
-	public static void decode(int start, int size, ELF elf,
-			OpCodeHookCallback callback) {
+	public static void decode(int start, int size, ELF elf, OpCodeHookCallback callback) {
 		decode(OS.getMainImage().getMemory(), start, size, elf.isLittleEndian(), callback);
 	}
 
@@ -49,8 +46,8 @@ public final class OpCodeDecodeHelper {
 		return 0b1 == (position & 1);
 	}
 
-	private static void decodeArm(byte[] data, int start, int size,
-			boolean isLittleEndian, OpCodeHookCallback callback) {
+	private static void decodeArm(byte[] data, int start, int size, boolean isLittleEndian,
+			OpCodeHookCallback callback) {
 
 		int current;
 
@@ -76,16 +73,14 @@ public final class OpCodeDecodeHelper {
 				if (!callback.ArminstructionDecodeDone(current, opCode, ret))
 					break;
 			} else if (!callback.exception(
-					new IllegalArgumentException(
-							"Unable to decode instruction "
-									+ Integer.toBinaryString(opCode)), current,
-					opCode))
+					new IllegalArgumentException("Unable to decode instruction " + Integer.toBinaryString(opCode)),
+					current, opCode))
 				break;
 		}
 	}
 
-	private static void decodeThumb(byte[] data, int start, int size,
-			boolean isLittleEndian, OpCodeHookCallback callback) {
+	private static void decodeThumb(byte[] data, int start, int size, boolean isLittleEndian,
+			OpCodeHookCallback callback) {
 
 		int current;
 
@@ -108,24 +103,18 @@ public final class OpCodeDecodeHelper {
 			}
 
 			if (ret != null) {
-				if (!callback.Thumb16instructionDecodeDone(current,
-						(short) opCode, ret))
+				if (!callback.Thumb16instructionDecodeDone(current, (short) opCode, ret))
 					break;
 			}
 
 			else {
 
 				if (i + 2 >= size)
-					if (!callback.exception(
-							new IllegalArgumentException(
-									"Unable to decode instruction "
-											+ Integer.toBinaryString(opCode)),
-							current, opCode))
+					if (!callback.exception(new IllegalArgumentException(
+							"Unable to decode instruction " + Integer.toBinaryString(opCode)), current, opCode))
 						break;
 
-				int command = (opCode << 16)
-						| ByteUtil.bytes2Int32(data, current + 2, 2,
-								isLittleEndian);
+				int command = (opCode << 16) | ByteUtil.bytes2Int32(data, current + 2, 2, isLittleEndian);
 
 				i += 2;
 
@@ -140,13 +129,10 @@ public final class OpCodeDecodeHelper {
 				}
 
 				if (ret != null) {
-					if (!callback.Thumb32instructionDecodeDone(current,
-							command, ret))
+					if (!callback.Thumb32instructionDecodeDone(current, command, ret))
 						break;
 				} else if (!callback.exception(
-						new IllegalArgumentException(
-								"Unable to decode instruction "
-										+ Integer.toBinaryString(command)),
+						new IllegalArgumentException("Unable to decode instruction " + Integer.toBinaryString(command)),
 						current, command))
 					break;
 			}
@@ -154,17 +140,21 @@ public final class OpCodeDecodeHelper {
 	}
 
 	public interface OpCodeHookCallback {
-		public boolean ArminstructionDecodeDone(int current, int instruction,
-				ParseTemplate ret);
+		public boolean ArminstructionDecodeDone(int current, int instruction, ParseTemplate ret);
 
-		public boolean Thumb16instructionDecodeDone(int current,
-				short instruction, ParseTemplate ret);
+		public boolean Thumb16instructionDecodeDone(int current, short instruction, ParseTemplate ret);
 
-		public boolean Thumb32instructionDecodeDone(int current,
-				int instruction, ParseTemplate ret);
+		public boolean Thumb32instructionDecodeDone(int current, int instruction, ParseTemplate ret);
 
 		public boolean exception(Throwable t, int current, int instruction);
 
 		public void onFinish();
+	}
+
+	public static void main(String[] args) {
+		int opcode = 0B1110_0001_0100_1111_1000_0000_0000_0000;
+		ParseTemplate p = ArmFactory.parse(opcode);
+		System.out.println(p.getClass().getName());
+		System.out.println(p.parse(opcode));
 	}
 }

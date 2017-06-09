@@ -18,16 +18,12 @@ public class LDRB_A8_418 extends ParseSupport {
 	@Override
 	public String parse(int data) {
 
-		StringBuilder sb = new StringBuilder("LDRB");
+		StringBuilder sb = new StringBuilder("LDR");
 		sb.append(CondFactory.parse(getCond(data))).append(" ");
 
 		int Rt = getShiftInt(data, 12, 4);
 		int Rn = getShiftInt(data, 16, 4);
-		int Rm = getShiftInt(data, 0, 4);
-
-		int imm5 = getShiftInt(data, 7, 5);
-		int type = getShiftInt(data, 5, 2);
-
+		int imm12 = getShiftInt(data, 0, 12);
 		boolean index = getShiftInt(data, 24, 1) == 1;
 		boolean add = getShiftInt(data, 23, 1) == 1;
 		boolean wback = getShiftInt(data, 21, 1) == 1;
@@ -36,18 +32,14 @@ public class LDRB_A8_418 extends ParseSupport {
 		sb.append(parseRegister(Rn));
 
 		if (!index)
-			sb.append("] , ");
+			sb.append("] , #");
 		else
-			sb.append(" , ");
+			sb.append(" , #");
 
 		if (!add)
 			sb.append("-");
 
-		sb.append(parseRegister(Rm));
-		sb.append(" , ");
-		sb.append(TypeFactory.parse(type));
-		sb.append(" #");
-		sb.append(imm5);
+		sb.append(imm12);
 
 		if (index)
 			sb.append("]");

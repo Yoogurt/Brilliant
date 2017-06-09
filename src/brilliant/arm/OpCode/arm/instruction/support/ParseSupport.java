@@ -50,17 +50,31 @@ public abstract class ParseSupport implements ParseTemplate {
 		if (Rm != -1) {
 			if (Rd != -1 || Rn != -1)
 				sb.append(" , ");
-			sb.append(parseRegister(Rm)).append(" ");
+
+			if (isRmMemory())
+				sb.append("[");
+
+			sb.append(parseRegister(Rm));
+
+			if (isRmMemory())
+				sb.append("] ");
 		}
 
-		int imm5 = getShift(data);
+		int shift = getShift(data);
 		int type = getType(data);
 
-		if (imm5 != 0) {
+		if (!shifterUsed()) {
+			if (shift != 0) {
+				if (type >= 0)
+					sb.append(TypeFactory.parse(type));
+				parseShift(sb, shift, type >= 0 || Rm > 0 || Rn > 0 || Rd > 0);
+			}
+		} else {
 			if (type >= 0)
 				sb.append(TypeFactory.parse(type));
-			parseShift(sb, imm5, type >= 0);
+			parseShift(sb, shift, type >= 0 || Rm > 0 || Rn > 0 || Rd > 0);
 		}
+
 		String comment = getCommnet(data);
 
 		if (comment != null)
@@ -73,7 +87,7 @@ public abstract class ParseSupport implements ParseTemplate {
 
 		sb.append(" ");
 
-		if (!type)
+		if (type)
 			sb.append(", ");
 
 		if (shifterRegister())
@@ -87,7 +101,7 @@ public abstract class ParseSupport implements ParseTemplate {
 	}
 
 	protected String getOpCode(int data) {
-		return null;
+		return getClass().getSimpleName().split("_")[0];
 	}
 
 	protected int getRd(int data) {
@@ -111,8 +125,7 @@ public abstract class ParseSupport implements ParseTemplate {
 	}
 
 	protected String error(int data) {
-		throw new IllegalArgumentException("Unable to decode instruction "
-				+ Integer.toBinaryString(data) + " at "
+		throw new IllegalArgumentException("Unable to decode instruction " + Integer.toBinaryString(data) + " at "
 				+ getClass().getSimpleName().split("_")[0]);
 	}
 
@@ -149,6 +162,14 @@ public abstract class ParseSupport implements ParseTemplate {
 	}
 
 	protected boolean isRnwback(int data) {
+		return false;
+	}
+
+	protected boolean isRmMemory() {
+		return false;
+	}
+
+	protected boolean shifterUsed() {
 		return false;
 	}
 

@@ -6,14 +6,25 @@
 package brilliant.arm.OpCode.arm.instruction;
 
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import static brilliant.arm.OpCode.factory.OpUtil.*;
 
-@Deprecated
 public class LDREX_A8_432 extends ParseSupport {
 
 	public static final LDREX_A8_432 INSTANCE = new LDREX_A8_432();
 
-	public String parse(int data) {
-		throw new UnsupportedOperationException("LDREX no implements");
+	@Override
+	protected int getRd(int data) {
+		return getShiftInt(data, 12, 4);
+	}
+
+	@Override
+	protected int getRn(int data) {
+		return getShiftInt(data, 16, 4);
+	}
+
+	@Override
+	protected boolean isRnMemory() {
+		return true;
 	}
 
 	@Override

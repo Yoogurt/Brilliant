@@ -5,15 +5,49 @@
 -------------------------------*/
 package brilliant.arm.OpCode.arm.instruction;
 
-import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.parseRegister;
 
-@Deprecated
+import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import brilliant.arm.OpCode.factory.CondFactory;
+
 public class LDRSB_A8_454 extends ParseSupport {
 
 	public static final LDRSB_A8_454 INSTANCE = new LDRSB_A8_454();
 
 	public String parse(int data) {
-		throw new UnsupportedOperationException("LDRSB no implements");
+
+		StringBuilder sb = new StringBuilder("LDRSB");
+		sb.append(CondFactory.parse(getCond(data))).append(" ");
+
+		int Rt = getShiftInt(data, 12, 4);
+		int Rn = getShiftInt(data, 16, 4);
+		int Rm = getShiftInt(data, 0, 4);
+
+		boolean index = getShiftInt(data, 24, 1) == 1;
+		boolean add = getShiftInt(data, 23, 1) == 1;
+		boolean wback = getShiftInt(data, 21, 1) == 1;
+
+		sb.append(parseRegister(Rt)).append(" , [");
+		sb.append(parseRegister(Rn));
+
+		if (!index)
+			sb.append("] , ");
+		else
+			sb.append(" , ");
+
+		if (!add)
+			sb.append("-");
+
+		sb.append(parseRegister(Rm));
+
+		if (index)
+			sb.append("]");
+
+		if (wback)
+			sb.append("!");
+
+		return sb.toString();
 	}
 
 	@Override

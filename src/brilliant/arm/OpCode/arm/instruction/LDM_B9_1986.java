@@ -6,14 +6,42 @@
 package brilliant.arm.OpCode.arm.instruction;
 
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import brilliant.arm.OpCode.factory.AModeFactory;
 
-@Deprecated
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+
 public class LDM_B9_1986 extends ParseSupport {
 
 	public static final LDM_B9_1986 INSTANCE = new LDM_B9_1986();
 
-	public String parse(int data) {
-		throw new UnsupportedOperationException("LDM no implements");
+	@Override
+	protected String getOpCode(int data) {
+		return "LDM" + AModeFactory.parse(getShiftInt(data, 24, 1), getShiftInt(data, 23, 1), getShiftInt(data, 16, 4));
+	}
+
+	@Override
+	protected int getRn(int data) {
+		return getShiftInt(data, 16, 4);
+	}
+
+	@Override
+	protected boolean isRnwback(int data) {
+		return getShiftInt(data, 23, 1) == 0b1;
+	}
+
+	@Override
+	protected int getShift(int data) {
+		return getShiftInt(data, 0, 16);
+	}
+	
+	@Override
+	protected String getCommnet(int data) {
+		return "^";
+	}
+
+	@Override
+	protected boolean shifterRegisterList() {
+		return true;
 	}
 
 	@Override

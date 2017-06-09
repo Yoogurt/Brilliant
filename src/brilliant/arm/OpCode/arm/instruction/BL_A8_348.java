@@ -54,7 +54,7 @@ public class BL_A8_348 extends ParseSupport implements Remotable {
 	}
 
 	@Override
-	public int remoteValue(int data) {
+	public int offset(int data) {
 		int cond = getShiftInt(data, 28, 4);
 		if (cond != 0b1111)
 			return remoteValueA1(data);

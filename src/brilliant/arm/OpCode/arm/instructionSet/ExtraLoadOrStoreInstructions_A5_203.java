@@ -49,7 +49,7 @@ public class ExtraLoadOrStoreInstructions_A5_203 {
 			if (assert0(op1, 2) && assert1(op1, 0))
 				return LDRSB_A8_454.INSTANCE;
 			if (assert0(op1, 0) && assert1(op1, 2))
-				if (Rn != 0b111)
+				if (Rn != 0b1111)
 					return LDRD_A8_426.INSTANCE;
 				else
 					return LDRD_A8_428.INSTANCE;

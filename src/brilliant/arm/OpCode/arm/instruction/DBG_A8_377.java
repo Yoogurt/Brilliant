@@ -6,14 +6,20 @@
 package brilliant.arm.OpCode.arm.instruction;
 
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import static brilliant.arm.OpCode.factory.OpUtil.*;
 
-@Deprecated
 public class DBG_A8_377 extends ParseSupport {
 
 	public static final DBG_A8_377 INSTANCE = new DBG_A8_377();
 
-	public String parse(int data) {
-		throw new UnsupportedOperationException("DBG no implements");
+	@Override
+	protected String getOpCode(int data) {
+		return "DBG";
+	}
+
+	@Override
+	protected int getShift(int data) {
+		return getShiftInt(data, 0, 4);
 	}
 
 	@Override

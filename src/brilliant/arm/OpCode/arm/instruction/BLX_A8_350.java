@@ -6,8 +6,8 @@
 package brilliant.arm.OpCode.arm.instruction;
 
 import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
-import brilliant.arm.OpCode.factory.Remotable;
 
 /**
  * @author Yoogurt

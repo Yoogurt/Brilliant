@@ -5,15 +5,27 @@
 -------------------------------*/
 package brilliant.arm.OpCode.arm.instruction;
 
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
 
-@Deprecated
 public class LDREXH_A8_438 extends ParseSupport {
 
 	public static final LDREXH_A8_438 INSTANCE = new LDREXH_A8_438();
 
-	public String parse(int data) {
-		throw new UnsupportedOperationException("LDREXH no implements");
+	@Override
+	protected int getRd(int data) {
+		return getShiftInt(data, 12, 4);
+	}
+
+	@Override
+	protected int getRn(int data) {
+		return getShiftInt(data, 16, 4);
+	}
+
+	@Override
+	protected boolean isRnMemory() {
+		return true;
 	}
 
 	@Override

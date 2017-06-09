@@ -22,6 +22,18 @@ public class Register {
 	public static volatile int CPSR = -1;
 	public static volatile int SPCR = -1;
 
+	public static final int CPU_MODE_USER = 0b10000;
+	public static final int CPU_MODE_FIQ = 0b10001;
+	public static final int CPU_MODE_IRQ = 0b10010;
+	public static final int CPU_MODE_MANAGE = 0b10011;
+	public static final int CPU_MODE_INTERRUPT = 0b10111;
+	public static final int CPU_MODE_UNDEFINE = 0b11011;
+	public static final int CPU_MODE_SYSTEM = 0b11111;
+
+	static {
+		setM(CPU_MODE_USER);
+	}
+
 	/**
 	 * Negative condition flag
 	 */
@@ -90,7 +102,7 @@ public class Register {
 	}
 
 	public static int getM() {
-		return CPSR & 0x000000f;
+		return CPSR & 0x000001f;
 	}
 
 	public static void setN(int data) {
@@ -146,7 +158,7 @@ public class Register {
 	}
 
 	public static void setM(int data) {
-		modifyCPSRWid(data, 0, 4);
+		modifyCPSRWid(data, 0, 5);
 	}
 
 	private static void modifyCPSR(int data, int position) {
@@ -168,8 +180,7 @@ public class Register {
 		CPSR |= data << fromIndex;
 	}
 
-	public static class RegisterIllegalStateExeception extends
-			IllegalStateException {
+	public static class RegisterIllegalStateExeception extends IllegalStateException {
 
 		/**
 		 * 

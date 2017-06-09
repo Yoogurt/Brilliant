@@ -5,15 +5,71 @@
 -------------------------------*/
 package brilliant.arm.OpCode.arm.instruction;
 
-import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
+import static brilliant.arm.OpCode.factory.OpUtil.parseRegister;
 
-@Deprecated
+import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import brilliant.arm.OpCode.factory.CondFactory;
+
 public class LDRSHT_A8_464 extends ParseSupport {
 
 	public static final LDRSHT_A8_464 INSTANCE = new LDRSHT_A8_464();
 
 	public String parse(int data) {
-		throw new UnsupportedOperationException("LDRSHT no implements");
+		int bit22 = getShiftInt(data, 22, 1);
+		if (bit22 == 1)
+			return super.parse(data);
+		else
+			return EncodingA2(data);
+	}
+
+	@Override
+	protected int getRd(int data) {
+		return getShiftInt(data, 12, 4);
+	}
+
+	@Override
+	protected int getRn(int data) {
+		return getShiftInt(data, 16, 4);
+	}
+
+	@Override
+	protected int getShift(int data) {
+		int add = getShiftInt(data, 23, 1);
+		int imm8 = (getShiftInt(data, 8, 4) << 4) | getShiftInt(data, 0, 4);
+		if (add == 1)
+			return imm8;
+		else
+			return -imm8;
+	}
+
+	@Override
+	protected boolean isRnMemory() {
+		return true;
+	}
+
+	private String EncodingA2(int data) {
+		StringBuilder sb = new StringBuilder("LDRSHT");
+		int Rt = getRd(data);
+		int Rn = getRn(data);
+		int Rm = getShiftInt(data, 0, 4);
+		boolean add = getShiftInt(data, 23, 1) == 1;
+
+		sb.append(CondFactory.parse(getCond(data)));
+
+		sb.append(" ");
+		sb.append(parseRegister(Rt));
+
+		sb.append(" , [");
+		sb.append(parseRegister(Rn));
+		sb.append("] , ");
+
+		if (!add)
+			sb.append("-");
+
+		sb.append(parseRegister(Rm));
+
+		return sb.toString();
 	}
 
 	@Override

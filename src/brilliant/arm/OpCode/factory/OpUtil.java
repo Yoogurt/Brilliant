@@ -1,7 +1,5 @@
 package brilliant.arm.OpCode.factory;
 
-import brilliant.elf.util.Log;
-
 public class OpUtil {
 
 	public static final int R0 = 0x0;
@@ -20,6 +18,10 @@ public class OpUtil {
 	public static final int SP = 0xD;
 	public static final int LR = 0xE;
 	public static final int PC = 0xF;
+
+	public static final int APSR = 0x10;
+	public static final int CPSR = 0x11;
+	public static final int SPSR = 0x12;
 
 	/**
 	 * transform data into binary data and check the specific index is 0 or not
@@ -59,8 +61,6 @@ public class OpUtil {
 	 * result 0b10 = 2
 	 */
 	public static int getShiftInt(int data, int from, int length) {
-		Log.e(Integer.toBinaryString(data) + "  from " + from + "  length "
-				+ length);
 		return (data >>> from) & ((1 << length) - 1);
 	}
 
@@ -73,15 +73,20 @@ public class OpUtil {
 			return "R" + no;
 
 		switch (no) {
-		case 13:
+		case SP:
 			return "SP";
-		case 14:
+		case LR:
 			return "LR";
-		case 15:
+		case PC:
 			return "PC";
+		case APSR:
+			return "APSR";
+		case CPSR:
+			return "CPSR";
+		case SPSR:
+			return "SPCR";
 		default:
-			throw new IllegalArgumentException("Unable to decode register "
-					+ no);
+			throw new IllegalArgumentException("Unable to decode register " + no);
 		}
 	}
 
@@ -146,8 +151,7 @@ public class OpUtil {
 		if (high5 == 0b00100 || high5 == 0b00101)
 			return ((imm12 & 0xff) << 24) | ((imm12 & 0xff) << 8);
 		if (high5 == 0b00110 || high5 == 0b00111)
-			return ((imm12 & 0xff) << 24) | ((imm12 & 0xff) << 16)
-					| ((imm12 & 0xff) << 8) | (imm12 & 0xff);
+			return ((imm12 & 0xff) << 24) | ((imm12 & 0xff) << 16) | ((imm12 & 0xff) << 8) | (imm12 & 0xff);
 
 		int base = 0b01000;
 		imm12 = (imm12 & 0xff | 0x80) << 24;
@@ -155,7 +159,7 @@ public class OpUtil {
 	}
 
 	public static void main(String[] args) {
-	System.out.println(Integer.toBinaryString(0b1110101111111111111011001110 >>> 1));
+		System.out.println(Integer.toBinaryString(0b1110101111111111111011001110 >>> 1));
 	}
 
 }

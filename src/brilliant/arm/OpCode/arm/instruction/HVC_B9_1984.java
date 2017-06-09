@@ -6,8 +6,8 @@
 package brilliant.arm.OpCode.arm.instruction;
 
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import static brilliant.arm.OpCode.factory.OpUtil.*;
 
-@Deprecated
 public class HVC_B9_1984 extends ParseSupport {
 
 	public static final HVC_B9_1984 INSTANCE = new HVC_B9_1984();
@@ -15,6 +15,13 @@ public class HVC_B9_1984 extends ParseSupport {
 	@Override
 	protected String getOpCode(int data) {
 		return "HVC";
+	}
+
+	@Override
+	protected int getShift(int data) {
+		int imm12 = getShiftInt(data, 8, 12);
+		int imm4 = getShiftInt(data, 0, 4);
+		return (imm12 << 12 | imm4);
 	}
 
 	@Override

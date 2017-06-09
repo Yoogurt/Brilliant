@@ -6,18 +6,36 @@
 package brilliant.arm.OpCode.arm.instruction;
 
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import brilliant.arm.OpCode.factory.Remotable;
+import brilliant.elf.vm.Register;
 
-@Deprecated
-public class LDRD_A8_428 extends ParseSupport {
+import static brilliant.arm.OpCode.factory.OpUtil.*;
+
+public class LDRD_A8_428 extends ParseSupport implements Remotable {
 
 	public static final LDRD_A8_428 INSTANCE = new LDRD_A8_428();
 
+	@Override
 	public String parse(int data) {
-		throw new UnsupportedOperationException("LDRD no implements");
+		return LDRD_A8_426.INSTANCE.parse(data);
+	}
+
+	@Override
+	protected String getCommnet(int data) {
+		if (Register.PC <= 0)
+			return null;
+		return "@" + (Register.PC + offset(data));
 	}
 
 	@Override
 	public void performExecuteCommand(int data) {
+	}
+
+	@Override
+	public int offset(int data) {
+		int imm8 = (getShiftInt(data, 8, 4) << 4) | getShiftInt(data, 0, 4);
+		int add = getShiftInt(data, 23, 1);
+		return add == 1 ? imm8 : -imm8;
 	}
 
 }

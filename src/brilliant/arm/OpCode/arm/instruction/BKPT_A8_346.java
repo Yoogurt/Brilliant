@@ -6,14 +6,36 @@
 package brilliant.arm.OpCode.arm.instruction;
 
 import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import brilliant.arm.OpCode.factory.CondFactory;
 
-@Deprecated
+import static brilliant.arm.OpCode.factory.OpUtil.*;
+
 public class BKPT_A8_346 extends ParseSupport {
 
 	public static final BKPT_A8_346 INSTANCE = new BKPT_A8_346();
 
-	public String parse(int data) {
-		throw new UnsupportedOperationException("BKPT no implements");
+	@Override
+	protected String getOpCode(int data) {
+		return "BKPT";
+	}
+
+	@Override
+	protected int getCond(int data) {
+		int cond = super.getCond(data);
+
+		if (cond != CondFactory.AL)
+			error(data);
+		return cond;
+	}
+
+	@Override
+	protected int getShift(int data) {
+		int imm12 = getShiftInt(data, 8, 12);
+		int imm4 = getShiftInt(data, 0, 4);
+
+		int imm = (imm12 << 12) | imm4;
+
+		return imm;
 	}
 
 	@Override

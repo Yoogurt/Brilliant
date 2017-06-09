@@ -5,9 +5,13 @@
 -------------------------------*/
 package brilliant.arm.OpCode.arm.instruction;
 
-import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import static brilliant.arm.OpCode.factory.OpUtil.getShiftInt;
 
-public class LDRB_A8_420 extends ParseSupport {
+import brilliant.arm.OpCode.arm.instruction.support.ParseSupport;
+import brilliant.arm.OpCode.factory.Remotable;
+import brilliant.elf.vm.Register;
+
+public class LDRB_A8_420 extends ParseSupport implements Remotable {
 
 	public static final LDRB_A8_420 INSTANCE = new LDRB_A8_420();
 
@@ -17,7 +21,28 @@ public class LDRB_A8_420 extends ParseSupport {
 	}
 
 	@Override
+	protected String getCommnet(int data) {
+
+		if (Register.PC <= 0)
+			return null;
+
+		return "@" + (offset(data) + Register.PC);
+	}
+
+	@Override
+	protected boolean shifterUsed() {
+		return true;
+	}
+
+	@Override
 	public void performExecuteCommand(int data) {
+	}
+
+	@Override
+	public int offset(int data) {
+		int imm12 = getShiftInt(data, 0, 12);
+		int add = getShiftInt(data, 23, 1);
+		return add == 1 ? imm12 : -imm12;
 	}
 
 }

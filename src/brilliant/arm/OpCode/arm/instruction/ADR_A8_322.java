@@ -63,7 +63,7 @@ public class ADR_A8_322 extends ParseSupport implements Remotable {
 	}
 
 	@Override
-	public int remoteValue(int data) {
+	public int offset(int data) {
 		boolean before = getShiftInt(data, 21, 4) == 0b0010;
 		return before ? -armExpandImm(getShiftInt(data, 0, 12)) : armExpandImm(getShiftInt(data, 0, 12));
 	}
